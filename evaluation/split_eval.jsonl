@@ -1,0 +1,5 @@
+{"image": "data/RTS_sb_01/images/comm/p0042.jpg", "gt": "data/RTS_sb_01/gt/comm/p0042.txt", "page": "p0042", "block": "comm", "unit": "00-0.3-tail", "status": "verified"}
+{"image": "data/RTS_sb_01/images/core/p0043.jpg", "gt": "data/RTS_sb_01/gt/core/p0043.txt", "page": "p0043", "block": "core", "unit": "00-0.4-full", "status": "verified"}
+{"image": "data/RTS_sb_01/images/comm/p0043.jpg", "gt": "data/RTS_sb_01/gt/comm/p0043.txt", "page": "p0043", "block": "comm", "unit": "00-0.4-full", "status": "verified"}
+{"image": "data/RTS_sb_01/images/core/p0044.jpg", "gt": "data/RTS_sb_01/gt/core/p0044.txt", "page": "p0044", "block": "core", "unit": "00-0.5-full", "status": "verified"}
+{"image": "data/RTS_sb_01/images/comm/p0044.jpg", "gt": "data/RTS_sb_01/gt/comm/p0044.txt", "page": "p0044", "block": "comm", "unit": "00-0.5-full", "status": "verified"}

@@ -1,0 +1,6 @@
+{"image": "data/RTS_sb_01/images/core/p0032.jpg", "gt": "data/RTS_sb_01/gt/core/p0032.txt", "page": "p0032", "block": "core", "unit": "00-0.1-full", "status": "verified-visually"}
+{"image": "data/RTS_sb_01/images/comm/p0032.jpg", "gt": "data/RTS_sb_01/gt/comm/p0032.txt", "page": "p0032", "block": "comm", "unit": "00-0.1-head", "status": "auto-approx"}
+{"image": "data/RTS_sb_01/images/comm/p0034.jpg", "gt": "data/RTS_sb_01/gt/comm/p0034.txt", "page": "p0034", "block": "comm", "unit": "00-0.1-mid", "status": "auto-approx"}
+{"image": "data/RTS_sb_01/images/comm/p0039.jpg", "gt": "data/RTS_sb_01/gt/comm/p0039.txt", "page": "p0039", "block": "comm", "unit": "00-0.2-part", "status": "auto-approx"}
+{"image": "data/RTS_sb_01/images/comm/p0040.jpg", "gt": "data/RTS_sb_01/gt/comm/p0040.txt", "page": "p0040", "block": "comm", "unit": "00-0.2-part", "status": "auto-approx"}
+{"image": "data/RTS_sb_01/images/comm/p0041.jpg", "gt": "data/RTS_sb_01/gt/comm/p0041.txt", "page": "p0041", "block": "comm", "unit": "00-0.3-head", "status": "auto-continuity"}
