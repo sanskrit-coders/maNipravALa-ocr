@@ -1,0 +1,1 @@
+# maNipravALa-ocr
