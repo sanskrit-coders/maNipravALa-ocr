@@ -60,6 +60,13 @@ after each unnumbered plate; approx `printed = pdf_index − 30…33`).
    → fuzzy (rapidfuzz `token_set_ratio` on Devanagari→Tamil normalized text) mapping
    page → best core/comm unit + `align_pilot_details/*.json`. Constrain candidates by TOC
    adhikara for production (pilot shows sequential hits e.g. p0043→00-0.4 core+comm 62–63).
+6. `scripts/make_gt.py --vol 01|02 [--write]` → per-crop GT text for all boxed crops
+   (`data/RTS_sb_0N/gt/{core,comm}/pXXXX.txt`, byte-exact unit-body substrings) + report
+   `metadata/gt_report_0N.csv`; dry-run by default. OCR cache `metadata/ocr_0N/`.
+   Statuses `auto-approx`/`needs-review`; doubtful pairs are renamed `pXXXX_doubtful.{jpg,txt}`
+   (best-guess text) and excluded from training by name; gold/verified entries preserved; idempotent.
+   Done: Vol.1 1086 auto-approx + 28 needs-review (25 doubtful images, 21 texts); Vol.2 1117 + 15
+   (11 doubtful images, 8 texts); see `data/README.md` "GT generation" for the flag vocabulary.
 
 ## Pilot status (14 pp, 01.pdf idx 31–44, printed 1–14 → adhikara 00)
 

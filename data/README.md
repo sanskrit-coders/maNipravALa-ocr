@@ -3,7 +3,7 @@
 - `data/RTS_sb_01/` = Vol.1 (01.pdf, 630 pp, adhikaras 00-22). `pages_raw/pXXXX.jpg` (150 DPI JPEG, pdf_index),
   `images/{core,comm}/pXXXX.jpg` (deskewed block crops via detect_blocks),
   `metadata/{pages.csv,blocks.json,skew.json}`, `gt/{core,comm}/` (page-part GT; gold for eval blocks, auto/needs-review otherwise).
-- `data/RTS_sb_02/` = Vol.2 (02.pdf, 616 pp, adhikaras 23-32). Same layout; GT deferred (images only for now).
+- `data/RTS_sb_02/` = Vol.2 (02.pdf, 616 pp, adhikaras 23-32). Same layout, GT generated (1117 files, 15 needs-review).
 - Splits are path lists partitioning the above (no copies):
   `training/split_train.jsonl`, `evaluation/split_eval.jsonl` (+ `evaluation/eval_index.jsonl`),
   each row `{image, gt, page, block, unit, status}` with repo-relative `data/...` paths.
@@ -12,6 +12,36 @@
   `python3 -m doc_curation.image.checker.detect_blocks --vol 01` (run from the
   `doc_curation` repo root; `--vol 02` same; `--root` or `$MANIPRAVALA_OCR_ROOT`
   point at this repo, else a sibling `maNipravALa-ocr` is auto-detected).
+
+## GT generation (`training/scripts/make_gt.py`)
+Aligns every boxed crop image to its unit text body (`training/metadata/units_{core,commentary}.jsonl`)
+and writes byte-exact substring GT: each `gt/{core,comm}/pXXXX.txt` is a raw substring of the unit body
+(word-boundary start/end; trailing whitespace stripped only when the slice does not reach the body end).
+
+- Run: `python3 training/scripts/make_gt.py --vol 01` (dry: report only) / `--write` (gt + blocks.json + report).
+  OCR of crops is cached in `training/metadata/ocr_01/{core,comm}/pXXXX.txt` (Tesseract `tam+san`, PSM 6, no sudo —
+  `/tmp/tess-root` install; regenerate with the same script).
+- Algorithm: core crops are walked in page order and fuzzy-matched to the ordered unit list (sequential pointer);
+  commentary crops inherit the last assigned core unit; per-unit crop chains are then aligned to the commentary
+  body via `rapidfuzz.partial_ratio_alignment` on normalized token streams (Devanagari→Tamil), boundaries snap to
+  word starts; independent per-crop estimates + a verbatim anchor refine (first >=6-char OCR token within 250 chars).
+- Statuses: `auto-approx` = GT written; `needs-review` = no reliable pair → **`_doubtful` naming**
+  (`images/{block}/pXXXX_doubtful.jpg` + best-guess `gt/{block}/pXXXX_doubtful.txt` when a slice exists;
+  image-only when nothing can be guessed, e.g. failed cores). Training/export scripts should glob-exclude
+  `*_doubtful*` (or treat them as review queue). `verified` / `verified-visually` / `absent-by-design`
+  entries are never touched or renamed; re-runs are idempotent.
+  Note: `detect_blocks` re-runs overwrite crop files under plain names, so run `make_gt.py --write`
+  after regenerating crops to re-apply the `_doubtful` renames.
+- Report: `training/metadata/gt_report_01.csv` (`page,block,unit,part,start,end,score,status,flags`).
+  Flags worth knowing: `merged-core:{u}` / `merged-core-next:{u}` + `core-inside-merged-box:{u}` (section-end
+  pages where one box holds two mUlams, e.g. p0082 = 01-1.15+01-1.16, p0091 = 02-2.6+02-2.7),
+  `first-crop-after-merged-core`, `multi-page-core` (mUlam spanning 2 pages), `no-core-block-found`,
+  `chain-truncated`, `boundary-disagree`, `head-start-offset`, `low-core-score`, `low-score`.
+- Vol.1 result (2026-10): 1114 boxed crops → 1086 auto-approx GT (507 core + 579 comm), 28 needs-review
+  (21 core + 7 comm); 2 units' cores live inside merged boxes (01-1.16, 02-2.7); gold files byte-identical.
+- Vol.2 result (2026-10): 1132 boxed crops → 1117 auto-approx GT (550 core + 567 comm), 15 needs-review
+  (8 core incl. 3 `no-core-block-found` units 24-24.46/25-25.11/25-25.33 + the p0592 merged 32-32.5/32-32.6
+  volume-end box, 7 comm incl. 3 `core-missing-region` demotions p0125/p0154/p0177); idempotent.
 
 ## Header-fix note (first-line cut)
 `detect_blocks.py` fallback `header_bottom=10%` cut the first text line on pages without
