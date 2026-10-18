@@ -1,0 +1,15 @@
+[
+ {
+  "page": "p0307",
+  "block": "comm",
+  "edges": {
+   "top": {
+    "ink": 149,
+    "runs": 3,
+    "maxrun": 134,
+    "kind": "rule",
+    "cut": true
+   }
+  }
+ }
+]

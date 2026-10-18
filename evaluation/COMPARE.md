@@ -11,14 +11,16 @@ Eval layout (fixed; was ambiguous before):
 
 | page/block | GT chars | CER | WER | note |
 |---|---|---|---|---|
-| p0042/comm (00-0.3-tail) | 2050 | 0.2003 | 0.7071 | commentary-only page; best (pure Tamil flow) |
-| p0043/core (00-0.4 verse) | 100 | 0.3010 | 0.7273 | short Devanagari verse `पापिष्ठः…` |
-| p0043/comm (00-0.4-full) | 2330 | 0.3076 | 0.8191 | starts `இப்படி सर्वमुमुक्षु…` |
-| p0044/core (00-0.5 prose) | 418 | 0.3531 | 1.0938 | `आचार्यवत्तै…` mixed prose, hardest |
-| p0044/comm (00-0.5-full) | 1902 | 0.3232 | 0.8393 | starts `மில்லையாகையால்…` |
-| MEAN core (2) | — | 0.3271 | — | |
-| MEAN comm (3) | — | 0.2770 | — | |
+| p0042/comm (00-0.3-tail) | 2050 | 0.2290 | 0.7475 | commentary-only page; best (pure Tamil flow) |
+| p0043/core (00-0.4 verse) | 100 | 0.1845 | 0.7273 | short Devanagari verse `पापिष्ठः…` |
+| p0043/comm (00-0.4-full) | 2330 | 0.2974 | 0.8291 | starts `இப்படி सर्वमुमुक्षु…` |
+| p0044/core (00-0.5 prose) | 418 | 0.3483 | 1.0312 | `आचार्यवत्तै…` mixed prose, hardest |
+| p0044/comm (00-0.5-full) | 1902 | 0.3459 | 0.8988 | starts `மில்லையாகையால்…` |
+| MEAN core (2) | — | 0.2664 | — | |
+| MEAN comm (3) | — | 0.2908 | — | |
 
+Numbers are after the deskew fix (crops are deskewed; p0043 sep y=244, p0044 sep y=455).
+Old pre-deskew baseline: MEAN core 0.3271, MEAN comm 0.2770 (p0043/p0044 seps 247/454.5).
 Old page-level numbers (CER 0.43, full-unit GT + header/footer noise) are deprecated
 (`evaluation/pred_tesseract/`, `results_tesseract.json` removed).
 Kraken/TrOCR: `training/scripts/train_kraken.py`, `train_trocr.py` write same `pred/{core,comm}/`
@@ -32,7 +34,7 @@ without checking block presence. `align.py` fuzzy core match spuriously fired be
 commentary quotes/discusses core words (e.g. verse words appear in comm), not because a core
 block exists. `detect_blocks.py` (0.6-width threshold) correctly said `has_core=False` for
 p0042–44, but eval ignored it. Fix: GT only from visually confirmed blocks (p0042 comm-only;
-p0043 sep y=245/249; p0044 sep y=453/456, kw=0.3 detector); core GT deleted for p0042;
+p0043 sep y=244; p0044 sep y=455, kw=0.3 detector); core GT deleted for p0042;
 comm GT cut to page-part (p0042 = unit tail from `தன்பற்றில்`, offset 1297/3347;
 p0043/44 = full units, start/end verified against crop OCR).
 

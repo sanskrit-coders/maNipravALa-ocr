@@ -52,9 +52,10 @@ after each unnumbered plate; approx `printed = pdf_index − 30…33`).
    `metadata/pages_*.csv` (`pdf_index,printed_page,image,w,h`).
 3. `scripts/baseline_ocr.py --images images/sarabodhini-01 --glob "p00*.jpg" --out metadata/baseline_01 -l tam+san --psm 6`
    (uses local Tesseract from `/tmp/tess-root`, no sudo) → `*.txt,*.hocr,*.tsv` anchors.
-4. `scripts/detect_blocks.py --images … --out metadata/blocks_01`
-   → `crops/*_{core,comm}.jpg` + `*_blocks.json` (header/separator heuristic; pilot uses fixed
-   10%/94% margins — improve separator merging for mixed pages, see NOTES).
+4. `python3 -m doc_curation.image.checker.detect_blocks` (moved out of this repo's
+   `scripts/`; legacy `--images/--out` mode retained)
+   → `crops/*_{core,comm}.jpg` + `*_blocks.json` (header/separator heuristic; see
+   `data/README.md` for the current split/snap logic and crop-edge audit).
 5. `scripts/align.py --baseline metadata/baseline_01 --out metadata/align_pilot.csv`
    → fuzzy (rapidfuzz `token_set_ratio` on Devanagari→Tamil normalized text) mapping
    page → best core/comm unit + `align_pilot_details/*.json`. Constrain candidates by TOC
