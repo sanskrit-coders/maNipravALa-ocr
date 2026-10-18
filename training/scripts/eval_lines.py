@@ -60,13 +60,14 @@ def engine_tess(rows):
     return [{"name": r["name"], "gt": r["gt"], "pred": p} for r, p in zip(rows, preds)]
 
 
-def engine_kraken(rows, model_path):
+def engine_kraken(rows, model_path, device="cpu"):
     from kraken.containers import Segmentation, BBoxLine
     from kraken.models import load_models
+    from kraken.lib.models import TorchSeqRecognizer
     from kraken import rpred
     from PIL import Image
     models = load_models(str(model_path))
-    net = models[0]
+    net = TorchSeqRecognizer(models[0], device=device)
     out = []
     for r in rows:
         p = LINES / "eval" / (r["name"] + ".png")
@@ -84,6 +85,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--engine", choices=["tess", "kraken"], required=True)
     ap.add_argument("--model")
+    ap.add_argument("--device", default="cpu")
     ap.add_argument("--dump", default="")
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
@@ -100,7 +102,7 @@ def main():
     if args.engine == "tess":
         preds = engine_tess(rows)
     else:
-        preds = engine_kraken(rows, args.model)
+        preds = engine_kraken(rows, args.model, args.device)
 
     pairs = [(p["gt"], p["pred"]) for p in preds]
     res = metrics(pairs)
