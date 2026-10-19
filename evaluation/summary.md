@@ -1,7 +1,9 @@
-# Indic-OCR (BytesByJay) — accuracy evaluation
+# Line-OCR evaluation summary — Indic-OCR (BytesByJay) + our trained recognizer
 
 Evaluated as a candidate OCR engine for **sArabodhinI vol. 01–02** (mixed Tamil–Devanagari
 manipravala print), against our held-out line eval split and the Tesseract `tam+san` baseline.
+**Update (2026-10-19):** we also trained our own recognizer on the train split; it reaches
+**CER 0.292** on the same 445-line eval set — see §7.
 
 **Bottom line:** the repository ships **no trained models** — its recognition accuracy *is*
 PaddleOCR's pretrained accuracy, and on our eval lines that is **CER 0.73 (rec-only, oracle
@@ -21,7 +23,8 @@ Repo audit (commit `main`, cloned 2026-10-18; 4 commits, no releases, no weights
 | TrOCR backend | "state-of-the-art" | `microsoft/trocr-base-handwritten` — an **English** handwriting model; cannot produce any Indic script |
 | Script classifier (`src/script_classifier.py`) | automatic script detection | Architecture + training code only; **no weights in the repo** (`models/` contains a README). As shipped it predicts from random init |
 | Preprocessing (`src/preprocessing.py`) | "advanced preprocessing" | OpenCV pipeline: NLM denoise, CLAHE, unsharp mask (`preprocess_for_ocr`); optional deskew/binarize/resize for training-path |
-| Evaluation tools (`src/evaluation.py`) | CER/WER | self-contained pure-Python Levenshtein/CER (+ sklearn metrics for the classifier) |
+| Evaluation tools (`src/evaluation.py`) 
+fix | CER/WER | self-contained pure-Python Levenshtein/CER (+ sklearn metrics for the classifier) |
 | `train.py` | fine-tuning | **stub**: `train_ocr()` logs "OCR fine-tuning is not yet implemented." Only the script-classifier task has real training code; no artifacts published |
 
 So "Indic-OCR accuracy" reduces to: **PaddleOCR pretrained models** (PP-OCRv4 `ta` / `devanagari`
@@ -71,6 +74,8 @@ python3 training/scripts/indic-ocr/compare_with_baseline.py
 | PaddleOCR rec best-of + Indic-OCR preprocessing | 0.732 | 0.731 | 1.017 | 1.000 |
 | PaddleOCR det+rec `ta` | 0.755 | 0.774 | 1.116 | 1.000 |
 | PaddleOCR det+rec best-of (oracle) | 0.710 | 0.728 | 1.117 | 1.000 |
+| **ours — trained on train split (kaggle v10)** | **0.292** | **0.293** | **0.608** | 0.980 |
+| ours — repeat run (kaggle v13) | 0.294 | 0.295 | 0.605 | 0.964 |
 
 ### 3.2 All 534 lines (includes the 89 broken-target lines)
 
@@ -125,6 +130,8 @@ Failure modes confirmed by the dumps:
   (upstream PaddleOCR, not this repo's stub) would import Devanagari/Tamil glyph knowledge,
   which our from-scratch kraken model lacks. Worth a follow-up experiment with the ~16.5k
   feasible training lines.
+  *Update: an own from-scratch model with the corrected init now reaches CER 0.292 on that data
+  (§7); fine-tuning PP-OCRv4 would now be a comparison, not a necessity.*
 * The OpenCV preprocessing ablation (`--preprocess repo`: Indic-OCR's denoise + CLAHE +
   unsharp on the same models) changes **nothing materially**: oracle best-of CER 0.732 with
   and without it on the 445-line subset (per-language: `ta` 0.760 vs 0.757, `hi` 0.897 vs
@@ -140,4 +147,27 @@ Failure modes confirmed by the dumps:
 | `evaluation/line_eval_paddleocr_det.jsonl(+.summary.json)` | det+rec-mode predictions |
 | `evaluation/line_eval_paddleocr_pp.jsonl(+.summary.json)` | rec-mode with Indic-OCR preprocessing |
 | `evaluation/line_eval_baseline.jsonl` | Tesseract baseline (534 lines) |
+| `evaluation/line_eval_kaggle_v10_best.jsonl` | our model (v10) per-line predictions (0.292 CER) |
+| `evaluation/line_eval_kaggle_v13_best.jsonl` | our model (v13 repeat) per-line predictions |
+| `training/local/kaggle_v10_best.pt` | our best checkpoint (kraken-spec, 40 ep, fp32, no aug) |
+| `training/local/kaggle_v13_best.pt` | repeat-run checkpoint (same config) |
 | `training/scripts/indic-ocr/` | `setup_env.sh`, `eval_paddleocr.py`, `compare_with_baseline.py` |
+
+## 7. Our trained recognizer (kraken-VGSL spec, for context)
+
+Since no pretrained engine handled mixed Tamil–Devanagari well, we trained from scratch on the
+**train split** of the same line data (16.5k CTC-feasible lines, vol 01–02; eval split never seen).
+
+| item | value |
+|---|---|
+| architecture | exact kraken VGSL spec `[1,64,0,1 Cr3,13,32 … S1(1x0)1,3 Lbx200×3 …] O1c165` — torch-only replica, verified bit-identical to kraken (keys, outputs, init) via `training/scripts/verify_kernel_arch.py` |
+| training | Kaggle T4, batch 32, lr 3e-3 (warmup 400, cosine → 5e-5), 40 epochs, fp32, **no augmentation**, seed 1234 |
+| result (445 eval lines) | **CER 0.2922 / cer_nows 0.2931 / WER 0.6083** (v10; repeat v13: 0.2940 / 0.2953 / 0.6047) |
+| kernel | `vishvasvasuki/manipravala-lines-train` (private, GPU) |
+
+Hard-won details (each cost a Kaggle run): kraken's **init matters** (wrong init stalls at 0.85-0.88;
+replicate conv `uniform ±0.1`, LSTM orthogonal + forget-bias 1.0, Linear Xavier); **AMP fp16
+occasionally NaNs** on T4 → use fp32; **augmentation severely hurts** this dataset (0.88 vs 0.29);
+**80-epoch cosine is worse than 40** (0.354 — LR stays in the noise zone); probability-averaging the
+two checkpoints *hurts* CTC decoding (0.315) — no ensemble. Scripts: `training/scripts/eval_kraken_manual.py`,
+`eval_kraken_ensemble.py`, `training/kaggle/kernel/{train.py,arch.py}`.

@@ -64,7 +64,7 @@ class LineDS(Dataset):
 
 
 class CachedLineDS(Dataset):
-    def __init__(self, cache_dir):
+    def __init__(self, cache_dir, augment=False):
         self.dir = pathlib.Path(cache_dir)
         meta = json.load(open(self.dir / 'meta.json'))
         self.files = [str(REPO / f) for f in meta['files']]
@@ -72,13 +72,37 @@ class CachedLineDS(Dataset):
         self.ylens = meta['ylens']
         self.height = meta['height']
         self.c2l = meta['c2l']
+        self.augment = augment
 
     def __len__(self):
         return len(self.files)
 
     def __getitem__(self, i):
         d = torch.load(self.dir / f'{i:06d}.pt')
-        return d['x'][0], d['y']
+        x, y = d['x'][0], d['y']
+        if self.augment:
+            x = augment_tensor(x)
+        return x, y
+
+
+def augment_tensor(x):
+    import torch.nn.functional as F
+    H, W = x.shape
+    if random.random() < 0.8:
+        ang = random.uniform(-1.0, 1.0) * math.pi / 180.0
+        sc = random.uniform(0.92, 1.08)
+        tx = random.uniform(-2.0, 2.0) * 2.0 / W
+        ty = random.uniform(-1.5, 1.5) * 2.0 / H
+        theta = torch.tensor([[sc * math.cos(ang), -sc * math.sin(ang), tx],
+                              [sc * math.sin(ang), sc * math.cos(ang), ty]])
+        grid = F.affine_grid(theta.unsqueeze(0), (1, 1, H, W), align_corners=False)
+        x = F.grid_sample(x.unsqueeze(0).unsqueeze(0), grid, mode='bilinear',
+                          padding_mode='zeros', align_corners=False)[0, 0]
+    if random.random() < 0.5:
+        x = (x * random.uniform(0.85, 1.15) + random.uniform(-0.1, 0.1)).clamp(0, 1)
+    if random.random() < 0.3:
+        x = (x + torch.randn_like(x) * random.uniform(0.01, 0.04)).clamp(0, 1)
+    return x
 
 
 def collate(batch):
@@ -200,6 +224,7 @@ def main():
     ap.add_argument('--eval-n', type=int, default=150)
     ap.add_argument('--device', default='cuda:0')
     ap.add_argument('--height', type=int, default=64)
+    ap.add_argument('--augment', action='store_true', help='random affine/contrast/noise on cached tensors')
     ap.add_argument('--cache', default='training/local/lines_cache',
                     help='dir with prebuilt line tensors (build_line_cache.py); empty to disable')
     args = ap.parse_args()
@@ -212,7 +237,7 @@ def main():
     cache = REPO / args.cache if args.cache else None
     use_cache = bool(cache and (cache / 'train' / 'meta.json').exists() and not args.probe)
     if use_cache:
-        train_ds = CachedLineDS(cache / 'train')
+        train_ds = CachedLineDS(cache / 'train', augment=args.augment)
         eval_ds = CachedLineDS(cache / 'eval')
         if train_ds.height != args.height:
             raise SystemExit(f'cache height {train_ds.height} != --height {args.height}; '
