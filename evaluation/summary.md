@@ -1,4 +1,4 @@
-# Line-OCR evaluation summary — Indic-OCR (BytesByJay) + our trained recognizer
+# Line/Page OCR evaluation summary — Indic-OCR (BytesByJay), our recognizer, and script-run faux-page OCR
 
 Evaluated as a candidate OCR engine for **sArabodhinI vol. 01–02** (mixed Tamil–Devanagari
 manipravala print), against our held-out line eval split and the Tesseract `tam+san` baseline.
@@ -137,6 +137,11 @@ Failure modes confirmed by the dumps:
   and without it on the 445-line subset (per-language: `ta` 0.760 vs 0.757, `hi` 0.897 vs
   0.912; all-534 best-of 0.843 vs 0.839). The project's own contribution to recognition
   accuracy is ~zero.
+* **On real mixed-script page text, whole-line and whole-page engines fail; splitting by
+  script works.** A script-patch classifier + per-script faux pages + Google Drive OCR reaches
+  **CER 0.094** on an 11-line real-page excerpt, vs 0.348 for our line model and 0.456 for the
+  same Drive engine on the unsplit region (§8). This is a *page-assembly* result (not the
+  line-OCR benchmark), but it is the best output we have on actual PDF text so far.
 
 ## 6. Artifacts
 
@@ -152,6 +157,10 @@ Failure modes confirmed by the dumps:
 | `training/local/kaggle_v10_best.pt` | our best checkpoint (kraken-spec, 40 ep, fp32, no aug) |
 | `training/local/kaggle_v13_best.pt` | repeat-run checkpoint (same config) |
 | `training/scripts/indic-ocr/` | `setup_env.sh`, `eval_paddleocr.py`, `compare_with_baseline.py` |
+| `training/local/script_cls.pt` | script-patch classifier (48×48, dev/tam/other/null; val_acc 0.937) |
+| `training/scripts/script_cls/` | `train_classifier.py`, `pipeline.py`, `drive_ocr_images.py`, `eval_lines.py` |
+| `evaluation/page_gt/ra-tra-sA_1_p0100.*` | mini-GT (11 lines) and the three predictions evaluated in §8 |
+| `data/RTS_5c_01/ocr_scriptcls/` | pilot output for PDF1 p100 (`.txt`, `runs.jsonl`) |
 
 ## 7. Our trained recognizer (kraken-VGSL spec, for context)
 
@@ -171,3 +180,67 @@ occasionally NaNs** on T4 → use fp32; **augmentation severely hurts** this dat
 **80-epoch cosine is worse than 40** (0.354 — LR stays in the noise zone); probability-averaging the
 two checkpoints *hurts* CTC decoding (0.315) — no ensemble. Scripts: `training/scripts/eval_kraken_manual.py`,
 `eval_kraken_ensemble.py`, `training/kaggle/kernel/{train.py,arch.py}`.
+
+## 8. Script-run boxing + script-pure faux pages (real-page excerpt)
+
+Both baselines and our line model degrade on **real pages**, where Devanagari and Tamil alternate
+inside a single printed line (commentary labels, quoted mUlam, Tamil suffixes on Sanskrit stems).
+Motivated by `doc_curation.pdf.drive_ocr.split_and_ocr_all` (which boxed lines by script before
+OCR), we boxed *runs* of each script, reflowed them into script-pure faux pages, and sent those to
+Google Drive OCR.
+
+### Pipeline (`training/scripts/script_cls/pipeline.py`)
+
+1. Render PDF page at 300 dpi; line segmentation reused from `apply_ocr_pdf.segment_lines`.
+2. Word segmentation by horizontal ink projection (gap ≥ 10 px).
+3. Sliding 48×48 patch classifier, stride 8; per-patch labels `dev/tam/other/null`; a run keeps a
+   patch's label only above 0.45 confidence (else `null`).
+4. Merge patches into runs; drop runs < 20 px wide; split words at script transitions.
+5. Compose one faux page per script: each run is a line, scaled to 90 px height (≥0.6), 130 px
+   vertical gap, width cap 1780 px, JPEG q92. 20 runs per faux page (chunking).
+6. OCR each faux page with Google Drive (`doc_curation` client, `drive_ocr_images.py`); map OCR
+   lines back to runs positionally. On a line-count mismatch, OCR runs individually (fallback).
+7. Reassemble the page with per-run `pre_space` from the patch map.
+
+Classifier: synthetic 48×48 patches rendered from `data/texts/{core,commentary}` with the
+Devanagari/Tamil font sets (plus random noise/blank for `other`/`null`), small CNN, CPU ~25 min.
+**Validation accuracy 0.937** (dev 0.951 / tam 0.938 / other 0.417 / null 0.975). The weak `other`
+class is harmless in practice: only high-confidence dev/tam runs are batched, and the page overlay
+(`/tmp/opencode/scriptcls_run/overlay/p0100.jpg` during the pilot) shows boxes tracking the script
+boundaries even inside words (`राजा|வுக்கும்`, `प्रियत|மங்களையும்`, `நாய|ं|देवो`).
+
+### Mini-GT and results
+
+Mini-GT: PDF1 p100, printed lines 1–11 (mUlam opening + the first lines of the `(सा.दी.)` and
+`(सा.स्वा.)` commentaries), hand-transcribed from zoomed line crops — 746 nonspace chars
+(`evaluation/page_gt/ra-tra-sA_1_p0100.gt.txt`).
+
+| system | CER | CER (no ws) | WER |
+|---|---|---|---|
+| **script runs + faux pages + Drive OCR** | **0.0944** | **0.0938** | 0.4507 |
+| our line model v10 (lines fed whole) | 0.3475 | 0.3660 | 0.7606 |
+| Drive OCR on the whole text region (no split) | 0.4564 | 0.4598 | 0.8028 |
+
+Whole-page Drive OCR on p100 was qualitatively unusable (garbled, reordered, image blobs in the
+output), and Tesseract on such pages is worse still (§3). Splitting by script is the single
+biggest gain observed on real text so far.
+
+Residual errors on this excerpt are mostly *assembly/parse* artifacts rather than recognition:
+stray markdown (`|`, `\*`, `\.`), a dropped closing paren in `(सा.दी.)`, missing word spaces where
+the printed gap is < 10 px, and a few matra confusions. The Tamil and Devanagari glyphs themselves
+are largely correct.
+
+### Caveats
+
+* **Scope:** one 11-line excerpt from one page — enough to show a 3–5× CER improvement, not a
+  statistically robust benchmark. Next step is 2–3 more pages, ideally from another volume.
+* **Runtime is the blocker:** 299 runs on this page → 15 faux pages → ~40 min/page. Most of the
+  cost is the per-run fallback: tiny Tamil suffix fragments are sometimes dropped by Drive OCR, so
+  chunks consistently return 19/20 lines and trigger 20 single-run calls at ~20–30 s each (plus
+  multi-minute API stalls). For 3000 pages this is weeks of wall time.
+* Mitigations identified: merge fragments before batching (raise/word-adaptive gap), replace the
+  full per-run fallback with recursive chunk splitting or DP alignment against run texts, and/or
+  recognize script-pure faux pages with a *local* per-script model (e.g. fine-tuned PP-OCRv4)
+  instead of Drive.
+* Output text keeps Drive's markdown escapes; the parser strips the common ones but a stricter
+  normalizer is needed before this is usable as an e-text.
