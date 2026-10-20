@@ -23,12 +23,13 @@ Usage:
 import argparse
 import json
 import pathlib
+import re
 import subprocess
 import sys
 
 import numpy as np
 import torch
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from apply_ocr_pdf import segment_lines  # noqa: E402
@@ -38,13 +39,15 @@ REPO = BASE.parent if BASE.name == "training" else BASE
 
 VENV_PY = "/home/vvasuki/gitland/python_venv/bin/python"
 DRIVE_HELPER = pathlib.Path(__file__).resolve().parent / "drive_ocr_images.py"
-GOOGLE_KEY = "/home/vvasuki/gitland/vvasuki-git/sysconf/kunchikA/google/profing/ocr_app_oauth.json"
 GOOGLE_KEY = "/home/vvasuki/gitland/vvasuki-git/sysconf/kunchikA/google/proofing/ocr_app_oauth.json"
+TAG_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 SCRIPT_COLORS = {"dev": (200, 0, 0), "tam": (0, 120, 0), "other": (0, 0, 220)}
 GAP_WORD = 10
 STRIDE = 8
 MIN_RUN = 20
+TAG_RE = re.compile(r"#T(\d{2})")
+MD_ESC_RE = re.compile(r"\\([\\`*_{}\[\]()#+\-.!|])")
 
 
 def load_classifier(path, device):
@@ -146,8 +149,9 @@ def classify_word(net, classes, arr, x0, x1, y0, y1, dev):
     return out
 
 
-def compose_faux(arr, runs, path, prefix):
-    """runs: list of (idx, x0,x1,y0,y1). Stacks crops one per line, height 90."""
+def compose_faux(arr, runs, path, tag_start=1):
+    """runs: list of (idx, x0,x1,y0,y1). Stacks crops one per line, height 90,
+    each labelled with a printed #TNN tag so OCR lines map back unambiguously."""
     crops = []
     for r in runs:
         _, x0, x1, y0, y1 = r
@@ -158,33 +162,48 @@ def compose_faux(arr, runs, path, prefix):
         s = max(s, 0.6)
         im = Image.fromarray(c).resize((max(1, int(round(c.shape[1] * s))), max(1, int(round(h * s)))), Image.LANCZOS)
         crops.append(im)
-    W = max(600, max(im.width for im in crops) + 120)
+    W = max(600, max(im.width for im in crops) + 320)
     gap = 130
     H = 40 + sum(im.height + gap for im in crops)
     page = Image.new("L", (W, H), 255)
+    dr = ImageDraw.Draw(page)
+    font = ImageFont.truetype(TAG_FONT, 44)
     y = 20
-    for im in crops:
-        page.paste(im, (60, y))
+    for k, im in enumerate(crops):
+        page.paste(im, (240, y))
+        dr.text((30, y + 20), f"#T{tag_start + k:02d}", font=font, fill=0)
         y += im.height + gap
     page.convert("RGB").save(path, quality=92)
     return len(crops)
 
 
-def parse_drive_lines(txt):
-    out = []
-    import re
+def parse_tagged(txt, n):
+    """Map Drive OCR output lines to tag indices 1..n.
+
+    Returns list of length n (text or None). Text after a tag on the same line,
+    and all untagged continuation lines, belong to that tag; text before the
+    first tag of a line also continues the previous tag."""
+    texts = [None] * n
+    cur = None
     for line in txt.splitlines():
         s = line.strip()
-        if not s:
-            continue
-        if s.startswith("![") or s.startswith("[image") or s.startswith("<data:"):
-            continue
-        if s == "---":
+        if not s or s == "---" or s.startswith("![") or s.startswith("[image") or s.startswith("<data:"):
             continue
         s = s.replace("**", "")
-        s = re.sub(r"\\([\[\]\\_\-])", r"\1", s)
-        out.append(s)
-    return out
+        s = MD_ESC_RE.sub(r"\1", s)
+        pieces = []
+        pos = 0
+        for m in TAG_RE.finditer(s):
+            pieces.append((cur, s[pos:m.start()]))
+            cur = int(m.group(1)) - 1
+            pos = m.end()
+        pieces.append((cur, s[pos:]))
+        for idx, t in pieces:
+            t = t.strip()
+            if idx is None or not t or not (0 <= idx < n):
+                continue
+            texts[idx] = (texts[idx] + " " + t) if texts[idx] else t
+    return texts
 
 
 def main():
@@ -196,7 +215,7 @@ def main():
     ap.add_argument("--classifier", default="training/local/script_cls.pt")
     ap.add_argument("--dpi", type=int, default=300)
     ap.add_argument("--device", default="cuda:0")
-    ap.add_argument("--chunk", type=int, default=25)
+    ap.add_argument("--chunk", type=int, default=20)
     ap.add_argument("--overlay", action="store_true")
     args = ap.parse_args()
 
@@ -253,7 +272,7 @@ def main():
                 chunk = subset[ci:ci + args.chunk]
                 idxs = [page_runs.index(r) for r in chunk]
                 path = faux_dir / f"p{pi:04d}_{script}_{ci:03d}.jpg"
-                n = compose_faux(arr, [(k, r["x0"], r["x1"], r["y0"], r["y1"]) for k, r in zip(idxs, chunk)], path, script)
+                n = compose_faux(arr, [(k, r["x0"], r["x1"], r["y0"], r["y1"]) for k, r in zip(idxs, chunk)], path)
                 assert n == len(chunk)
                 faux_files.append((path, chunk))
         if faux_files:
@@ -261,23 +280,22 @@ def main():
                            check=True, capture_output=True)
         for path, chunk in faux_files:
             txt_path = pathlib.Path(str(path) + ".txt")
-            ols = parse_drive_lines(txt_path.read_text(encoding="utf-8")) if txt_path.exists() else []
-            if len(ols) == len(chunk):
-                for r, t in zip(chunk, ols):
-                    r["text"] = t
-                continue
-            print(f"  WARN {path.name}: {len(ols)} ocr lines vs {len(chunk)} runs -> per-run retry", flush=True)
-            singles = []
-            for k, r in enumerate(chunk):
-                sp = faux_dir / f"{path.stem}_s{k:02d}.jpg"
-                compose_faux(arr, [(-1, r["x0"], r["x1"], r["y0"], r["y1"])], sp, r["script"])
-                singles.append((sp, r))
-            subprocess.run([VENV_PY, str(DRIVE_HELPER), "--key", GOOGLE_KEY] + [str(p) for p, _ in singles],
-                           check=True, capture_output=True)
-            for sp, r in singles:
-                st = pathlib.Path(str(sp) + ".txt")
-                sl = parse_drive_lines(st.read_text(encoding="utf-8")) if st.exists() else []
-                r["text"] = " ".join(sl) if sl else None
+            texts = parse_tagged(txt_path.read_text(encoding="utf-8"), len(chunk)) if txt_path.exists() else [None] * len(chunk)
+            missing = [k for k, t in enumerate(texts) if t is None]
+            if missing:
+                print(f"  WARN {path.name}: {len(missing)}/{len(chunk)} tags missing -> retry page", flush=True)
+                retry_path = faux_dir / f"{path.stem}_retry.jpg"
+                compose_faux(arr, [(m, chunk[m]["x0"], chunk[m]["x1"], chunk[m]["y0"], chunk[m]["y1"]) for m in missing],
+                             retry_path, tag_start=1)
+                subprocess.run([VENV_PY, str(DRIVE_HELPER), "--key", GOOGLE_KEY, str(retry_path)],
+                               check=True, capture_output=True)
+                rt = pathlib.Path(str(retry_path) + ".txt")
+                rtexts = parse_tagged(rt.read_text(encoding="utf-8"), len(missing)) if rt.exists() else []
+                for m, t in zip(missing, rtexts):
+                    if t is not None:
+                        texts[m] = t
+            for r, t in zip(chunk, texts):
+                r["text"] = t
 
         by_line = {}
         for r in page_runs:

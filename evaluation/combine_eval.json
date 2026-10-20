@@ -1,0 +1,49 @@
+{
+  "pages": {
+    "p100": {
+      "scriptsepdrive": 0.0969,
+      "devruns": 0.77,
+      "hybrid": 0.1077,
+      "fill_empty": 0.0969,
+      "line_oracle": 0.0969,
+      "dev_line_wins": 0
+    },
+    "p200": {
+      "scriptsepdrive": 0.0315,
+      "devruns": 0.7135,
+      "hybrid": 0.0315,
+      "fill_empty": 0.0315,
+      "line_oracle": 0.0315,
+      "dev_line_wins": 0
+    },
+    "p400": {
+      "scriptsepdrive": 0.1188,
+      "devruns": 0.6861,
+      "hybrid": 0.1188,
+      "fill_empty": 0.1188,
+      "line_oracle": 0.1188,
+      "dev_line_wins": 0
+    }
+  },
+  "mean": {
+    "scriptsepdrive": 0.0824,
+    "devruns": 0.7232,
+    "hybrid": 0.086
+  },
+  "notes": "CER on page mini-GTs; hybrid = Drive text, replaced by devTam when Drive empty or contains Latin/markdown; line_oracle = per-line best of the two full-page systems; dev_line_wins = lines where devTam beats scriptSepDriveOCR.",
+  "script_conditional": {
+    "note": "devTam replaces Drive on one script's runs only; other script stays Drive",
+    "p100": {
+      "devruns_for_dev": 0.3934,
+      "devruns_for_tam": 0.4877
+    },
+    "p200": {
+      "devruns_for_dev": 0.6961,
+      "devruns_for_tam": 0.0578
+    },
+    "p400": {
+      "devruns_for_dev": 0.4231,
+      "devruns_for_tam": 0.3891
+    }
+  }
+}
