@@ -3,55 +3,76 @@
 This report evaluates OCR engines and page pipelines for **sArabodhinI vol. 01–02** — a
 manipravala print in which Tamil and Devanagari alternate *inside words and lines* (Tamil suffixes
 on Sanskrit stems, Devanagari commentary labels, quoted mUlam). Two test beds are used: a held-out
-**line** split of 534 crops from the same volumes, and **three real page excerpts** (25 GT lines)
-hand-transcribed from the PDFs.
+**line** split of 534 crops from the same volumes, and **five hand-verified block excerpts**
+(89 printed lines, 6,193 non-space GT characters) from `RTS_sb_01`. Every number below comes from
+those `RTS_sb_*` sets; the earlier `RTS_5c` pilot is archived and is not used for evaluation.
 
 Candidates: **Tesseract** (`tam+san`), **PaddleOCR PP-OCRv4** pretrained models (the engine behind
-the Indic-OCR/BytesByJay repo), **Google Drive** document OCR, **devTamCharsOCR** (our from-scratch line recognizer), and
+the Indic-OCR/BytesByJay repo), **Google Drive** document OCR, **devTamCharsOCR** (our from-scratch line recognizer),
 **scriptSepDriveOCR** (a script-run splitting page pipeline that reflows script-pure runs onto
-faux pages before OCR).
+faux pages before OCR), and **linewiseScriptSepDriveOCR** (the same pipeline with one faux page
+per printed line).
 
 **Bottom line**
 
-| approach | line CER (445-line set) | page CER (3 excerpts) | note |
+| approach | line CER (445-line set) | block CER (5 `RTS_sb_01` blocks) | note |
 |---|---|---|---|
-| Tesseract 5 `tam+san`, psm 7 | **0.476** | — | best zero-shot engine on line crops |
+| Tesseract 5 `tam+san`, psm 7 | **0.476** | 0.352 | best zero-shot engine on mixed lines |
+| Tesseract, local script-split (`san`/`tam` on script segments) | — | **0.226** | best local configuration; 0.296 with the same mixed model on the same segments |
 | PaddleOCR PP-OCRv4 `ta`/`deva` (rec, oracle route) | 0.71–0.73 | — | shipped "Indic-OCR" engine; not usable |
-| **devTamCharsOCR (v10)** (from scratch, train split only) | **0.292** | 0.351 | strongest line-crop model; degrades on pages fed whole |
-| Drive OCR on the whole text region | — | 0.26 (0.46 / 0.07) | erratic; output frequently unusable |
-| **scriptSepDriveOCR (v2)** | — | **0.082** (0.097 / 0.032 / 0.119) | best real-page output; 4× better than feeding lines whole |
+| **devTamCharsOCR (v10)** (from scratch, train split only) | **0.292** | 0.238 | strongest line-crop model; transfers to block lines |
+| devTamCharsOCR on script runs | — | 0.806 | isolated 1–4-akshara crops are outside its training regime |
+| devTamCharsOCR on script segments | — | 0.585 | script-pure input does **not** close the gap |
+| Drive OCR on the whole text block | — | 0.435 | erratic; output often reorders/drops lines |
+| **scriptSepDriveOCR (v2)** | — | **0.134** | best block output; 3.2× better than whole-block Drive |
+| linewiseScriptSepDriveOCR | — | 0.166 | per-line faux pages; worse than page-batched script runs on 4/5 blocks |
 
-Five findings dominate everything below: (1) **script purity inside a recognized unit is the
-single biggest factor** — every engine fails on mixed units; (2) pretrained PaddleOCR transfer is
-poor for this material; (3) devTamCharsOCR is the best single-line recognizer, but it is a
-line-crop model and loses accuracy on full page lines; (4) **scriptSepDriveOCR** (splitting page
-lines by script and assembling the page from script-pure runs) beats all alternatives on pages by
-~4×; (5) **combining the two systems does not reduce CER** (§4.6). The remaining blocker is
-throughput, not accuracy.
+Line and block CERs use different GT units and are **not comparable** (see §2.3). Six findings
+dominate everything below: (1) **script mixing is a major failure mode for pretrained engines** —
+Tesseract and PaddleOCR substitute or drop Devanagari in mixed units, and Paddle is clearly worse
+on mixed than on either pure bucket; (2) pretrained PaddleOCR transfer is poor for this material; (3) devTamCharsOCR is the best single-line
+recognizer and even improves slightly on block lines, but it collapses on the short fragments
+that faux pages require; (4) **scriptSepDriveOCR** (splitting block lines by script and
+assembling the block from script-pure runs) beats the best alternative by 1.7× in the block
+micro average (3.2× vs unsplit Drive), while per-line batching
+(linewiseScriptSepDriveOCR, 0.166) is worse on 4/5 blocks, so script runs should be
+batched per block/page, not per line; (5) the script-split gain **does hold for a local
+per-script recognizer** (Tesseract: 0.352 → 0.226), so it is not Drive-specific, although Drive
+keeps a 1.7× lead; (6) a **script-pure devTamCharsOCR input variant does not close the gap**
+(0.585 vs 0.238 whole-line), because the deficit is the short-fragment regime, not script mixing;
+combining the two systems does not reduce CER (§4.6). The remaining blocker is throughput, not
+accuracy.
 
 ---
 
 ## 1. Models and configuration
 
-Five systems are compared; they differ in their unit of recognition and in what they were trained on:
+Six systems are compared; they differ in their unit of recognition and in what they were trained on:
 
-* **Tesseract 5** — pretrained line OCR (`tam+san`); the zero-shot baseline.
+* **Tesseract 5** — pretrained line OCR (`tam+san`); the zero-shot baseline. Also used in a
+  script-split configuration: the same page segmentation as the pipeline, but each script-pure
+  run/segment is recognized with the matching `san` (Devanagari) or `tam` model.
 * **PaddleOCR PP-OCRv4** — pretrained recognizers for Tamil and Devanagari (`ta`, `devanagari`);
   the recognition engine shipped by the Indic-OCR repo.
-* **Google Drive OCR** — cloud document OCR, used on pages (whole text region or composed faux
-  pages), not as a line model.
+* **Google Drive OCR** — cloud document OCR, used on blocks/pages (whole text region or composed
+  faux pages), not as a line model.
 * **devTamCharsOCR** — our from-scratch line recognizer (kraken-VGSL spec) trained on 16.5k
   Devanagari/Tamil line crops from these volumes; outputs one line of text per line crop.
-* **scriptSepDriveOCR** — a page-level pipeline: classifies script at word/run level, reflows
-  script-pure runs onto faux pages, OCRs those with Google Drive, and reassembles the page.
+* **scriptSepDriveOCR** — a block/page-level pipeline: classifies script at word/run level,
+  reflows script-pure runs onto faux pages, OCRs those with Google Drive, and reassembles the page.
+* **linewiseScriptSepDriveOCR** — the same pipeline with line-wise batching: line segmentation →
+  script separation within each line → one faux page per printed line → Drive OCR. It isolates
+  the effect of the OCR batching unit from the script separation itself (§4.4).
 
 | engine | version / model | how it was run |
 |---|---|---|
-| Tesseract | 5.x, `tam+san` traineddata | psm 7 on line crops; psm 6 where used on page bands |
+| Tesseract | 5.x, `tam+san`, `san`, `tam` traineddata | psm 7 on line/run/segment crops |
 | PaddleOCR | 2.7.3 / 2.6.2 (CPU, 6 threads) | PP-OCRv4 `ta` and `devanagari` recognizers, PP-OCRv3 multilingual detector; `rec` (line crops) and `det+rec` (`.ocr(img, cls=True)`) |
-| Google Drive OCR | cloud document OCR (OAuth client) | whole text region, and per-script faux pages (`drive_ocr_images.py`) |
-| devTamCharsOCR | kraken-VGSL spec, torch replica, v10/v13 | CTC greedy decode on line crops (§6) |
-| scriptSepDriveOCR | script classifier + faux pages + Drive OCR | full page, 300 dpi (§4.3) |
+| Google Drive OCR | cloud document OCR (OAuth client) | whole text block, and per-script faux pages (`drive_ocr_images.py`) |
+| devTamCharsOCR | kraken-VGSL spec, torch replica, v10/v13 | CTC greedy decode on line/run/segment crops (§6) |
+| scriptSepDriveOCR | script classifier + faux pages + Drive OCR | block/page, 150 dpi crop upscaled 2×; 20 runs per faux page |
+| linewiseScriptSepDriveOCR | script classifier + per-line faux pages + Drive OCR | one faux page per printed line (`--linewise`) |
+| script classifier | 48×48 patch CNN, 4 classes | val acc 0.937 (dev 0.951 / tam 0.938 / other 0.417 / null 0.975) |
 
 ### 1.1 The PaddleOCR candidate (the Indic-OCR repo)
 
@@ -88,35 +109,50 @@ python3 training/scripts/indic-ocr/compare_with_baseline.py
 
 ### 2.1 Line set
 
-* 534 single-line crops from vol. 01–02, auto-aligned GT.
+* 534 single-line crops from `RTS_sb_01`/`RTS_sb_02`, auto-aligned GT.
 * 89 lines carry broken alignment targets (tiny slivers with 1000+ char references, discovered
   while building the line data). They are excluded from the fair comparison; the resulting
   **445 CTC-feasible lines** are used for all engine numbers. Both figures are reported (§3.2).
-* Composition of the feasible set: 55 Devanagari-dominant, 343 mixed (Tamil+Devanagari),
-  47 Tamil-dominant lines.
+* Composition of the feasible set: 34 Devanagari-only, 394 mixed (Tamil+Devanagari),
+  17 Tamil-only lines (raw-script classification; §3.3).
 
-### 2.2 Page set
+### 2.2 Block set (`RTS_sb_01`)
 
-Hand-transcribed excerpts (2× zoomed line crops; corpus cross-checks where the printed text
-matches an e-text). GT and all stored predictions live in `evaluation/page_gt/`.
+Five verified text blocks from the first volume. The images are 150 dpi crops of the relevant
+text region (headers and rules excluded), upscaled 2× with LANCZOS before the pipeline, i.e.
+approximately the 300 dpi scale used in production.
 
-| page | lines | chars | content |
+| block | printed lines | non-space GT chars | content |
 |---|---|---|---|
-| PDF1 p100 | 11 | 746 | mUlam opening + `(सा.दी.)` / `(सा.स्वा.)` commentary |
-| PDF2 p200 | 9 | 812 | mUlam + `(सा.प्र.)` commentary |
-| PDF3 p400 | 5 | 409 | `चरमश्लोकाधिकारः` commentary (Tamil clusters partly uncertain) |
+| `comm/p0042` | 30 | 1,853 | Tamil commentary with Sanskrit quotations |
+| `core/p0043` | 2 | 90 | two-line Devanagari mUlam verse with Tamil frame |
+| `comm/p0043` | 28 | 2,132 | dense Tamil commentary with Sanskrit sUtras |
+| `core/p0044` | 6 | 385 | Devanagari/Tamil mUlam passage |
+| `comm/p0044` | 23 | 1,733 | Tamil commentary with Sanskrit quotations |
+
+Total: **89 printed lines, 6,193 non-space GT characters**. The five blocks are the first five
+verified rows of `evaluation/eval_index.jsonl` / `evaluation/split_eval.jsonl`. Their GT is contiguous block
+text, **not aligned to the printed lines**, so all block scoring is whitespace-stripped
+character CER over the whole block.
+
+The earlier `RTS_5c_*` volumes and their pilot predictions were moved to `data/RTS_5c/` and
+`evaluation/RTS_5c/`; they are kept for reference only.
 
 ### 2.3 Metrics and conventions
 
-* CER/WER via `jiwer`, on raw and whitespace-stripped text, identical across all engines
-  (`training/scripts/script_cls/eval_lines.py`; per-line dumps under `evaluation/`).
+* **Line-level:** CER/WER via `jiwer`, on raw and whitespace-stripped text, identical across all
+  engines (`training/scripts/script_cls/eval_lines.py`; per-line dumps under `evaluation/`).
+* **Block-level:** whitespace-stripped character CER via
+  `rapidfuzz.distance.Levenshtein.distance / len(GT without spaces)`, micro-averaged over blocks
+  (i.e. summed edit distance / summed GT characters). Line breaks in the GT are ignored.
 * **Oracle script routing:** where an engine must choose a script-specific model, we report
   `best-of` = per-line minimum-CER pick. This is an upper bound for any automatic router (mixed
   lines are unrouteable in principle anyway).
-* Page-level and line-level CERs are **not directly comparable**: page excerpts include headers,
-  item numbers, and line-break artifacts, and their GT is smaller and less certain (see §8).
-* Tesseract is run in line mode (psm 7); PaddleOCR in `rec` and `det+rec` modes; Drive OCR on
-  page-sized regions and on composed faux pages.
+* Line-level and block-level CERs are **not directly comparable**: the units, GT lengths and
+  error weighting differ (line GT is per printed line; block GT is a contiguous passage). Compare
+  systems only within the same table.
+* Tesseract is run in psm 7 on line crops and on script runs/segments; PaddleOCR in `rec` and
+  `det+rec` modes; Drive OCR on whole blocks and on composed faux pages.
 
 ## 3. Line-level results
 
@@ -146,143 +182,285 @@ The 89 broken lines have huge references and dominate character-weighted CER; th
 pipeline "wins" there only by emitting nothing on slivers, capping their per-line CER at 1.0
 instead of >1.0.
 
-### 3.3 By GT script composition (feasible subset)
+### 3.3 By GT script composition (feasible subset, raw CER)
 
-| script | n | Tesseract | Paddle rec `ta` | Paddle rec best (oracle) |
+| script | n | Tesseract | Paddle rec best (oracle) | devTamCharsOCR |
 |---|---|---|---|---|
-| devanagari-dominant | 55 | **0.485** | 0.942 | 0.731 |
-| mixed (Tamil+Devanagari) | 343 | **0.492** | 0.752 | 0.750 |
-| tamil-dominant | 47 | **0.312** | 0.573 | 0.570 |
+| Devanagari-only | 34 | 0.493 | 0.688 | 0.408 |
+| mixed (Tamil+Devanagari) | 394 | 0.478 | 0.740 | **0.285** |
+| Tamil-only | 17 | 0.336 | 0.538 | 0.300 |
 
 Oracle picks (all 534): rec `ta` 455 / `hi` 79; det+rec `ta` 390 / `hi` 144. **PaddleOCR never
-beats Tesseract in any script bucket.**
+beats Tesseract in any script bucket.** The crucial row is devTamCharsOCR: its mixed lines are
+*slightly easier* than its pure-script lines, so it does not suffer from script mixing — unlike
+the pretrained engines. Tesseract's pure-Devanagari bucket is no easier than its mixed bucket
+(0.493 vs 0.478), so line-level composition alone does not predict the block-level split gain;
+the block experiment (§4) is the controlled test.
 
 ### 3.4 Qualitative failure modes
 
-| line (GT) | PaddleOCR best | Tesseract |
-|---|---|---|
-| தன்பற்றில் - தானே தன் **संबन्ध**த்தை உண்டாக்குகையில். … | `Id Miog, ' ounைoூs1g- Go$h- ms ng - gudr?` | தன்பற்றில் - தானே தன் **84**த்தை உண்டாக்குகையில். … |
-| **सङ्ग्रहोक्ति.** தகவோக்கத்தில் - **कृपाधिक्य**த்தில். இது 'அருள் | `னானஎன்பதினிப்uொிர.தகேவாக்கத்தில்-துரித்தில.இதரஅஞளர்` | னான்” என்பதின் **संग्रहोक्ति**. தகவோக்கத்தில் - **ஊரிண**த்தில். இது “அருள் |
-| பாட்டில் சொன்ன இன்பம் முதலான … (Tamil only) | `பாட்டல்ெசானனஇன்பம்ழதலான…` (CER 0.27, spaces lost) | — |
+Line-level examples from the eval split (outputs verbatim; CER in parentheses; links are the
+actual crops). `linewiseScriptSepDriveOCR` is included for each line; `scriptSepDriveOCR` is not
+defined for a single isolated line (it needs a block of runs).
 
-* **Mixed-script lines defeat both models.** The `ta` model renders Devanagari as Latin garbage
-  (`संबन्ध` → `Go$h-`) and vice versa (`hi` outputs digits/Latin for Tamil). 343/445 feasible
-  lines are mixed — this is the dominant error source everywhere.
-* **Even same-script text loses spacing** and confuses similar ligatures (`சொன்ன` → `ெசானன`).
-* The Devanagari model (`hi`, trained on Hindi) is weakest: 0.91 CER alone.
+* **Mixed line `01_p0042_comm_L00`** ([crop](examples/01_p0042_comm_L00.png); Tesseract 0.236,
+  devTamCharsOCR 0.036, linewise 0.109)
+  * GT: `தன்பற்றில் - தானே தன் संबन्धத்தை உண்டாக்குகையில். இது, 'நின்று`
+  * Tesseract: `தன்பற்றில்‌ - தானே தன்‌ த்தை உண்டாக்குகையில்‌. இது, “நின்று தன்‌` — the Sanskrit word is replaced by a Tamil fragment and a tail is hallucinated.
+  * PaddleOCR: `Is Mnu, To qunoூsumos Goghk mo mau -ougnms` — Devanagari rendered as Latin garbage, word boundaries lost.
+  * devTamCharsOCR: `தன்பற்றில் - தானே தன் संबन्धத்தை உண்டாக்குகையில். இது, நின்று த` — right script and words; only the apostrophe is missing and a `த` is added at the end.
+  * linewiseScriptSepDriveOCR: `தன்பற்றில் தானே தன் संबन्धத்தை உண்டாக்குகையில் இது, “நின்று தன்` — close, but drops the hyphen and the comma spacing.
+* **Mixed line `01_p0042_comm_L03`** ([crop](examples/01_p0042_comm_L03.png); Tesseract 0.538,
+  devTamCharsOCR 0.346, linewise 0.327)
+  * GT: `सङ्ग्रहोक्ति. தகவோக்கத்தில் - कृपाधिक्यத்தில். இது 'அருள்`
+  * Tesseract: `னான்‌” என்பதின்‌ 898, தகவோக்கத்தில்‌ - कृपाधिक्यं). இது “அருள்‌` — re-routes the line start and substitutes `सङ्ग्रहोक्ति` with digits.
+  * devTamCharsOCR: `னான் என்பதின் संग्रहोक्ति, தகவோக்கத்தில் - कपाधिक्यத்தில். இது "ருள்` — prepends `னான் என்பதின்` from the previous line, misreads `कृपा` as `कपा`, and clips the final `அ`.
+  * linewiseScriptSepDriveOCR: `னான் என்பதின் संग्रहोक्ति. தகவோக்கத்தில் कृपाधिक्यத்தில். இது 66அருள்` — nearly right, but leaks the tag digits `66` into the text.
+* **Tamil-only line `01_p0042_comm_L12`** ([crop](examples/01_p0042_comm_L12.png); Tesseract
+  0.052, devTamCharsOCR 0.034, linewise 0.034)
+  * GT: `பாட்டில் சொன்ன இன்பம் முதலான பத்து உபகாரங்களையும் செய்வதற்காகவே.`
+  * Tesseract: `பாட்டில்‌ சொன்ன இன்பம்‌ முதலான பத்து உபகாரங்களையும்‌ செய்வதற்காகவே.` — essentially exact.
+  * PaddleOCR: `பாட்டலெசான்னஇன்பம்ழதலானபத்தஉபகாரங்கைளயமெசய்வதற்காகேவ.` — all word spaces lost, ligatures corrupted (`சொன்ன`→`ெசானன`).
+  * devTamCharsOCR: `ாட்டில் சொன்ன இன்பம் முதலான பத்து உகாரங்களையும் செய்வதற்காகவே.` — near-exact; drops the leading `ப` and one `ப` inside `உபகார`.
+  * devTamCharsOCR on the script segments: exact (CER 0.000) — splitting a pure line does not hurt this example.
+  * linewiseScriptSepDriveOCR: `பாட்டில் சொன்ன இன்பம் முதலான பத்து உபகாரங்களையு5. ம் செய்வதற்காகவே.` — leaks `5.` into the last word.
+* **Mixed line `01_p0042_comm_L24`** ([crop](examples/01_p0042_comm_L24.png); Tesseract 0.463,
+  devTamCharsOCR 0.019, linewise 0.185)
+  * GT: `उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே - अनादिயான`
+  * Tesseract: `தாலும்‌, எண்யாலும்‌, மாகக்‌ காண்பிக்கும்‌. தொல்வழியே - யான` — drops the Devanagari words.
+  * devTamCharsOCR: `उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே - अनादिயன` — near-perfect (one vowel sign).
+  * linewiseScriptSepDriveOCR: `தாலும், उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே अनादिuபான` — duplicates/mangles the line start and leaks `u`.
+* **Devanagari-only line `01_p0043_core_L00`** ([crop](examples/01_p0043_core_L00.png);
+  Tesseract 0.232, devTamCharsOCR 0.130, linewise 0.188)
+  * GT: `क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्`
+  * Tesseract: `“पापिष्ठः क्षनबन्धुर्च पुण्डरीकरच पुण्यकृत्‌ । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्‌` — prepends a word from the previous printed line and confuses `श`/`र`.
+  * devTamCharsOCR: `िष्टः्षबन्धशच पुण्डरीकशच पुण्यकृत् । आचार्यवत्तया मुक्तो तस्मादाचार्यवान्` — loses the line start and `मुक्तौ`→`मुक्तो`.
+  * linewiseScriptSepDriveOCR: ` "पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यवृhd आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` — most words right, but `पुण्यकृत्`→`पुण्यवृhd` and the inherited `"पापिष्ठः`.
+* **Dense mixed line `01_p0043_comm_L05`** ([crop](examples/01_p0043_comm_L05.png); Tesseract
+  0.353, devTamCharsOCR 0.147, linewise 0.191)
+  * GT: `अतिशयित-पापமுள்ளவனான. क्षत्रबन्धुश्च - இந்த चकारம் आचार्यवत्तै இருந்தாலும்`
+  * Tesseract: `எ19-ராமுள்ளவனான. कषत्रबन्धुङ्च- இந்த चकारा आचार्यवत्ते இருந்தாலும்‌ पापिष्ठ-` — substitutes the first word and appends the next line's text.
+  * devTamCharsOCR: `ितपापமுள்ளவனான. क्ष्बन्धुश्च இந்த चकारம் आचार्यवत्तै இருந்தாலும் ்` — drops line-start chars, but keeps the script mixture.
+  * linewiseScriptSepDriveOCR: `शयित - पापமுள்ளவனான. क्षत्रबन्धुश्च- இந்த चकार:9 आचार्यवत्तै இருந்தாலும் पापिष्ठ-` — good core, but leaks `:9` and inherits the next line.
+* **Mixed prose line `01_p0044_core_L01`** ([crop](examples/01_p0044_core_L01.png); Tesseract
+  0.526, devTamCharsOCR 0.053, linewise 0.035)
+  * GT: `आचार्यवंशம் भगवाனளவுஞ்செல்ல अनुसन्धिக்கவேணுமென்றோதப்பட்டது.`
+  * Tesseract: `आचार्य-वंशा *ளனளவுஞ்செல்ல अनुसन्यि 4०/69/0102 079 01८ 10 ८ ॐ.` — the Tamil half collapses into digits/symbols.
+  * devTamCharsOCR: `आचार्यंश் भगवाனளவுஞ்செல்ல अनुसन्धिக்கவேணுமென்றுதப்பட்டது.` — near-exact; `वंशம்` and `ஓ` differ.
+  * linewiseScriptSepDriveOCR: `आचार्य - वंश,ம் भगवाனளவுஞ்செல்ல अनुसन्धिக்கவேணுமென்றோதப்பட்டது.` — inserts punctuation but keeps the words.
+
+Failure modes:
+
+* **Mixed-script lines defeat the pretrained engines.** PaddleOCR's `ta` model renders Devanagari
+  as Latin garbage (`Goghk` for `संबन्ध`) and its `hi` model does the reverse; 394/445 feasible lines
+  are mixed. Tesseract degrades more gracefully but silently substitutes, drops or duplicates
+  Devanagari words.
+* **devTamCharsOCR is strongest on natural lines, including mixed ones.** Its remaining errors are
+  edge clipping, quote/punctuation, and occasional vowel-sign/word errors on Devanagari-only
+  lines — not script confusion.
+* **Isolated fragments are a different domain.** On script runs devTamCharsOCR emits nothing for
+  27% of runs and scores 0.806; even on larger script segments it scores 0.585 (§4).
+* **linewiseScriptSepDriveOCR leaks tags/escapes.** Per-line faux pages have few runs and smaller
+  text, so Drive misreads some `#TNN` tags as text (`66`, `:9`, `Sh`, `u`, `hd`), and the
+  per-line pages sometimes lose the trailing/leading space. This is a visible part of its
+  residual error (0.166 vs 0.134 for page-batched script separation).
+* **Same-script lines are easy for Tesseract and devTamCharsOCR**, but PaddleOCR still loses word
+  spaces and confuses similar Tamil ligatures.
+* The Devanagari PaddleOCR model (`hi`, trained on Hindi) is the weakest: 0.91 CER alone.
 
 ### 3.5 Takeaways
 
 * On clean line crops, devTamCharsOCR is **1.6× better than Tesseract** and **2.5× better than
   PaddleOCR**; Tesseract remains the best zero-shot engine.
-* Character error is dominated by *script mixing*, not by individual glyph shapes: models trained
-  on pure-script data are reliable, mixed lines are where they break.
-* Line-level accuracy does not transfer to page lines: devTamCharsOCR scores 0.29 on crops but
-  0.35 on page lines fed whole (§4.4).
+* Script mixing is a major error source for the pretrained engines (especially PaddleOCR), but
+  **not for devTamCharsOCR** (pure-script lines are not easier for it). This distinction decides
+  §4.5.
+* devTamCharsOCR transfers to block lines on its home regime (0.238 block CER vs 0.292 line CER),
+  but it collapses when the same model is applied to the short runs/segments that faux pages
+  need (0.806/0.585). That is a training-domain gap, not a script gap.
 
-## 4. Page-level evaluation
+## 4. Block-level evaluation
 
-### 4.1 Why real pages are harder
+### 4.1 Why block lines are harder
 
-Printed pages mix scripts not only between lines but *inside* a line: a Devanagari mUlam quote
+Printed blocks mix scripts not only between lines but *inside* a line: a Devanagari mUlam quote
 with Tamil commentary labels, Tamil verbal suffixes on Sanskrit stems, parentheses and item
 numbers. Whole-line engines (ours included) then apply a model trained on predominantly pure
-script to a unit containing both scripts; whole-page OCR engines reorder, drop or garble lines.
+script to a unit containing both scripts; whole-block OCR engines reorder, drop or garble lines.
+The five `RTS_sb_01` blocks contain 89 printed lines, 898 classified runs and 593 script
+segments.
 
-### 4.2 Line segmentation audit (`training/scripts/script_cls/audit_lines.py`)
+### 4.2 Line segmentation audit
 
-Before trusting the pipeline we audited `apply_ocr_pdf.segment_lines` on four pages (PDF1 p50,
-p100; PDF2 p200; PDF3 p400):
+Before trusting the pipeline we audited `segment_lines` on the five upscaled block images
+(`training/scripts/script_cls/audit_lines.py`, `audit_page` applied to the block crops):
 
-* All Tesseract word-box centers fall inside their segment (35/35, 28/28, 25/25, 31/31); no
-  lines are merged or split.
-* Ink coverage 84–92%. The only missed ink is full-width section rules (p100: ~56k px of rules
-  plus ~1.2k px of stray marks; on p50 *all* missed ink is rules).
-* Fully-contained box counts are lower only where Tesseract boxes straddle the ±2 px crop edge
-  (p100: 21/35), which occasionally clips descenders but loses no line content.
-
-Line segmentation is not a bottleneck; the rest of this section uses it as-is.
+* All Tesseract word-boxes fall inside their segment (30/30, 2/2, 28/28, 6/6, 23/23); no lines
+  are merged or split.
+* Ink coverage is **99.996%** on every block (missed ink 2–33 px per block, i.e. isolated specks).
+* The two-column heuristic flagged two segments in `comm/p0043` and one in `comm/p0044`; these
+  are wide inter-word gaps in dense commentary, not column layouts (the volume is single-column).
+* The audit is not a bottleneck; the rest of this section uses line segmentation as-is.
 
 ### 4.3 Script-run splitting pipeline (`training/scripts/script_cls/pipeline.py`)
 
 Inspired by `doc_curation.pdf.drive_ocr.split_and_ocr_all` (which boxes lines by script before
 OCR), the pipeline boxes *runs* and assembles the page from script-pure pieces:
 
-1. Render PDF page at 300 dpi; segment lines (above).
-2. Word segmentation by horizontal ink projection (gap ≥ 10 px).
-3. Sliding 48×48 patch classifier, stride 8; per-patch labels `dev/tam/other/null`; a run keeps
+1. Load the block image; upscale 2× so a 150 dpi crop is at approximately 300 dpi.
+2. Segment lines (above).
+3. Word segmentation by horizontal ink projection (gap ≥ 10 px).
+4. Sliding 48×48 patch classifier, stride 8; per-patch labels `dev/tam/other/null`; a run keeps
    a patch's label only above 0.45 confidence (else `null`).
-4. Merge patches into runs; drop runs < 20 px wide; split words at script transitions.
-5. Compose one faux page per script: each run is a line, scaled to 90 px height (≥0.6), 130 px
+5. Merge patches into runs; drop runs < 20 px wide; split words at script transitions.
+6. Compose one faux page per script: each run is a line, scaled to 90 px height (≥0.6), 130 px
    vertical gap, width cap 1780 px, JPEG q92; 20 runs per faux page.
-6. OCR each faux page with Google Drive. Every run carries a printed `#TNN` tag to its left; the
+7. OCR each faux page with Google Drive. Every run carries a printed `#TNN` tag to its left; the
    parser maps tags → runs, so dropped or merged OCR lines cannot shift the page. Continuation
    lines bind to the previous tag; markdown escapes and trailing base64 image blobs are stripped.
-7. Missing tags trigger one retry of the affected chunk (no per-run fallback); runs that remain
-   unreadable are left empty. Reassemble the page with per-run `pre_space` from the patch map.
+8. Missing tags trigger one retry of the affected chunk (no per-run fallback); runs that remain
+   unreadable are left empty. Reassemble the block with per-run `pre_space` from the patch map.
 
-The tag scheme (v2) replaced the pilot's positional mapping and cut the 299-run p100 page from
-~40 min to ~4 minutes of Drive calls.
+In the five-block + seven-example run, 148 faux pages were composed and 74 of the 222 Drive
+pages (33%) needed a retry for missing tags. After retries, 26/898 runs (2.9%) remain empty. 43/898 runs (4.8%)
+contain a Latin character, mostly leaked tag/escape characters.
 
 **Script classifier:** synthetic 48×48 patches rendered from `data/texts/{core,commentary}` with
 the Devanagari/Tamil font sets (plus noise/blank for `other`/`null`), small CNN, CPU ~25 min.
 Validation accuracy **0.937** (dev 0.951 / tam 0.938 / other 0.417 / null 0.975). The weak
 `other` class is harmless in practice: only high-confidence dev/tam runs are batched, and the
-page overlay (`/tmp/opencode/scriptcls_run/overlay/p0100.jpg` during the pilot) shows boxes
-tracking script boundaries even inside words (`राजा|வுக்கும்`, `प्रियत|மங்களையும்`, `नाय|ं|देवो`).
+run boxes track script boundaries even inside words (`राजा|வுக்கும்`, `प्रियत|மங்களையும்`,
+`नाय|ं|देवो`).
+
+`linewiseScriptSepDriveOCR` uses the same steps but composes one faux page per printed line
+(`--linewise`), i.e. no cross-line batching.
 
 ### 4.4 Results
 
-| system | CER p100 | CER p200 | CER p400 | mean CER | mean WER |
-|---|---|---|---|---|---|
-| **script runs + faux pages + Drive OCR (v2)** | **0.0969** | **0.0315** | **0.1188** | **0.082** | 0.396 |
-| devTamCharsOCR (page lines fed whole) | 0.3475 | 0.3517 | 0.3543 | 0.351 | 0.805 |
-| Drive OCR on the whole text region (no split) | 0.4564 | 0.0674 | — | 0.262* | 0.599* |
+Whitespace-stripped CER per block; micro is over all five blocks (6,193 GT chars).
 
-\* two pages only. (The positional pilot scored 0.0944 on p100; the tag version's 0.0969 is
-within GT/parse noise.) scriptSepDriveOCR beats devTamCharsOCR by ~4× and the unsplit Drive
-baseline on every page. Whole-page Drive OCR is qualitatively unusable (garbled,
-reordered, base64 blobs), and Tesseract on such lines is worse still (§3).
+| system | comm p0042 | core p0043 | comm p0043 | core p0044 | comm p0044 | **micro** |
+|---|---|---|---|---|---|---|
+| **scriptSepDriveOCR (v2)** | 0.074 | 0.078 | 0.270 | **0.031** | **0.057** | **0.134** |
+| linewiseScriptSepDriveOCR | 0.120 | **0.056** | 0.280 | 0.070 | 0.101 | 0.166 |
+| Tesseract on whole lines (`tam+san`) | 0.241 | 0.133 | 0.445 | 0.377 | 0.362 | 0.352 |
+| Tesseract on script runs (per-script models) | 0.159 | 0.222 | 0.420 | 0.140 | 0.154 | 0.247 |
+| **Tesseract on script segments (per-script models)** | 0.144 | 0.089 | 0.390 | 0.138 | 0.139 | **0.226** |
+| Tesseract on script segments (mixed `tam+san` model, control) | 0.161 | 0.100 | 0.476 | 0.273 | 0.234 | 0.296 |
+| devTamCharsOCR on whole lines | 0.103 | 0.233 | 0.443 | 0.200 | 0.140 | 0.238 |
+| devTamCharsOCR on script runs | 0.812 | 0.789 | 0.863 | 0.681 | 0.757 | 0.806 |
+| devTamCharsOCR on script segments | 0.441 | 0.267 | 0.761 | 0.449 | 0.568 | 0.585 |
+| Drive OCR on the whole block (no split) | 0.277 | 0.222 | 0.551 | 0.540 | 0.450 | 0.435 |
 
-### 4.5 Residual errors
+scriptSepDriveOCR beats every alternative in the micro average and 4/5 individual blocks (on the
+tiny 2-line `core/p0043`, linewise wins 0.056 vs 0.078, but it has only two lines, so per-line
+batching has almost no overhead). The split is worth **3.2×** against unsplit Drive (0.435),
+**1.8×** against the best devTamCharsOCR configuration (0.238), and **1.7×** against the best
+local script-split Tesseract configuration (0.226). The unsplit Drive output is erratic: 0.031 on
+`core/p0044` but 0.551 on `comm/p0043`, where dense Tamil commentary makes it reorder and drop
+lines. linewiseScriptSepDriveOCR is usually a little worse than page-batched separation
+(0.166 vs 0.134 micro), and worse on 4/5 blocks.
 
-Errors are mostly *assembly/recognition* artifacts: stray markdown (`|`, `\*`, `\.`), a dropped
-closing paren, missing word spaces where the printed gap is < 10 px, and Tamil vowel-sign/matra
-confusions (`नैर्भर्य` for `नैश्शर्य`, `प्रदर्शिபா` for `प्रदर्शिया`, `कृषनै`). The p400 loss is
-dominated by dense Tamil commentary and 300 dpi glyph ambiguity, not by the script split; its GT
-also carries a few uncertain Tamil clusters.
+The most important pattern in the table is the **opposite response to splitting**:
+
+* Tesseract improves monotonically as units get more script-pure and better sized:
+  whole lines 0.352 → runs 0.247 → segments 0.226.
+* devTamCharsOCR collapses on fragments: whole lines 0.238, runs 0.806, segments 0.585.
+
+Both are "local" models; the difference is their training regime. Tesseract's per-script models
+were trained on exactly the kind of short, script-pure crop that a faux page contains, while
+devTamCharsOCR was trained on complete printed lines. §4.5 isolates how much of the Tesseract
+gain comes from segmentation versus per-script routing.
+
+### 4.5 Answering the two open questions
+
+**Q1 — does the script-split gain hold for a local per-script recognizer, or is it Drive-specific?**
+
+It holds, but Drive still wins. Using the pipeline's own segmentation and a local Tesseract
+(`training/scripts/script_cls/control_seg.py` reproduces the mixed-model control):
+
+| configuration | micro CER |
+|---|---|
+| whole lines, mixed `tam+san` model | 0.352 |
+| script segments, mixed `tam+san` model (segmentation control) | 0.296 |
+| script segments, per-script `san`/`tam` models | **0.226** |
+
+So segmentation alone (shorter units, no cross-script model confusion) recovers 0.056 CER, and
+per-script model routing recovers another 0.070. The per-script split improves **all five
+blocks** (0.241→0.144, 0.133→0.089, 0.445→0.390, 0.377→0.138, 0.362→0.139). This is a genuine
+local per-script gain, not a Drive artefact. But the best local configuration (0.226) is still
+1.7× worse than Drive on the same blocks (0.134), and one block (`comm/p0043`, 0.390) remains
+far from usable. Drive's advantage is recognition quality on the fragments, not the script split.
+
+**Q2 — can a script-pure variant of devTamCharsOCR close the gap on faux pages?**
+
+Not as an input variant, and the evidence argues against a per-script retrain as the next step.
+Applied to script-pure segments, devTamCharsOCR scores **0.585**, much worse than the same model
+on whole lines (**0.238**) and 4.4× worse than Drive on the same blocks (**0.134**). On natural
+pure-script lines the model is not better either: 0.408 on Devanagari-only and 0.300 on
+Tamil-only lines versus **0.285** on mixed lines (§3.3). Script purity is therefore not what
+devTamCharsOCR lacks.
+
+What it lacks is the **short-fragment regime**:
+
+* 27% of script runs get an empty devTamCharsOCR output; short 1–4-akshara crops are outside the
+  line-crop training distribution.
+* Segment crops are larger and improve to 0.585, but still lose the full-line context the model
+  was trained on (and Drive gets 0.134 on the same blocks).
+* A script-pure *model* trained on the same line-crop distribution would inherit the same
+  short-fragment weakness. Closing the gap requires training on faux-page-style fragments (or
+  fine-tuning a pretrained recognizer such as PP-OCRv4), not merely restricting training data to
+  one script.
 
 ### 4.6 Combining devTamCharsOCR with scriptSepDriveOCR (negative result)
 
-The two page systems fail differently, so we tested whether mixing them lowers CER. All variants
-reuse the same run segmentation and page assembly and differ only in the per-run text source
-(`training/scripts/script_cls/combine_eval.py`; per-run texts in
-`evaluation/page_gt/combine_runs_*.jsonl`).
+The two systems fail differently, so we tested whether mixing them lowers CER. All variants
+reuse the same run segmentation and block assembly and differ only in the per-run text source
+(`training/scripts/script_cls/combine_sb.py`; per-run texts in
+`evaluation/sb_eval/runs_*.jsonl`; scores in `evaluation/sb_eval/combine.json`).
 
-| variant | CER p100 | CER p200 | CER p400 | mean |
-|---|---|---|---|---|
-| **scriptSepDriveOCR (baseline)** | **0.0969** | **0.0315** | **0.1188** | **0.082** |
-| devTamCharsOCR on script-pure runs | 0.7700 | 0.7135 | 0.6861 | 0.723 |
-| run-level hybrid (devTam if Drive empty/suspicious) | 0.1077 | 0.0315 | 0.1188 | 0.086 |
-| devTam fills only empty Drive runs | 0.0969 | 0.0315 | 0.1188 | 0.082 |
-| per-line oracle selection (upper bound) | 0.0969 | 0.0315 | 0.1188 | 0.082 |
+| variant | micro CER |
+|---|---|
+| **scriptSepDriveOCR (baseline)** | **0.134** |
+| devTamCharsOCR on script runs (all runs) | 0.806 |
+| devTam replaces Drive only for Devanagari runs | 0.414 |
+| devTam replaces Drive only for Tamil runs | 0.463 |
+| devTam fills only empty Drive runs | 0.135 |
+| run-level hybrid (devTam if Drive text is empty or suspicious) | 0.136 |
 
-* **devTamCharsOCR does not transfer to isolated runs.** It is a full-line model; on tight 1–4
-  akshara crops it loses context and decodes at CER ≈ 0.69–0.77, so it cannot be the backend for
-  faux pages as-is.
-* **Hybrid/repair rules do not help.** Filling empty Drive runs with devTam changes nothing (those
-  runs are sub-glyph stubs unreadable by both). The suspicious-text rule even hurt p100
-  (0.108 vs 0.097): two lines that looked broken in Drive were still better than devTam's.
-* **Script-conditional mixes are worse too.** Using devTam for only one script's runs (Drive for
-  the rest) gives CER 0.39/0.70/0.42 when Devanagari runs come from devTam and 0.49/0.06/0.39 when
-  Tamil runs do (p100/p200/p400).
-* **There is no complementarity at line granularity.** A per-line oracle that may pick either
-  system selects scriptSepDriveOCR on all 25 GT lines (`dev_line_wins = 0` everywhere).
+* **devTamCharsOCR does not transfer to isolated runs.** It is a full-line model; on tight
+  1–4-akshara crops it loses context, emits nothing for 27% of runs, and decodes at CER 0.68–0.86
+  depending on the block.
+* **Repair rules do not help.** Filling empty Drive runs with devTam changes the micro CER from
+  0.1342 to 0.1345 (the empty runs are sub-glyph stubs that neither engine can read).
+* **The suspicious-text hybrid hurts slightly** (0.136): runs whose Drive text contains a Latin
+  character are not reliably better when replaced by devTam.
+* **Script-conditional mixes are much worse** (0.414 when devTam handles only Devanagari runs,
+  0.463 when only Tamil runs), because the run-level devTam texts dominate the error.
+* **There is no complementarity at these units.** Because block GT is not line-aligned, we did
+  not compute a per-line oracle; the run-level results are already decisive.
 
-Combining the current two systems therefore does **not** reduce CER. The productive combination is
-to put the recognizer into the same regime as Drive — train/fine-tune a script-pure run recognizer
-and use it as the local backend (removing the Drive dependency) — rather than mixing a full-line
-model with run-level inputs.
+Combining the current two systems therefore does **not** reduce CER. The productive combination
+is to train a recognizer in the same regime as Drive — faux-page fragments — rather than mixing
+a full-line model with run-level inputs.
+
+### 4.7 Qualitative block example
+
+`core/p0043` ([block image](../data/RTS_sb_01/images/core/p0043.jpg), 2 lines, 90 GT chars;
+CERs: devTamCharsOCR 0.233, Tesseract segments 0.089, scriptSepDriveOCR 0.078,
+linewise 0.056):
+
+* GT: `"पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान् भवेत् ॥" என்று`
+* devTamCharsOCR (whole lines): `पापटः्षवन्धुच पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तो तस्मादाचार्यवान्` / `ன்று` — loses the opening quote, the first two words and the final `भवेत् ॥"`.
+* Tesseract (script segments): `"पापिष्ठः क्षत्रबन्धुरुच पुण्डरीकङच पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` / `भवेत्1 என்று` — all words present; `श`→`र`/`ङ`, `॥"`→`1`.
+* scriptSepDriveOCR: `" पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्‍यवृhd आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` / `भवेत् என்று` — `पुण्यकृत् ।` collapsed to `पुण्‍यवृhd`, closing `॥"` dropped.
+* linewiseScriptSepDriveOCR: same as scriptSepDriveOCR except `पुण्यवृत्` instead of `पुण्यवृhd`; the only substantial difference on this block is the missing `hd` tag leak.
+
+The dense `comm/p0043` block ([image](../data/RTS_sb_01/images/comm/p0043.jpg), CER 0.270) shows
+the other failure mode: the words are mostly right, but Drive leaks tag/escape characters into
+the text (`நிர्बन्ध'முண்டோ?`, `Sh uபில்`, `uயாதோ?`), and the residual errors concentrate in
+Tamil vowel signs and word spacing. This block alone accounts for most of the gap between 0.134
+and a production-ready figure.
 
 ## 5. Verdict and recommendations
 
@@ -290,19 +468,29 @@ model with run-level inputs.
   (0.48) is the best zero-shot engine and the only sensible pretrained fallback. **PaddleOCR
   pretrained models are not usable** (0.71–0.73), and the Indic-OCR repo adds no accuracy of its
   own (no weights, stub fine-tuning, English-only TrOCR, preprocessing that changes nothing).
-* **For real pages:** feed neither whole lines nor whole pages to a single-script engine.
-  scriptSepDriveOCR is the winning pattern by a wide margin (mean page CER **0.082** vs 0.351 for
-  devTamCharsOCR and 0.262 for unsplit Drive OCR).
-* **Do not combine the two systems as-is:** run-level and line-level mixing of devTamCharsOCR with
-  scriptSepDriveOCR gives no gain (§4.6) — they are not complementary at these units.
+* **For blocks/pages:** feed neither whole lines nor whole blocks to a single-script engine.
+  scriptSepDriveOCR is the winning pattern by a wide margin (block CER **0.134** vs 0.238 for
+  devTamCharsOCR on whole lines and 0.435 for unsplit Drive OCR); batching per printed line
+  (linewiseScriptSepDriveOCR) is worse (0.166).
+* **Q1 (local per-script backend): yes, the gain is real.** Script-segmenting and using
+  per-script Tesseract models cuts the local CER from 0.352 to 0.226 (36% relative), and improves
+  every block. It is not Drive-specific. But it is not parity: Drive remains 1.7× better on the
+  same blocks.
+* **Q2 (script-pure devTamCharsOCR): no.** Script-pure segments score 0.585 vs 0.238 for whole
+  lines, and pure natural lines are not easier than mixed ones. The model needs fragment-regime
+  training, not script-pure training.
+* **Do not combine the two systems as-is:** run-level mixing of devTamCharsOCR with
+  scriptSepDriveOCR gives no gain and often hurts (§4.6) — they are not complementary at these
+  units.
 * **Fine-tuning PaddleOCR's PP-OCRv4** on our 16.5k feasible train lines remains a plausible
   follow-up (it imports Devanagari/Tamil glyph knowledge our from-scratch model lacks), but it is
-  now a comparison, not a necessity: the from-scratch model already reaches 0.292.
-* **Production path:** the accuracy blocker is solved; the throughput blocker is not. Drive OCR
-  latency dominates (2–4 min/page healthy, arbitrary stalls otherwise). Two mitigations, in
-  order of value: (a) recognize script-pure faux pages with a **local** per-script recognizer
-  (fine-tuned PP-OCRv4 or a script-pure variant of devTamCharsOCR) instead of Drive; (b) reduce calls
-  by merging tiny fragments before batching (raise/word-adaptive gap).
+  now a comparison, not a necessity: the from-scratch model already reaches 0.292 on lines.
+* **Production path:** the accuracy blocker is narrowed but not solved locally. Drive OCR latency
+  dominates (minutes per block/page, arbitrary stalls). Two mitigations, in order of value:
+  (a) train a **local fragment/run recognizer** (fine-tuned PP-OCRv4 or a devTamCharsOCR variant
+  trained on faux-page-style segments) to replace Drive; (b) reduce calls by merging tiny
+  fragments before batching (raise/word-adaptive gap). The current best local split (0.226) is
+  not yet good enough to replace Drive (0.134).
 * **Use Tesseract for line segmentation and page inventory** (headers, rules, item numbers) —
   it is reliable there; do not use it as the final recognizer on mixed lines.
 
@@ -330,6 +518,12 @@ probability-averaging the two checkpoints *hurts* CTC decoding (0.315) — no en
 
 | file | contents |
 |---|---|
+| `evaluation/sb_eval/metrics.json` | per-block and per-example CER for all variants, micro averages |
+| `evaluation/sb_eval/whole_scores.json` | CER of the unsplit whole-block Drive baseline |
+| `evaluation/sb_eval/{block}.pred_{variant}.txt` | block predictions (`tess_line`, `tess_run`, `tess_seg`, `dev_line`, `dev_run`, `dev_seg`, `drive_sep`, `drive_line`, `drive_whole`) |
+| `evaluation/sb_eval/runs_{block}.jsonl` | per-run boxes, scripts, Drive/devTam/Tesseract texts (reusable without re-OCR) |
+| `evaluation/sb_eval/example_{line}.json` | qualitative line crops: GT, per-variant predictions, CER |
+| `evaluation/examples/{line}.{png,gt.txt}` | the seven qualitative crops and their GT (linked from §3.4) |
 | `evaluation/line_eval_paddleocr.jsonl` | per-line rec-mode predictions (`pred_ta`, `pred_hi`, oracle `pred`) |
 | `evaluation/line_eval_paddleocr.jsonl.summary.json` | rec-mode aggregate metrics |
 | `evaluation/line_eval_paddleocr_det.jsonl(+.summary.json)` | det+rec-mode predictions |
@@ -337,32 +531,45 @@ probability-averaging the two checkpoints *hurts* CTC decoding (0.315) — no en
 | `evaluation/line_eval_baseline.jsonl` | Tesseract baseline (534 lines) |
 | `evaluation/line_eval_kaggle_v10_best.jsonl` | devTamCharsOCR (v10) per-line predictions (0.292 CER) |
 | `evaluation/line_eval_kaggle_v13_best.jsonl` | devTamCharsOCR (v13 repeat) per-line predictions |
-| `evaluation/page_gt/ra-tra-sA_{1_p0100,2_p0200,3_p0400}.{gt,pred_scriptcls,pred_linenet_v10,pred_drive_whole_region}.txt` | page mini-GTs (11/9/5 lines) and the stored predictions |
-| `evaluation/page_gt/ra-tra-sA_*.pred_{devruns,hybrid}.txt` | page assemblies for the combination variants (§4.6) |
-| `evaluation/page_gt/combine_runs_{100,200,400}.jsonl` | per-run Drive vs devTam texts (reusable without re-OCR) |
-| `evaluation/combine_eval.json` | CER for the combination variants (§4.6) |
+| `training/scripts/script_cls/eval_sb.py` | block/example harness (all variants, segmentation, faux pages, scoring) |
+| `training/scripts/script_cls/audit_lines.py` | line-segmentation audit |
+| `training/scripts/script_cls/pipeline.py` | production block/page pipeline |
+| `training/scripts/script_cls/drive_ocr_images.py` | Drive OCR helper (skips existing outputs) |
+| `training/scripts/script_cls/combine_sb.py` | run-level combination variants for the `RTS_sb` blocks (§4.6) |
+| `training/scripts/script_cls/control_seg.py` | mixed-model segmentation control for the Q1 decomposition (§4.5) |
+| `evaluation/sb_eval/combine.json` | combination-variant CERs per block and micro |
+| `evaluation/sb_eval/tess_seg_mixed.json` | segmentation control: mixed Tesseract model on script segments |
+| `training/scripts/script_cls/combine_eval.py` | earlier PDF-page combination script (pilot artifacts in `evaluation/RTS_5c/`) |
+| `data/RTS_sb_01/{images,gt}/` | block crops (`comm/`, `core/`) and block GT |
+| `evaluation/eval_index.jsonl`, `evaluation/split_eval.jsonl` | canonical verified blocks and train/eval split |
+| `data/RTS_5c/`, `evaluation/RTS_5c/` | archived `RTS_5c` volumes, pilot predictions and combination runs (reference only) |
 | `training/local/kaggle_v10_best.pt` | devTamCharsOCR best checkpoint (kraken-spec, 40 ep, fp32, no aug) |
 | `training/local/kaggle_v13_best.pt` | repeat-run checkpoint (same config) |
 | `training/local/script_cls.pt` | script-patch classifier (48×48, dev/tam/other/null; val_acc 0.937) |
 | `training/scripts/indic-ocr/` | `setup_env.sh`, `eval_paddleocr.py`, `compare_with_baseline.py` |
-| `training/scripts/script_cls/` | `train_classifier.py`, `pipeline.py`, `audit_lines.py`, `combine_eval.py`, `drive_ocr_images.py`, `eval_lines.py` |
-| `data/RTS_5c_01/ocr_scriptcls/` | pilot output for PDF1 p100 (`.txt`, `runs.jsonl`) |
-| `/tmp/opencode/scriptcls_v2_out/` | tag-scheme (v2) outputs for the three evaluated pages |
+| `/tmp/opencode/sb_eval/faux/` | composed faux pages for the five-block run (ephemeral) |
 
 ## 8. Caveats and open questions
 
-* **Scope:** 3 pages from 3 volumes but only 25 GT lines total; line-level set is 445 lines from
-  vol 01–02. The ~4× page-level gap is consistent across all three pages, but absolute page CERs
-  will move with GT precision (the p400 GT was revised by ~25 chars after zoom review and still
-  carries uncertain Tamil clusters).
-* **Page numbers are not comparable to line numbers:** page GT includes headers/item numbers and
-  line-break artifacts that line-crop GT avoids.
-* **Drive API behavior** is erratic (0.067 on p200's clean 9-line band vs 0.456 on p100;
-  multi-minute stalls, one run delayed overnight) — single-page whole-region numbers mean little.
-  Script splitting wins on every page regardless.
-* **Open questions:** (1) does the script-split gain hold for a *local* per-script recognizer, or
-  is it specific to Drive OCR? (2) can a script-pure variant of devTamCharsOCR close the gap on
-  faux pages? (3) how much does word-gap tuning recover the remaining spacing errors?
-  (4) evaluate on more pages/volumes, especially pages with two-column layouts (none seen so far).
-* Output text keeps Drive's markdown escapes; the parser strips common ones but a stricter
-  normalizer is needed before this is usable as an e-text.
+* **Scope:** five blocks from vol. 01 (89 printed lines, 6,193 non-space GT chars) and 445 line
+  crops from vol. 01–02. The micro-average ranking (scriptSepDriveOCR, linewise, local
+  splits) holds, but individual blocks differ: linewise wins the 2-line `core/p0043`, and
+  absolute CERs will move with block boundaries and GT precision. `comm/p0043` is the hardest and drives much of the residual.
+* **Block GT is not line-aligned:** it is contiguous text for the crop, so block CER cannot be
+  compared with the 445-line CER, and per-line diagnostics on blocks are approximate.
+* **Runtime:** the five-block + seven-example run composed 148 faux pages and needed 74 retries
+  (222 Drive calls), taking ~53 min wall clock (~14 s/call including one ~4 min stall). The
+  retry rate (33%) is the main cost; missing tags on composed pages (31–37% retry rate for both
+  page-batched and linewise block pages) are the weakest point.
+  For 3000 pages this is still weeks, so throughput remains the production blocker.
+* **Drive API behavior is erratic:** 0.031 on `core/p0044` vs 0.551 on `comm/p0043` for the same
+  whole-block call, with occasional multi-minute stalls. Script splitting wins on every block
+  regardless, but single-block whole-region numbers mean little.
+* **Tag/markdown pollution:** ~5% of runs contain Latin characters, mostly leaked `#TNN` tags or
+  markdown escapes (`hd`, `Sh`, `u`, digits). The parser strips common escapes, but a stricter
+  normalizer is needed before the output is usable as an e-text.
+* **Q1 and Q2 are answered above** (§4.5). Remaining questions: (a) how much does word-gap tuning
+  recover the residual spacing errors? (b) more blocks/volumes, especially two-column layouts
+  (none seen so far); (c) can a recognizer trained on faux-page fragments (rather than line
+  crops) approach Drive's 0.134 while running locally? (d) how far does a lightly fine-tuned
+  PP-OCRv4 get on the same fragment regime?

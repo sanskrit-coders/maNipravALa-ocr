@@ -4,6 +4,8 @@
   `images/{core,comm}/pXXXX.jpg` (deskewed block crops via detect_blocks),
   `metadata/{pages.csv,blocks.json,skew.json}`, `gt/{core,comm}/` (page-part GT; gold for eval blocks, auto/needs-review otherwise).
 - `data/RTS_sb_02/` = Vol.2 (02.pdf, 616 pp, adhikaras 23-32). Same layout, GT generated (1117 files, 15 needs-review).
+- `data/RTS_5c/` = the 5-commentary edition volumes (`RTS_5c_01`…`RTS_5c_04`), kept for
+  reference only; all evaluation uses `RTS_sb_*` (the canonical volumes above).
 - Splits are path lists partitioning the above (no copies):
   `training/split_train.jsonl`, `evaluation/split_eval.jsonl` (+ `evaluation/eval_index.jsonl`),
   each row `{image, gt, page, block, unit, status}` with repo-relative `data/...` paths.
