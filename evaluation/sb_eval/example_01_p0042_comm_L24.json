@@ -1,15 +1,15 @@
 {
- "gt": "\u0909\u0915\u094d\u0924\u093f\u0baf\u0bbe\u0bb2\u0bc1\u0bae\u0bcd, \u0938\u094d\u092a\u0937\u094d\u091f\u0bae\u0bbe\u0b95\u0b95\u0bcd \u0b95\u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd. \u0ba4\u0bca\u0bb2\u0bcd\u0bb5\u0bb4\u0bbf\u0baf\u0bc7 - \u0905\u0928\u093e\u0926\u093f\u0baf\u0bbe\u0ba9",
+ "gt": "उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே - अनादिயான",
  "n_lines": 1,
- "n_runs": 9,
+ "n_runs": 10,
  "preds": {
-  "tess_line": "\u0ba4\u0bbe\u0bb2\u0bc1\u0bae\u0bcd\u200c, \u0b8e\u0ba3\u0bcd\u0baf\u0bbe\u0bb2\u0bc1\u0bae\u0bcd\u200c, \u0bae\u0bbe\u0b95\u0b95\u0bcd\u200c \u0b95\u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd\u200c. \u0ba4\u0bca\u0bb2\u0bcd\u0bb5\u0bb4\u0bbf\u0baf\u0bc7 - \u0baf\u0bbe\u0ba9",
-  "dev_line": "\u0909\u0915\u094d\u0924\u093f\u0baf\u0bbe\u0bb2\u0bc1\u0bae\u0bcd, \u0938\u094d\u092a\u0937\u094d\u091f\u0bae\u0bbe\u0b95\u0b95\u0bcd \u0b95\u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd. \u0ba4\u0bca\u0bb2\u0bcd\u0bb5\u0bb4\u0bbf\u0baf\u0bc7 - \u0905\u0928\u093e\u0926\u093f\u0baf\u0ba9",
-  "tess_run": "\u0ba4\u0bbe\u0bb2\u0bc1\u0bae\u0bcd\u200c, \u0909\u0915\u094d\u0924\u093f!\u0baf\u0bbe\u0bb2\u0bc1\u0bae\u0bcd\u200c, \u0938\u094d\u092a\u0937\u094d\u091f\u0bae\u0bbe\u0b95\u0b95\u0bcd\u200c \u0b95\u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd\u200c. \u0ba4\u0bca\u0bb2\u0bcd\u0bb5\u0bb4\u0bbf\u0baf\u0bc7 \u0905\u0928\u093e\u0926\u093f\u0baa\u0bbe\u0ba9",
-  "tess_seg": "\u0ba4\u0bbe\u0bb2\u0bc1\u0bae\u0bcd\u200c, \u0909\u0915\u094d\u0924\u093f!\u0baf\u0bbe\u0bb2\u0bc1\u0bae\u0bcd\u200c, \u0938\u094d\u092a\u0937\u094d\u091f\u0bae\u0bbe\u0b95\u0b95\u0bcd\u200c \u0b95\u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd\u200c. \u0ba4\u0bca\u0bb2\u0bcd\u0bb5\u0bb4\u0bbf\u0baf\u0bc7 \u0905\u0928\u093e\u0926\u093f\u0baa\u0bbe\u0ba9",
-  "dev_run": "\u092a \u092a\u092a \u092a\u092a \u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd.  \u0906\u0928\u092a",
-  "dev_seg": "\u092a \u092a\u092a \u0b95\u0b95\u0bcd \u0b95\u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd. \u0ba4\u0bca\u0bb2\u0bcd\u0bb5\u0bb4\u0bbf\u0baf\u0bc7 \u0906\u093f",
-  "drive_line": "\u0ba4\u0bbe\u0bb2\u0bc1\u0bae\u0bcd, \u0909\u0915\u094d\u0924\u093f\u0baf\u0bbe\u0bb2\u0bc1\u0bae\u0bcd, \u0938\u094d\u092a\u0937\u094d\u091f\u0bae\u0bbe\u0b95\u0b95\u0bcd \u0b95\u0bbe\u0ba3\u0bcd\u0baa\u0bbf\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd. \u0ba4\u0bca\u0bb2\u0bcd\u0bb5\u0bb4\u0bbf\u0baf\u0bc7 \u0905\u0928\u093e\u0926\u093fu\u0baa\u0bbe\u0ba9"
+  "tess_line": "தாலும்‌, எண்யாலும்‌, மாகக்‌ காண்பிக்கும்‌. தொல்வழியே - யான",
+  "dev_line": "उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே - अनादिயன",
+  "tess_run": "தாலும்‌, उक्ति!யாலும்‌, स्पष्टமாகக்‌ காண்பிக்கும்‌. தொல்வழியே ண अनादि,யான",
+  "tess_seg": "தாலும்‌, उक्ति!யாலும்‌, स्पष्टமாகக்‌ காண்பிக்கும்‌. தொல்வழியே ண अनादि,யான",
+  "dev_run": "प पप पप ாண்பிக்கும்.   आஇ",
+  "dev_seg": "प पप கக் காண்பிக்கும். தொல்வழியே  कि",
+  "drive_line": "தாலும், उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே  अनादि ।யான"
  },
  "scores": {
   "tess_line": {
@@ -28,19 +28,19 @@
    "cer": 0.25925925925925924,
    "dist": 14,
    "n": 54,
-   "cer_raw": 0.2711864406779661
+   "cer_raw": 0.2542372881355932
   },
   "tess_seg": {
    "cer": 0.25925925925925924,
    "dist": 14,
    "n": 54,
-   "cer_raw": 0.2711864406779661
+   "cer_raw": 0.2542372881355932
   },
   "dev_run": {
-   "cer": 0.7407407407407407,
-   "dist": 40,
+   "cer": 0.7592592592592593,
+   "dist": 41,
    "n": 54,
-   "cer_raw": 0.711864406779661
+   "cer_raw": 0.7288135593220338
   },
   "dev_seg": {
    "cer": 0.5,
@@ -49,8 +49,8 @@
    "cer_raw": 0.4745762711864407
   },
   "drive_line": {
-   "cer": 0.18518518518518517,
-   "dist": 10,
+   "cer": 0.16666666666666666,
+   "dist": 9,
    "n": 54,
    "cer_raw": 0.2033898305084746
   }

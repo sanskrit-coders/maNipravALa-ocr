@@ -222,6 +222,8 @@ def main():
                     help="pages to compose before one Drive API batch")
     ap.add_argument("--linewise", action="store_true",
                     help="compose one faux page per printed line (linewiseScriptSepDriveOCR)")
+    ap.add_argument("--keep-other", action="store_true",
+                    help="include other/Latin runs in the final text (default: drop them)")
     ap.add_argument("--overlay", action="store_true")
     args = ap.parse_args()
 
@@ -285,11 +287,15 @@ def main():
             with open(out_dir / f"{stem}_p{pi:04d}.txt", "w", encoding="utf-8") as f:
                 for li in sorted(by_line):
                     parts = []
-                    for k, r in enumerate(by_line[li]):
+                    first = True
+                    for r in by_line[li]:
+                        if r["script"] == "other" and not args.keep_other:
+                            continue
                         t = r["text"] or ""
-                        if k > 0 and r["pre_space"]:
+                        if not first and r["pre_space"]:
                             parts.append(" ")
                         parts.append(t)
+                        first = False
                     f.write("".join(parts) + "\n")
             for r in page_runs:
                 runs_dump.write(json.dumps(r, ensure_ascii=False) + "\n")

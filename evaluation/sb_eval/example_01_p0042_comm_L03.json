@@ -1,15 +1,15 @@
 {
- "gt": "\u0938\u0919\u094d\u0917\u094d\u0930\u0939\u094b\u0915\u094d\u0924\u093f. \u0ba4\u0b95\u0bb5\u0bcb\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd - \u0915\u0943\u092a\u093e\u0927\u093f\u0915\u094d\u092f\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd. \u0b87\u0ba4\u0bc1 '\u0b85\u0bb0\u0bc1\u0bb3\u0bcd",
+ "gt": "सङ्ग्रहोक्ति. தகவோக்கத்தில் - कृपाधिक्यத்தில். இது 'அருள்",
  "n_lines": 1,
  "n_runs": 10,
  "preds": {
-  "tess_line": "\u0ba9\u0bbe\u0ba9\u0bcd\u200c\u201d \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bbf\u0ba9\u0bcd\u200c 898, \u0ba4\u0b95\u0bb5\u0bcb\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\u200c - \u0915\u0943\u092a\u093e\u0927\u093f\u0915\u094d\u092f\u0902). \u0b87\u0ba4\u0bc1 \u201c\u0b85\u0bb0\u0bc1\u0bb3\u0bcd\u200c",
-  "dev_line": "\u0ba9\u0bbe\u0ba9\u0bcd \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bbf\u0ba9\u0bcd \u0938\u0902\u0917\u094d\u0930\u0939\u094b\u0915\u094d\u0924\u093f, \u0ba4\u0b95\u0bb5\u0bcb\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd - \u0915\u092a\u093e\u0927\u093f\u0915\u094d\u092f\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd. \u0b87\u0ba4\u0bc1 \"\u0bb0\u0bc1\u0bb3\u0bcd",
-  "tess_run": "\u0ba9\u0bbe\u0ba9\u0bcd\u200c\u096a8\u0967 \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bbf\u0ba9\u0bcd\u200c \u0938\u0902\u0917\u094d\u0930\u0939\u094b\u0915\u094d\u0924\u093f. \u0ba4\u0b95\u0bb5\u0bcb\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\u200c \u0915\u0943\u092a\u093e\u0927\u093f\u0915\u094d\u092f, \u0b87\u0ba4\u0bc1 $\u0bae\u0b85\u0bb0\u0bc1\u0bb3\u0bcd\u200c",
-  "tess_seg": "\u0ba9\u0bbe\u0ba9\u0bcd\u200c\u096a8\u0967 \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bbf\u0ba9\u0bcd\u200c \u0938\u0902\u0917\u094d\u0930\u0939\u094b\u0915\u094d\u0924\u093f. \u0ba4\u0b95\u0bb5\u0bcb\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\u200c \u0915\u0943\u092a\u093e\u0927\u093f\u0915\u094d\u092f,\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\u200c. \u0b87\u0ba4\u0bc1 \u201c\u0b85\u0bb0\u0bc1\u0bb3\u0bcd\u200c",
-  "dev_run": "\u092a \u0b8e \u0938\u0938\u094d\u092a\u094d\u0930 \u0bcb\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u0915\u0915 \u0b87 \u0b87",
-  "dev_seg": "\u092a \u0b8e \u0938\u094d\u092a\u094d\u0930 \u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u0915\u0915\u0ba4\u0bbf\u0bb2. \u0b87\u0ba4\u0bc1 \u0b85\u0bb0\u0bb3",
-  "drive_line": "\u0ba9\u0bbe\u0ba9\u0bcd \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bbf\u0ba9\u0bcd \u0938\u0902\u0917\u094d\u0930\u0939\u094b\u0915\u094d\u0924\u093f. \u0ba4\u0b95\u0bb5\u0bcb\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u0915\u0943\u092a\u093e\u0927\u093f\u0915\u094d\u092f\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd. \u0b87\u0ba4\u0bc1 66\u0b85\u0bb0\u0bc1\u0bb3\u0bcd"
+  "tess_line": "னான்‌” என்பதின்‌ 898, தகவோக்கத்தில்‌ - कृपाधिक्यं). இது “அருள்‌",
+  "dev_line": "னான் என்பதின் संग्रहोक्ति, தகவோக்கத்தில் - कपाधिक्यத்தில். இது \"ருள்",
+  "tess_run": "னான்‌௧7 என்பதின்‌ संग्रहोक्ति. தகவோக்கத்தில்‌ कृपाधिक्यத்தில்‌. இது ४६",
+  "tess_seg": "னான்‌௧7 என்பதின்‌ संग्रहोक्ति. தகவோக்கத்தில்‌ कृपाधिक्यத்தில்‌. இது ४६",
+  "dev_run": "प எ सस्प्र ோக்கத்தில் कक இ पஅ",
+  "dev_seg": "प எ सस्प्र ோக்கத்தில் कक पஅ",
+  "drive_line": "னான் என்பதின் संग्रहोक्ति. தகவோக்கத்தில் कृपाधिक्यத்தில். இது 66அருள்"
  },
  "scores": {
   "tess_line": {
@@ -25,28 +25,28 @@
    "cer_raw": 0.3508771929824561
   },
   "tess_run": {
-   "cer": 0.5769230769230769,
-   "dist": 30,
+   "cer": 0.5,
+   "dist": 26,
    "n": 52,
-   "cer_raw": 0.5789473684210527
+   "cer_raw": 0.5087719298245614
   },
   "tess_seg": {
-   "cer": 0.46153846153846156,
-   "dist": 24,
+   "cer": 0.5,
+   "dist": 26,
    "n": 52,
-   "cer_raw": 0.47368421052631576
+   "cer_raw": 0.5087719298245614
   },
   "dev_run": {
+   "cer": 0.6923076923076923,
+   "dist": 36,
+   "n": 52,
+   "cer_raw": 0.6666666666666666
+  },
+  "dev_seg": {
    "cer": 0.7115384615384616,
    "dist": 37,
    "n": 52,
-   "cer_raw": 0.6842105263157895
-  },
-  "dev_seg": {
-   "cer": 0.5576923076923077,
-   "dist": 29,
-   "n": 52,
-   "cer_raw": 0.543859649122807
+   "cer_raw": 0.7017543859649122
   },
   "drive_line": {
    "cer": 0.3269230769230769,

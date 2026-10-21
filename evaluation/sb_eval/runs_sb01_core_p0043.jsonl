@@ -1,12 +1,10 @@
 {"line": 0, "seq": 0, "script": "dev", "x0": 392, "y0": 25, "x1": 592, "y1": 99, "pre_space": true, "tess_run": "“पापिष्ठः", "dev_run": "", "drive_sep": "\" पापिष्ठः", "drive_line": "\" पापिष्ठः"}
 {"line": 0, "seq": 1, "script": "dev", "x0": 630, "y0": 50, "x1": 876, "y1": 123, "pre_space": true, "tess_run": "्षि्िबन्धुर्च", "dev_run": "स", "drive_sep": "क्षत्रबन्धुश्च", "drive_line": "क्षत्रबन्धुश्च"}
 {"line": 0, "seq": 2, "script": "dev", "x0": 903, "y0": 38, "x1": 1163, "y1": 125, "pre_space": true, "tess_run": "पुण्डरीकङ्च", "dev_run": "तर", "drive_sep": "पुण्डरीकश्च", "drive_line": "पुण्डरीकश्च"}
-{"line": 0, "seq": 3, "script": "dev", "x0": 1189, "y0": 58, "x1": 1245, "y1": 127, "pre_space": true, "tess_run": "1.", "dev_run": "இ", "drive_sep": "पुण्‍", "drive_line": "पुण्‍"}
-{"line": 0, "seq": 4, "script": "dev", "x0": 1253, "y0": 58, "x1": 1309, "y1": 126, "pre_space": false, "tess_run": "धद", "dev_run": "प", "drive_sep": "यवृ", "drive_line": "यवृ"}
-{"line": 0, "seq": 5, "script": "dev", "x0": 1317, "y0": 58, "x1": 1383, "y1": 127, "pre_space": false, "tess_run": "म्त्‌", "dev_run": "प", "drive_sep": "hd", "drive_line": "त्"}
-{"line": 0, "seq": 6, "script": "dev", "x0": 1460, "y0": 33, "x1": 1760, "y1": 104, "pre_space": true, "tess_run": "आचार्यवत्तया", "dev_run": "आा्न्", "drive_sep": "आचार्यवत्तया", "drive_line": "आचार्यवत्तया"}
-{"line": 0, "seq": 7, "script": "dev", "x0": 1790, "y0": 32, "x1": 1910, "y1": 122, "pre_space": true, "tess_run": "मुक्तो", "dev_run": "सम्", "drive_sep": "मुक्तौ", "drive_line": "मुक्तौ"}
-{"line": 0, "seq": 8, "script": "dev", "x0": 1941, "y0": 34, "x1": 2325, "y1": 130, "pre_space": true, "tess_run": "तस्मादाचार्यवान्‌", "dev_run": "स्ादार्", "drive_sep": "तस्मादाचार्यवान्", "drive_line": "तस्मादाचार्यवान्"}
-{"line": 1, "seq": 9, "script": "dev", "x0": 285, "y0": 125, "x1": 415, "y1": 218, "pre_space": true, "tess_run": "भवेत्‌", "dev_run": "्", "drive_sep": "भवेत्", "drive_line": "भवेत्"}
-{"line": 1, "seq": 10, "script": "tam", "x0": 424, "y0": 135, "x1": 479, "y1": 201, "pre_space": false, "tess_run": "வ்‌", "dev_run": "", "drive_sep": null, "drive_line": null}
-{"line": 1, "seq": 11, "script": "tam", "x0": 536, "y0": 148, "x1": 733, "y1": 225, "pre_space": true, "tess_run": "என்று", "dev_run": "எ", "drive_sep": "என்று", "drive_line": "என்று"}
+{"line": 0, "seq": 3, "script": "dev", "x0": 1189, "y0": 58, "x1": 1383, "y1": 127, "pre_space": true, "tess_run": "पुण्यकृत्‌", "dev_run": "இ", "drive_sep": "पुण्यकृत्", "drive_line": "पुण्यकृत्"}
+{"line": 0, "seq": 4, "script": "dev", "x0": 1460, "y0": 33, "x1": 1760, "y1": 104, "pre_space": true, "tess_run": "आचार्यवत्तया", "dev_run": "आा्न्", "drive_sep": "आचार्यवत्तया", "drive_line": "आचार्यवत्तया"}
+{"line": 0, "seq": 5, "script": "dev", "x0": 1790, "y0": 32, "x1": 1910, "y1": 122, "pre_space": true, "tess_run": "मुक्तो", "dev_run": "सम्", "drive_sep": "मुक्तौ", "drive_line": "मुक्तौ"}
+{"line": 0, "seq": 6, "script": "dev", "x0": 1941, "y0": 34, "x1": 2325, "y1": 130, "pre_space": true, "tess_run": "तस्मादाचार्यवान्‌", "dev_run": "स्ादार्", "drive_sep": "तस्मादाचार्यवान्", "drive_line": "तस्मादाचार्यवान्"}
+{"line": 1, "seq": 7, "script": "dev", "x0": 285, "y0": 125, "x1": 445, "y1": 218, "pre_space": true, "tess_run": "भवेत्‌", "dev_run": "े्", "drive_sep": "भवेत् ॥", "drive_line": null}
+{"line": 1, "seq": 8, "script": "tam", "x0": 445, "y0": 135, "x1": 479, "y1": 201, "pre_space": false, "tess_run": "்‌", "dev_run": "", "drive_sep": null, "drive_line": "भवेत् ॥ 1'"}
+{"line": 1, "seq": 9, "script": "tam", "x0": 536, "y0": 148, "x1": 733, "y1": 225, "pre_space": true, "tess_run": "என்று", "dev_run": "எ", "drive_sep": "என்று", "drive_line": "என்று"}
