@@ -1,5 +1,14 @@
 # Script boundary classifier (mixed word → devanAgarI/tamiL split)
 
+## Input and output labels
+
+| | |
+|---|---|
+| **Input** | One 64×256 grayscale word image. The 2-channel variant adds a base-region ink-projection channel (same 64×256 shape). |
+| **Output labels** | A boundary heatmap over 256 columns; `argmax` gives one boundary fraction. The downstream split is `dev` prefix + `tam` suffix. |
+| **Granularity** | One boundary per mixed word (not one label per column). |
+
+
 Goal: given a mixed-script word image, find the boundary after the Devanagari prefix so
 Devanagari and Tamil strips can be composed separately.
 
@@ -49,15 +58,68 @@ boxes** (same image+box used by two or more GT tokens). Examples:
 
 These are why a correct shiro-rekhā endpoint can still be the wrong word boundary.
 
-## Projection / glyph-count approach
+## Tamil-first mixed words in GT
 
-`make_proj_labels.py` counts glyph clusters from Noto shaping (`k_dev`, `k_tam`), then uses a DP over the **base-region ink projection** to choose `k_dev+k_tam` glyph slots and sets the boundary after `k_dev` glyphs. Labels that disagree with the shiro-rekhā endpoint by more than 0.18 are discarded; 8,159 high-confidence words remain in `train_proj.jsonl`.
+Yes. Scanning all `RTS_sb_02/gt/**/*.txt` files, **1,645** whitespace-delimited mixed
+tokens have Tamil before Devanagari, spread over **747 files**. Out of 41,504 mixed tokens,
+about 4.0% are Tamil-first. Patterns:
 
-A 2-channel boundary CNN (image + base-projection channel) was attempted, but the last Kaggle run loaded **0 samples** due to a dataset/JSONL path issue and produced no metric. The label set itself is ready; the training loader needs one more fix.
+| pattern | count |
+|---|---:|
+| `dev-tam` | 38,416 |
+| `tam-dev-tam` | 1,078 |
+| `dev-tam-dev-tam` | 712 |
+| `dev-tam-dev` | 707 |
+| `tam-dev` | 465 |
+| `tam-dev-tam-dev` | 57 |
+| `tam-dev-tam-dev-tam` | 45 |
+| other dev-start | 24 |
+
+Examples:
+
+- `comm/p0032.txt:5` — `இருபத்திரண்டधिकाररूपமான` (`tam-dev-tam`)
+- `comm/p0033.txt:9` — `இவ்வधिकारार्थம்` (`tam-dev-tam`)
+- `comm/p0034.txt:3` — `இவ்வर्थ` (`tam-dev`)
+- `comm/p0036.txt:1` — `யிत्यादिना` (`tam-dev`)
+- `comm/p0037.txt:1` — `இவ்வपहारத்தை` (`tam-dev-tam`)
+- `comm/p0038.txt:3` — `என்றभिप्रायம்.` (`tam-dev-tam`)
+
+Therefore a boundary segmenter must not assume Devanagari is always the first script; it
+should either detect the first script run or support `tam-dev(-tam)` patterns.
+
+## Where the word boxes came from, and the fix
+
+The original training boxes came from `pipeline.word_segments`: fixed 4 px horizontal
+ink-gap projection, followed by a width-based DP mapping of GT words onto those boxes.
+This merged/misplaced words (see examples below).
+
+Replacement (`/tmp/opencode/fix_boxes.py`, generating
+`data/script-separator/train_words_fixed.jsonl`):
+
+1. Segment image lines.
+2. Assign contiguous GT words to lines with a width/glyph-count DP.
+3. Split each line into exactly the assigned number of words at **base-projection valleys**,
+   using GT glyph counts to set expected cut positions.
+4. Keep labels from GT; store only image path + box + text + runs.
+
+This produces **58,403** fixed boxes (all mixed words plus bounded pure/other words per page).
+The `p0049` example is corrected: `तत्त्वहितविषयமान` now has box `(465,2,756,59)`, not the
+Tamil `பிறப்பிக்கைக்கும்,` crop.
+
+## Glyph-numbered projection labels
+
+- `make_proj_labels.py` counts glyph clusters per script run from Noto shaping
+  (`k_dev`, `k_tam`), then uses DP over the **base-region ink projection** to choose
+  `k_dev+k_tam` glyph slots. The boundary is after the `k_dev`-th glyph.
+- Example target: `त, त्त्व, हि, त, वि, ष, य | மா, ய்` — boundary after `य`.
+- 8,159 high-confidence words agree with the shiro-rekhā endpoint and are stored in
+  `data/script-separator/train_proj.jsonl`.
+- A 2-channel boundary CNN (image + base-projection channel) was specified, but the last
+  Kaggle run loaded **0 samples** due to a dataset/JSONL path issue; it produced no metric yet.
 
 ## Next improvements
 
-- Use base-projection valleys to number glyphs and set the boundary after the
-  `k_dev`-th glyph (e.g. `त, त्त्व, हि, त, वि, ष, य | மா, ய்`).
-- Add the base-projection profile as an extra input channel to the boundary CNN.
-- Filter/repair merged boxes before training.
+- Train the 2-channel (image + base-projection) boundary CNN on `train_proj.jsonl` once the
+  loader path issue is fixed.
+- Handle Tamil-first words explicitly (`tam-dev(-tam)` is ~4% of mixed tokens).
+- Filter/repair remaining merged boxes before retraining.

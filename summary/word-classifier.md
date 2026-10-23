@@ -1,5 +1,14 @@
 # Word classifier (dev / tam / other / mixed)
 
+## Input and output labels
+
+| | |
+|---|---|
+| **Input** | One 64×256 grayscale word image (word box resized/padded; text height 24–48 px). |
+| **Output labels** | 4 classes: `dev`, `tam`, `other`, `mixed`. |
+| **Granularity** | One label per whole word image. |
+
+
 - Model: 64×256 word CNN, 4 classes: `dev`, `tam`, `other`, `mixed`.
 - Training data: `data/script-separator/train_words.jsonl` — **51,210** words from 1,070 pages,
   all labeled from GT; no stored crops.

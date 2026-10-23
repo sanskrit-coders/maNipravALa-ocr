@@ -1,5 +1,14 @@
 # Line classifier (experimental)
 
+## Input and output labels
+
+| | |
+|---|---|
+| **Input** | One 64×1024 grayscale line image. |
+| **Output labels** | 3 classes: `dev`, `tam`, `other`. |
+| **Granularity** | One label per line (dominant script). |
+
+
 - Model: 64×1024 line CNN, 3 classes (`dev/tam/other`).
 - Training: synthetic lines (pure script + 20% mixed).
 - Synthetic val accuracy **1.000**.

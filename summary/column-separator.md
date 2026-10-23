@@ -1,5 +1,14 @@
 # Column separator
 
+## Input and output labels
+
+| | |
+|---|---|
+| **Input** | One 64×256 grayscale word image. |
+| **Output labels** | 256 column labels, each `dev`, `tam`, or `other`. |
+| **Granularity** | One label per image column; consecutive equal labels form script runs. |
+
+
 - Model: per-column CNN over a 64×256 word image, 3 classes (`dev/tam/other`).
 - Training data: 24,890 mixed words with component-gap-refined boundaries.
 - Validation: real column accuracy **0.715**, boundary MAE **0.087** of word width.
