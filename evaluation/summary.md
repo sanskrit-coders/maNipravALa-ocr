@@ -1,3 +1,5 @@
+> Classifier-specific notes are now split into `summary/` (see `summary/overall.md`). This file remains the legacy full evaluation.
+
 # OCR evaluation for mixed Tamil–Devanagari (manipravala) print
 
 This report evaluates OCR engines and page pipelines for **sArabodhinI vol. 01–02** — a
