@@ -248,20 +248,19 @@ def main():
         unit = {"name": name, "kind": "block", "gt": gt, "arr": arr,
                 "lines": lines, "runs": runs, "segs": segs,
                 "sep": [], "linewise": []}
-        for script in ("dev", "tam", "other"):
-            subset = [i for i, r in enumerate(runs) if r["script"] == script]
-            for ci in range(0, len(subset), 20):
-                chunk = subset[ci:ci + 20]
+        for script in ("dev", "tam"):
+            subset = [s for s in segs if s["script"] == script]
+            for ci in range(0, len(subset), 40):
+                chunk = subset[ci:ci + 40]
                 path = faux / f"{name}_sep_{script}_{ci:03d}.jpg"
-                P.compose_faux(arr, [(i, runs[i]["x0"], runs[i]["x1"],
-                                      runs[i]["y0"], runs[i]["y1"]) for i in chunk], path)
+                P.compose_faux(arr, [(s["idx"], s["box"][0], s["box"][2], s["box"][1], s["box"][3]) for s in chunk], path)
                 unit["sep"].append((path, chunk))
-        for li, idxs in line_map(runs).items():
-            for ci in range(0, len(idxs), 20):
-                chunk = idxs[ci:ci + 20]
-                path = faux / f"{name}_line_L{li:03d}_{ci:03d}.jpg"
-                P.compose_faux(arr, [(i, runs[i]["x0"], runs[i]["x1"],
-                                      runs[i]["y0"], runs[i]["y1"]) for i in chunk], path)
+        for script in ("dev", "tam"):
+            subset = [s for s in segs if s["script"] == script]
+            for ci in range(0, len(subset), 40):
+                chunk = subset[ci:ci + 40]
+                path = faux / f"{name}_line_{script}_{ci:03d}.jpg"
+                P.compose_faux(arr, [(s["idx"], s["box"][0], s["box"][2], s["box"][1], s["box"][3]) for s in chunk], path)
                 unit["linewise"].append((path, chunk))
         units.append(unit)
         print(f"{name}: {len(lines)} lines, {len(runs)} runs, {len(segs)} segments", flush=True)
@@ -291,12 +290,12 @@ def main():
         unit = {"name": ex, "kind": "example", "gt": gt, "arr": arr,
                 "lines": lines, "runs": runs, "segs": segs,
                 "sep": [], "linewise": []}
-        for li, idxs in line_map(runs).items():
-            for ci in range(0, len(idxs), 20):
-                chunk = idxs[ci:ci + 20]
-                path = faux / f"ex_{ex}_L{li:03d}_{ci:03d}.jpg"
-                P.compose_faux(arr, [(i, runs[i]["x0"], runs[i]["x1"],
-                                      runs[i]["y0"], runs[i]["y1"]) for i in chunk], path)
+        for script in ("dev", "tam"):
+            subset = [s for s in segs if s["script"] == script]
+            for ci in range(0, len(subset), 40):
+                chunk = subset[ci:ci + 40]
+                path = faux / f"ex_{ex}_line_{script}_{ci:03d}.jpg"
+                P.compose_faux(arr, [(s["idx"], s["box"][0], s["box"][2], s["box"][1], s["box"][3]) for s in chunk], path)
                 unit["linewise"].append((path, chunk))
         units.append(unit)
         print(f"{ex}: {len(lines)} lines, {len(runs)} runs", flush=True)
@@ -317,10 +316,8 @@ def main():
                 missing = [k for k, t in enumerate(texts) if t is None]
                 if missing:
                     rpath = faux / f"{path.stem}_retry.jpg"
-                    P.compose_faux(u["arr"], [(chunk[m], u["runs"][chunk[m]]["x0"],
-                                               u["runs"][chunk[m]]["x1"],
-                                               u["runs"][chunk[m]]["y0"],
-                                               u["runs"][chunk[m]]["y1"]) for m in missing],
+                    P.compose_faux(u["arr"], [(chunk[m]["idx"], chunk[m]["box"][0], chunk[m]["box"][2],
+                                      chunk[m]["box"][1], chunk[m]["box"][3]) for m in missing],
                                    rpath, tag_start=1)
                     retry.append((rpath, missing, texts))
                 u.setdefault("drive", {}).setdefault(kind, []).append((chunk, texts))
@@ -337,14 +334,14 @@ def main():
                     texts[m] = t
 
     for u in units:
-        u["drive_sep"] = [None] * len(u["runs"])
-        u["drive_line"] = [None] * len(u["runs"])
+        u["drive_sep"] = [None] * len(u["segs"])
+        u["drive_line"] = [None] * len(u["segs"])
         for chunk, texts in u.get("drive", {}).get("sep", []):
-            for i, t in zip(chunk, texts):
-                u["drive_sep"][i] = t
+            for s, t in zip(chunk, texts):
+                u["drive_sep"][s["idx"]] = t
         for chunk, texts in u.get("drive", {}).get("linewise", []):
-            for i, t in zip(chunk, texts):
-                u["drive_line"][i] = t
+            for s, t in zip(chunk, texts):
+                u["drive_line"][s["idx"]] = t
 
     # --- local engines ---
     net, rev, trans = load_dev(args.ckpt, dev)
@@ -389,8 +386,8 @@ def main():
             "dev_run": "\n".join(assemble_runs(runs, lambda i: u["dev_run"][i])),
             "dev_seg": "\n".join(assemble_segments(runs, segs,
                                                    lambda s: u["dev_seg"][s["idx"]])),
-            "drive_sep": "\n".join(assemble_runs(runs, lambda i: u["drive_sep"][i])),
-            "drive_line": "\n".join(assemble_runs(runs, lambda i: u["drive_line"][i])),
+            "drive_sep": "\n".join(assemble_segments(runs, segs, lambda s: u["drive_sep"][s["idx"]])),
+            "drive_line": "\n".join(assemble_segments(runs, segs, lambda s: u["drive_line"][s["idx"]])),
         }
         if u["kind"] == "example":
             preds.pop("drive_sep", None)
@@ -400,10 +397,14 @@ def main():
         if u["kind"] == "block":
             for k, v in preds.items():
                 (out_dir / f"{u['name']}.pred_{k}.txt").write_text(v + "\n", encoding="utf-8")
+            run_seg = {i: s for s in segs for i in s["indices"]}
             with open(out_dir / f"runs_{u['name']}.jsonl", "w", encoding="utf-8") as f:
                 for i, r in enumerate(runs):
+                    s = run_seg.get(i)
+                    ds = u["drive_sep"][s["idx"]] if s and i == s["indices"][0] else None
+                    dl = u["drive_line"][s["idx"]] if s and i == s["indices"][0] else None
                     rec = dict(r, tess_run=u["tess_run"].get(i), dev_run=u["dev_run"][i],
-                               drive_sep=u["drive_sep"][i], drive_line=u["drive_line"][i])
+                               drive_sep=ds, drive_line=dl)
                     f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         else:
             (out_dir / f"example_{u['name']}.json").write_text(json.dumps({

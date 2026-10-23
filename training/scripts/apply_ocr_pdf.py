@@ -36,13 +36,14 @@ from train_lines2 import SUBSAMPLE, ids_to_text  # noqa: E402
 BASE = pathlib.Path(__file__).resolve().parents[1]
 REPO = BASE.parent if BASE.name == "training" else BASE
 
-TESS = "/tmp/tess-root/usr/bin/tesseract"
-TESSDATA = "/tmp/tess-root/usr/share/tesseract-ocr/5/tessdata/"
+TESS = os.environ.get("TESS_BIN", "/tmp/tess-root/usr/bin/tesseract")
+TESSDATA = os.environ.get("TESSDATA", "/tmp/tess-root/usr/share/tesseract-ocr/5/tessdata/")
+LINE_LANG = os.environ.get("TESS_LINE_LANG", "tam+san")
 
 
-def tesseract_boxes(img_path, psm):
+def tesseract_boxes(img_path, psm, lang=None):
     env = dict(os.environ, TESSDATA_PREFIX=TESSDATA, OMP_THREAD_LIMIT="1")
-    r = subprocess.run([TESS, str(img_path), "stdout", "-l", "tam+san",
+    r = subprocess.run([TESS, str(img_path), "stdout", "-l", lang or LINE_LANG,
                         "--psm", str(psm), "tsv"],
                        capture_output=True, env=env)
     if r.returncode != 0:

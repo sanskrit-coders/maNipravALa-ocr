@@ -1,146 +1,146 @@
 {"line": 0, "seq": 0, "script": "tam", "x0": 330, "y0": 33, "x1": 825, "y1": 88, "pre_space": true, "tess_run": "மில்லையாகையால்‌", "dev_run": "", "drive_sep": "மில்லையாகையால்", "drive_line": "மில்லையாகையால்"}
-{"line": 0, "seq": 1, "script": "dev", "x0": 868, "y0": 50, "x1": 1124, "y1": 104, "pre_space": true, "tess_run": "मुमुष्चु-सामान्य", "dev_run": "இ", "drive_sep": "मुमुक्षु सामान्य,", "drive_line": "மில்லையாகையால் - मुमुक्षु सामान्य,"}
+{"line": 0, "seq": 1, "script": "dev", "x0": 868, "y0": 50, "x1": 1124, "y1": 104, "pre_space": true, "tess_run": "मुमुष्चु-सामान्य", "dev_run": "இ", "drive_sep": "मुमुक्षु- सामान्य", "drive_line": "मुमुक्षु- सामान्य"}
 {"line": 0, "seq": 2, "script": "tam", "x0": 1124, "y0": 48, "x1": 1296, "y1": 114, "pre_space": false, "tess_run": "த்திற்கு", "dev_run": "", "drive_sep": "த்திற்கு", "drive_line": "த்திற்கு"}
-{"line": 0, "seq": 3, "script": "dev", "x0": 1340, "y0": 46, "x1": 1464, "y1": 112, "pre_space": true, "tess_run": "गुरुवरं", "dev_run": "प", "drive_sep": "गुरुवंशं", "drive_line": "गुरुवंशं"}
-{"line": 0, "seq": 4, "script": "dev", "x0": 1482, "y0": 60, "x1": 1586, "y1": 99, "pre_space": true, "tess_run": "भगवा", "dev_run": "प", "drive_sep": "भगवा", "drive_line": "भगवा"}
-{"line": 0, "seq": 5, "script": "tam", "x0": 1586, "y0": 61, "x1": 1746, "y1": 116, "pre_space": false, "tess_run": "னளவு", "dev_run": "प", "drive_sep": "னளவு", "drive_line": "னளவு"}
-{"line": 0, "seq": 6, "script": "tam", "x0": 1774, "y0": 54, "x1": 1943, "y1": 103, "pre_space": true, "tess_run": "செல்ல", "dev_run": "प", "drive_sep": "செல்ல", "drive_line": "செல்ல"}
+{"line": 0, "seq": 3, "script": "dev", "x0": 1340, "y0": 46, "x1": 1464, "y1": 112, "pre_space": true, "tess_run": "गुरुवरं", "dev_run": "प", "drive_sep": "गुरुवंशं भगवा", "drive_line": "गुरुवंशं भगवा"}
+{"line": 0, "seq": 4, "script": "dev", "x0": 1482, "y0": 60, "x1": 1586, "y1": 99, "pre_space": true, "tess_run": "भगवा", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 0, "seq": 5, "script": "tam", "x0": 1586, "y0": 61, "x1": 1746, "y1": 116, "pre_space": false, "tess_run": "னளவு", "dev_run": "प", "drive_sep": "[னளவு செல்ல", "drive_line": "[னளவு செல்ல"}
+{"line": 0, "seq": 6, "script": "tam", "x0": 1774, "y0": 54, "x1": 1943, "y1": 103, "pre_space": true, "tess_run": "செல்ல", "dev_run": "प", "drive_sep": null, "drive_line": null}
 {"line": 0, "seq": 7, "script": "dev", "x0": 1968, "y0": 45, "x1": 2152, "y1": 116, "pre_space": true, "tess_run": "अनुसन्धेय।", "dev_run": "अ", "drive_sep": "अनुसन्धेय", "drive_line": "अनुसन्धेय"}
 {"line": 0, "seq": 8, "script": "tam", "x0": 2153, "y0": 54, "x1": 2350, "y1": 120, "pre_space": false, "tess_run": "மென்று", "dev_run": "", "drive_sep": "மென்று", "drive_line": "மென்று"}
 {"line": 1, "seq": 9, "script": "dev", "x0": 325, "y0": 121, "x1": 413, "y1": 189, "pre_space": true, "tess_run": "्रुति।", "dev_run": "क्र", "drive_sep": "श्रुति", "drive_line": "श्रुति"}
-{"line": 1, "seq": 10, "script": "tam", "x0": 413, "y0": 129, "x1": 507, "y1": 178, "pre_space": false, "tess_run": "யில்‌", "dev_run": "प", "drive_sep": "யில்", "drive_line": "யில்"}
-{"line": 1, "seq": 11, "script": "tam", "x0": 532, "y0": 131, "x1": 791, "y1": 201, "pre_space": true, "tess_run": "சொன்னது", "dev_run": "னது", "drive_sep": "சொன்னது", "drive_line": "சொன்னது"}
+{"line": 1, "seq": 10, "script": "tam", "x0": 413, "y0": 129, "x1": 507, "y1": 178, "pre_space": false, "tess_run": "யில்‌", "dev_run": "प", "drive_sep": "யில் சொன்னது", "drive_line": "யில் சொன்னது"}
+{"line": 1, "seq": 11, "script": "tam", "x0": 532, "y0": 131, "x1": 791, "y1": 201, "pre_space": true, "tess_run": "சொன்னது", "dev_run": "னது", "drive_sep": null, "drive_line": null}
 {"line": 1, "seq": 12, "script": "dev", "x0": 830, "y0": 146, "x1": 926, "y1": 189, "pre_space": true, "tess_run": "सर्गत", "dev_run": "प", "drive_sep": "सङ्गत", "drive_line": "सङ्गत"}
-{"line": 1, "seq": 13, "script": "tam", "x0": 926, "y0": 143, "x1": 1198, "y1": 206, "pre_space": false, "tess_run": "'மாகுமோ?", "dev_run": "", "drive_sep": "மாகுமோ?", "drive_line": "மாகுமோ?"}
-{"line": 1, "seq": 14, "script": "tam", "x0": 1224, "y0": 146, "x1": 1404, "y1": 209, "pre_space": true, "tess_run": "என்கிற", "dev_run": "என்கற", "drive_sep": "என்கிற", "drive_line": "என்கிற"}
-{"line": 1, "seq": 15, "script": "dev", "x0": 1424, "y0": 138, "x1": 1504, "y1": 199, "pre_space": true, "tess_run": "राङ्क", "dev_run": "", "drive_sep": "शङ्खै।", "drive_line": "श।"}
-{"line": 1, "seq": 16, "script": "tam", "x0": 1504, "y0": 149, "x1": 1603, "y1": 196, "pre_space": false, "tess_run": "யில்‌", "dev_run": "प", "drive_sep": "யில்", "drive_line": "யில்"}
-{"line": 1, "seq": 17, "script": "tam", "x0": 1629, "y0": 166, "x1": 1714, "y1": 198, "pre_space": true, "tess_run": "பல", "dev_run": "प", "drive_sep": "பல", "drive_line": "பல"}
-{"line": 1, "seq": 18, "script": "dev", "x0": 1753, "y0": 159, "x1": 1865, "y1": 197, "pre_space": true, "tess_run": "प्रमाण", "dev_run": "இ", "drive_sep": "प्रमाण", "drive_line": "प्रमाणा"}
+{"line": 1, "seq": 13, "script": "tam", "x0": 926, "y0": 143, "x1": 1198, "y1": 206, "pre_space": false, "tess_run": "'மாகுமோ?", "dev_run": "", "drive_sep": "[மாகுமோ? என்கிற", "drive_line": "[மாகுமோ? என்கிற"}
+{"line": 1, "seq": 14, "script": "tam", "x0": 1224, "y0": 146, "x1": 1404, "y1": 209, "pre_space": true, "tess_run": "என்கிற", "dev_run": "என்கற", "drive_sep": null, "drive_line": null}
+{"line": 1, "seq": 15, "script": "dev", "x0": 1424, "y0": 138, "x1": 1504, "y1": 199, "pre_space": true, "tess_run": "राङ्क", "dev_run": "", "drive_sep": "शङ्कै।", "drive_line": "शङ्कै।"}
+{"line": 1, "seq": 16, "script": "tam", "x0": 1504, "y0": 149, "x1": 1603, "y1": 196, "pre_space": false, "tess_run": "யில்‌", "dev_run": "प", "drive_sep": "யில் பல", "drive_line": "யில் பல"}
+{"line": 1, "seq": 17, "script": "tam", "x0": 1629, "y0": 166, "x1": 1714, "y1": 198, "pre_space": true, "tess_run": "பல", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 1, "seq": 18, "script": "dev", "x0": 1753, "y0": 159, "x1": 1865, "y1": 197, "pre_space": true, "tess_run": "प्रमाण", "dev_run": "இ", "drive_sep": "प्रमाण |", "drive_line": "प्रमाण |"}
 {"line": 1, "seq": 19, "script": "tam", "x0": 1865, "y0": 152, "x1": 2124, "y1": 200, "pre_space": false, "tess_run": "ங்களாலே", "dev_run": "प ", "drive_sep": "ங்களாலே", "drive_line": "ங்களாலே"}
 {"line": 1, "seq": 20, "script": "dev", "x0": 2164, "y0": 160, "x1": 2348, "y1": 218, "pre_space": true, "tess_run": "बहुप्रकार-", "dev_run": "प्", "drive_sep": "बहुप्रकार-", "drive_line": "बहुप्रकार-"}
-{"line": 2, "seq": 21, "script": "tam", "x0": 328, "y0": 242, "x1": 384, "y1": 272, "pre_space": true, "tess_run": "ம!", "dev_run": "இ", "drive_sep": "மா க", "drive_line": "மா க"}
-{"line": 2, "seq": 22, "script": "tam", "x0": 400, "y0": 243, "x1": 446, "y1": 315, "pre_space": false, "tess_run": "ன", "dev_run": "", "drive_sep": "16", "drive_line": "16"}
-{"line": 2, "seq": 23, "script": "tam", "x0": 472, "y0": 244, "x1": 800, "y1": 295, "pre_space": true, "tess_run": "அவனுடைய", "dev_run": "प", "drive_sep": "அவனுடைய", "drive_line": "அவனுடைய"}
+{"line": 2, "seq": 21, "script": "tam", "x0": 328, "y0": 242, "x1": 384, "y1": 272, "pre_space": true, "tess_run": "ம!", "dev_run": "இ", "drive_sep": "மாக அவனுடைய", "drive_line": "மாக அவனுடைய"}
+{"line": 2, "seq": 22, "script": "tam", "x0": 400, "y0": 243, "x1": 446, "y1": 315, "pre_space": false, "tess_run": "ன", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 2, "seq": 23, "script": "tam", "x0": 472, "y0": 244, "x1": 800, "y1": 295, "pre_space": true, "tess_run": "அவனுடைய", "dev_run": "प", "drive_sep": null, "drive_line": null}
 {"line": 2, "seq": 24, "script": "dev", "x0": 868, "y0": 243, "x1": 972, "y1": 299, "pre_space": true, "tess_run": "गुरुत्व,", "dev_run": "प", "drive_sep": "गुरुत्व", "drive_line": "गुरुत्व"}
-{"line": 2, "seq": 25, "script": "tam", "x0": 972, "y0": 241, "x1": 1096, "y1": 304, "pre_space": false, "tess_run": "த்தை", "dev_run": "", "drive_sep": "த்தை", "drive_line": "த்தை"}
-{"line": 2, "seq": 26, "script": "tam", "x0": 1132, "y0": 242, "x1": 1613, "y1": 306, "pre_space": true, "tess_run": "அருளிச்செய்கிறார்‌", "dev_run": "அச்செய்கிறார்", "drive_sep": "அருளிச்செய்கிறார்", "drive_line": "அருளிச்செய்கிறார்"}
-{"line": 2, "seq": 27, "script": "dev", "x0": 1676, "y0": 238, "x1": 1791, "y1": 293, "pre_space": true, "tess_run": "तमिमं", "dev_run": "", "drive_sep": "तमिमं", "drive_line": "तमिमं"}
-{"line": 2, "seq": 28, "script": "dev", "x0": 1821, "y0": 240, "x1": 1957, "y1": 301, "pre_space": true, "tess_run": "इत्यादि,", "dev_run": "इत्", "drive_sep": "इत्यादि ।", "drive_line": "इत्यादि ।"}
-{"line": 2, "seq": 29, "script": "tam", "x0": 1957, "y0": 249, "x1": 2134, "y1": 296, "pre_space": false, "tess_run": "யாலே.", "dev_run": "प", "drive_sep": "யாலே.", "drive_line": "யாலே."}
-{"line": 2, "seq": 30, "script": "tam", "x0": 2240, "y0": 249, "x1": 2348, "y1": 315, "pre_space": true, "tess_run": "இது", "dev_run": "இ", "drive_sep": "இது", "drive_line": "இது"}
-{"line": 3, "seq": 31, "script": "dev", "x0": 321, "y0": 313, "x1": 449, "y1": 369, "pre_space": true, "tess_run": "सभापर्व", "dev_run": "", "drive_sep": "सभापर्व.", "drive_line": "सभापर्व,"}
+{"line": 2, "seq": 25, "script": "tam", "x0": 972, "y0": 241, "x1": 1096, "y1": 304, "pre_space": false, "tess_run": "த்தை", "dev_run": "", "drive_sep": "'த்தை அருளிச்செய்கிறார்", "drive_line": "'த்தை அருளிச்செய்கிறார்"}
+{"line": 2, "seq": 26, "script": "tam", "x0": 1132, "y0": 242, "x1": 1613, "y1": 306, "pre_space": true, "tess_run": "அருளிச்செய்கிறார்‌", "dev_run": "அச்செய்கிறார்", "drive_sep": null, "drive_line": null}
+{"line": 2, "seq": 27, "script": "dev", "x0": 1676, "y0": 238, "x1": 1791, "y1": 293, "pre_space": true, "tess_run": "तमिमं", "dev_run": "", "drive_sep": "तमिमं इत्यादि", "drive_line": "तमिमं इत्यादि"}
+{"line": 2, "seq": 28, "script": "dev", "x0": 1821, "y0": 240, "x1": 1957, "y1": 301, "pre_space": true, "tess_run": "इत्यादि,", "dev_run": "इत्", "drive_sep": null, "drive_line": null}
+{"line": 2, "seq": 29, "script": "tam", "x0": 1957, "y0": 249, "x1": 2134, "y1": 296, "pre_space": false, "tess_run": "யாலே.", "dev_run": "प", "drive_sep": "யாலே. இது", "drive_line": "யாலே. இது"}
+{"line": 2, "seq": 30, "script": "tam", "x0": 2240, "y0": 249, "x1": 2348, "y1": 315, "pre_space": true, "tess_run": "இது", "dev_run": "இ", "drive_sep": null, "drive_line": null}
+{"line": 3, "seq": 31, "script": "dev", "x0": 321, "y0": 313, "x1": 449, "y1": 369, "pre_space": true, "tess_run": "सभापर्व", "dev_run": "", "drive_sep": "सभापर्व,", "drive_line": "सभापर्व,"}
 {"line": 3, "seq": 32, "script": "tam", "x0": 449, "y0": 317, "x1": 578, "y1": 390, "pre_space": false, "tess_run": "த்தில்‌", "dev_run": "", "drive_sep": "த்தில்", "drive_line": "த்தில்"}
-{"line": 3, "seq": 33, "script": "dev", "x0": 602, "y0": 317, "x1": 722, "y1": 381, "pre_space": true, "tess_run": "सहदेव-", "dev_run": "", "drive_sep": "सहदेव-", "drive_line": "सहदेव-"}
-{"line": 3, "seq": 34, "script": "dev", "x0": 730, "y0": 337, "x1": 832, "y1": 376, "pre_space": false, "tess_run": "-ताक्य।", "dev_run": "प", "drive_sep": "-वाक्य।", "drive_line": "-वाक्य।"}
-{"line": 3, "seq": 35, "script": "tam", "x0": 834, "y0": 334, "x1": 887, "y1": 378, "pre_space": false, "tess_run": "ம்‌.", "dev_run": "प", "drive_sep": "ம்.", "drive_line": "ii."}
-{"line": 3, "seq": 36, "script": "dev", "x0": 919, "y0": 326, "x1": 1052, "y1": 381, "pre_space": true, "tess_run": "“(तमिमं", "dev_run": "‘", "drive_sep": "\"तमिमं", "drive_line": "\"तमिमं"}
-{"line": 3, "seq": 37, "script": "dev", "x0": 1070, "y0": 326, "x1": 1337, "y1": 385, "pre_space": true, "tess_run": "सर्वसंपनमाचार्य", "dev_run": "ससर्वसंप्ा्रय", "drive_sep": "सर्वसंपन्नमाचार्यं", "drive_line": "सर्वसंपन्नमाचार्यं"}
-{"line": 3, "seq": 38, "script": "dev", "x0": 1355, "y0": 332, "x1": 1445, "y1": 387, "pre_space": true, "tess_run": "पितरं", "dev_run": "प", "drive_sep": "पितरं", "drive_line": "पितरं"}
-{"line": 3, "seq": 39, "script": "dev", "x0": 1462, "y0": 348, "x1": 1560, "y1": 403, "pre_space": true, "tess_run": "गुरूम्‌", "dev_run": "", "drive_sep": "गुरुम्", "drive_line": "गुरुम्"}
-{"line": 3, "seq": 40, "script": "dev", "x0": 1607, "y0": 333, "x1": 1960, "y1": 404, "pre_space": true, "tess_run": "अर्व्यमर्चितुमिच्छामि", "dev_run": "अर्च्य्रितमिच्", "drive_sep": "अर्च्यमर्चितुमिच्छामि", "drive_line": "अर्च्यमर्चितुमिच्छामि"}
-{"line": 3, "seq": 41, "script": "dev", "x0": 1979, "y0": 313, "x1": 2256, "y1": 407, "pre_space": true, "tess_run": "स्वसम्बन्तुम्हय", "dev_run": "र्््तु", "drive_sep": "सर्वेसम्मन्तुमर्हथ", "drive_line": "सर्वेसम्मन्तुमर्हथ"}
+{"line": 3, "seq": 33, "script": "dev", "x0": 602, "y0": 317, "x1": 722, "y1": 381, "pre_space": true, "tess_run": "सहदेव-", "dev_run": "", "drive_sep": "सहदेव-वाक्य।", "drive_line": "सहदेव-वाक्य।"}
+{"line": 3, "seq": 34, "script": "dev", "x0": 730, "y0": 337, "x1": 832, "y1": 376, "pre_space": false, "tess_run": "-ताक्य।", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 3, "seq": 35, "script": "tam", "x0": 834, "y0": 334, "x1": 887, "y1": 378, "pre_space": false, "tess_run": "ம்‌.", "dev_run": "प", "drive_sep": "ம்.", "drive_line": "ம்."}
+{"line": 3, "seq": 36, "script": "dev", "x0": 919, "y0": 326, "x1": 1052, "y1": 381, "pre_space": true, "tess_run": "“(तमिमं", "dev_run": "‘", "drive_sep": "‘“तमिमं सर्वसंपन्नमाचार्यं पितरं गुरुम् । अर्च्यमर्चितुमिच्छामि सर्वेसम्मन्तुमर्हथ", "drive_line": "‘“तमिमं सर्वसंपन्नमाचार्यं पितरं गुरुम् । अर्च्यमर्चितुमिच्छामि सर्वेसम्मन्तुमर्हथ"}
+{"line": 3, "seq": 37, "script": "dev", "x0": 1070, "y0": 326, "x1": 1337, "y1": 385, "pre_space": true, "tess_run": "सर्वसंपनमाचार्य", "dev_run": "ससर्वसंप्ा्रय", "drive_sep": null, "drive_line": null}
+{"line": 3, "seq": 38, "script": "dev", "x0": 1355, "y0": 332, "x1": 1445, "y1": 387, "pre_space": true, "tess_run": "पितरं", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 3, "seq": 39, "script": "dev", "x0": 1462, "y0": 348, "x1": 1560, "y1": 403, "pre_space": true, "tess_run": "गुरूम्‌", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 3, "seq": 40, "script": "dev", "x0": 1607, "y0": 333, "x1": 1960, "y1": 404, "pre_space": true, "tess_run": "अर्व्यमर्चितुमिच्छामि", "dev_run": "अर्च्य्रितमिच्", "drive_sep": null, "drive_line": null}
+{"line": 3, "seq": 41, "script": "dev", "x0": 1979, "y0": 313, "x1": 2256, "y1": 407, "pre_space": true, "tess_run": "स्वसम्बन्तुम्हय", "dev_run": "र्््तु", "drive_sep": null, "drive_line": null}
 {"line": 3, "seq": 42, "script": "tam", "x0": 2296, "y0": 313, "x1": 2343, "y1": 395, "pre_space": true, "tess_run": "[்‌", "dev_run": "", "drive_sep": null, "drive_line": null}
 {"line": 4, "seq": 43, "script": "tam", "x0": 321, "y0": 419, "x1": 470, "y1": 485, "pre_space": true, "tess_run": "இதில்‌", "dev_run": "இ", "drive_sep": "இதில்", "drive_line": "இதில்"}
 {"line": 4, "seq": 44, "script": "dev", "x0": 501, "y0": 418, "x1": 635, "y1": 475, "pre_space": true, "tess_run": "तच्छब्द", "dev_run": "त्", "drive_sep": "तच्छब्दं", "drive_line": "तच्छब्दं"}
-{"line": 4, "seq": 45, "script": "tam", "x0": 663, "y0": 425, "x1": 990, "y1": 494, "pre_space": true, "tess_run": "அப்பொழுது", "dev_run": "அத", "drive_sep": "அப்பொழுது", "drive_line": "அப்பொழுது"}
-{"line": 4, "seq": 46, "script": "tam", "x0": 1023, "y0": 435, "x1": 1158, "y1": 498, "pre_space": true, "tess_run": "அந்த", "dev_run": "அ", "drive_sep": "அந்த", "drive_line": "அந்த"}
-{"line": 4, "seq": 47, "script": "dev", "x0": 1215, "y0": 424, "x1": 1287, "y1": 481, "pre_space": true, "tess_run": "सभे!", "dev_run": "", "drive_sep": "सभ", "drive_line": "सभै"}
+{"line": 4, "seq": 45, "script": "tam", "x0": 663, "y0": 425, "x1": 990, "y1": 494, "pre_space": true, "tess_run": "அப்பொழுது", "dev_run": "அத", "drive_sep": "அப்பொழுது அந்த", "drive_line": "அப்பொழுது அந்த"}
+{"line": 4, "seq": 46, "script": "tam", "x0": 1023, "y0": 435, "x1": 1158, "y1": 498, "pre_space": true, "tess_run": "அந்த", "dev_run": "அ", "drive_sep": null, "drive_line": null}
+{"line": 4, "seq": 47, "script": "dev", "x0": 1215, "y0": 424, "x1": 1287, "y1": 481, "pre_space": true, "tess_run": "सभे!", "dev_run": "", "drive_sep": "सभै।", "drive_line": "सभै।"}
 {"line": 4, "seq": 48, "script": "tam", "x0": 1287, "y0": 434, "x1": 1382, "y1": 483, "pre_space": false, "tess_run": "யில்‌", "dev_run": "प", "drive_sep": "யில்", "drive_line": "யில்"}
-{"line": 4, "seq": 49, "script": "dev", "x0": 1440, "y0": 430, "x1": 1688, "y1": 498, "pre_space": true, "tess_run": "नारदाद्युपदिष्ट-", "dev_run": "नारदादुप", "drive_sep": "नारदाद्युपदिष्ट-", "drive_line": "नारदाद्युपदिष्ट-"}
-{"line": 4, "seq": 50, "script": "dev", "x0": 1696, "y0": 448, "x1": 1808, "y1": 487, "pre_space": false, "tess_run": "-प्रत्व-", "dev_run": "प", "drive_sep": "-परत्व-", "drive_line": "-R-"}
-{"line": 4, "seq": 51, "script": "dev", "x0": 1824, "y0": 433, "x1": 2009, "y1": 490, "pre_space": false, "tess_run": "विरिष्टपरं", "dev_run": "िि्", "drive_sep": "विशिष्टपरं.", "drive_line": "विशिष्ट परं."}
-{"line": 4, "seq": 52, "script": "dev", "x0": 2072, "y0": 437, "x1": 2128, "y1": 496, "pre_space": true, "tess_run": "ट्म", "dev_run": "क", "drive_sep": "इमं", "drive_line": "इमं"}
+{"line": 4, "seq": 49, "script": "dev", "x0": 1440, "y0": 430, "x1": 1688, "y1": 498, "pre_space": true, "tess_run": "नारदाद्युपदिष्ट-", "dev_run": "नारदादुप", "drive_sep": "नारदाद्युपदिष्ट-परत्व - विशिष्टपरं. इमं", "drive_line": "नारदाद्युपदिष्ट-परत्व - विशिष्टपरं. इमं"}
+{"line": 4, "seq": 50, "script": "dev", "x0": 1696, "y0": 448, "x1": 1808, "y1": 487, "pre_space": false, "tess_run": "-प्रत्व-", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 4, "seq": 51, "script": "dev", "x0": 1824, "y0": 433, "x1": 2009, "y1": 490, "pre_space": false, "tess_run": "विरिष्टपरं", "dev_run": "िि्", "drive_sep": null, "drive_line": null}
+{"line": 4, "seq": 52, "script": "dev", "x0": 2072, "y0": 437, "x1": 2128, "y1": 496, "pre_space": true, "tess_run": "ट्म", "dev_run": "क", "drive_sep": null, "drive_line": null}
 {"line": 4, "seq": 53, "script": "tam", "x0": 2158, "y0": 443, "x1": 2346, "y1": 506, "pre_space": true, "tess_run": "என்கிற", "dev_run": "என்கிற", "drive_sep": "என்கிற", "drive_line": "என்கிற"}
-{"line": 5, "seq": 54, "script": "dev", "x0": 320, "y0": 524, "x1": 405, "y1": 569, "pre_space": true, "tess_run": "दाब्द्‌", "dev_run": "प", "drive_sep": "शब्द |", "drive_line": "शब्द | #TO2 D"}
-{"line": 5, "seq": 55, "script": "tam", "x0": 408, "y0": 520, "x1": 447, "y1": 564, "pre_space": false, "tess_run": "ம்‌", "dev_run": "प", "drive_sep": "·9 ம்", "drive_line": ":9"}
-{"line": 5, "seq": 56, "script": "tam", "x0": 478, "y0": 522, "x1": 746, "y1": 585, "pre_space": true, "tess_run": "அங்குள்ள", "dev_run": "அங்குள்ள", "drive_sep": "அங்குள்ள", "drive_line": "அங்குள்ள"}
-{"line": 5, "seq": 57, "script": "dev", "x0": 797, "y0": 531, "x1": 909, "y1": 570, "pre_space": true, "tess_run": "सकट -", "dev_run": "प", "drive_sep": "सकल-", "drive_line": "सकल-"}
-{"line": 5, "seq": 58, "script": "dev", "x0": 917, "y0": 533, "x1": 1029, "y1": 586, "pre_space": false, "tess_run": "-मनुज-", "dev_run": "प", "drive_sep": "-मनुज-", "drive_line": "-मनुज-"}
-{"line": 5, "seq": 59, "script": "dev", "x0": 1037, "y0": 535, "x1": 1141, "y1": 574, "pre_space": false, "tess_run": "-नुयन्‌-", "dev_run": "प", "drive_sep": "-नयन-", "drive_line": "-नयन-"}
-{"line": 5, "seq": 60, "script": "dev", "x0": 1149, "y0": 522, "x1": 1293, "y1": 577, "pre_space": false, "tess_run": "-विषयत्व", "dev_run": "स", "drive_sep": "- विषयत्व", "drive_line": "-विषयत्व"}
-{"line": 5, "seq": 61, "script": "tam", "x0": 1293, "y0": 532, "x1": 1454, "y1": 594, "pre_space": false, "tess_run": "'மாகிற", "dev_run": "प", "drive_sep": "மாகிற", "drive_line": "மாகிற"}
-{"line": 5, "seq": 62, "script": "dev", "x0": 1508, "y0": 524, "x1": 1644, "y1": 599, "pre_space": true, "tess_run": "सौलभ्य,", "dev_run": "", "drive_sep": "सौलभ्य,", "drive_line": "सौलभ्यः"}
-{"line": 5, "seq": 63, "script": "tam", "x0": 1644, "y0": 538, "x1": 1804, "y1": 602, "pre_space": false, "tess_run": "த்தைச்‌", "dev_run": "", "drive_sep": "த்தைச்", "drive_line": "'த்தைச்"}
-{"line": 5, "seq": 64, "script": "tam", "x0": 1834, "y0": 536, "x1": 2199, "y1": 605, "pre_space": true, "tess_run": "சொல்லுகிறது.", "dev_run": "पல்லுகறது.", "drive_sep": "சொல்லுகிறது.", "drive_line": "சொல்லுகிறது."}
+{"line": 5, "seq": 54, "script": "dev", "x0": 320, "y0": 524, "x1": 405, "y1": 569, "pre_space": true, "tess_run": "दाब्द्‌", "dev_run": "प", "drive_sep": "शब्द।", "drive_line": "शब्द।"}
+{"line": 5, "seq": 55, "script": "tam", "x0": 408, "y0": 520, "x1": 447, "y1": 564, "pre_space": false, "tess_run": "ம்‌", "dev_run": "प", "drive_sep": "ம் அங்குள்ள", "drive_line": "ம் அங்குள்ள"}
+{"line": 5, "seq": 56, "script": "tam", "x0": 478, "y0": 522, "x1": 746, "y1": 585, "pre_space": true, "tess_run": "அங்குள்ள", "dev_run": "அங்குள்ள", "drive_sep": null, "drive_line": null}
+{"line": 5, "seq": 57, "script": "dev", "x0": 797, "y0": 531, "x1": 909, "y1": 570, "pre_space": true, "tess_run": "सकट -", "dev_run": "प", "drive_sep": "सकल-मनुज- नयन-विषयत्व", "drive_line": "सकल-मनुज- नयन-विषयत्व"}
+{"line": 5, "seq": 58, "script": "dev", "x0": 917, "y0": 533, "x1": 1029, "y1": 586, "pre_space": false, "tess_run": "-मनुज-", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 5, "seq": 59, "script": "dev", "x0": 1037, "y0": 535, "x1": 1141, "y1": 574, "pre_space": false, "tess_run": "-नुयन्‌-", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 5, "seq": 60, "script": "dev", "x0": 1149, "y0": 522, "x1": 1293, "y1": 577, "pre_space": false, "tess_run": "-विषयत्व", "dev_run": "स", "drive_sep": null, "drive_line": null}
+{"line": 5, "seq": 61, "script": "tam", "x0": 1293, "y0": 532, "x1": 1454, "y1": 594, "pre_space": false, "tess_run": "'மாகிற", "dev_run": "प", "drive_sep": "[மாகிற", "drive_line": "[மாகிற"}
+{"line": 5, "seq": 62, "script": "dev", "x0": 1508, "y0": 524, "x1": 1644, "y1": 599, "pre_space": true, "tess_run": "सौलभ्य,", "dev_run": "", "drive_sep": "सौलभ्य", "drive_line": "सौलभ्य"}
+{"line": 5, "seq": 63, "script": "tam", "x0": 1644, "y0": 538, "x1": 1804, "y1": 602, "pre_space": false, "tess_run": "த்தைச்‌", "dev_run": "", "drive_sep": "த்தைச் சொல்லுகிறது.", "drive_line": "த்தைச் சொல்லுகிறது."}
+{"line": 5, "seq": 64, "script": "tam", "x0": 1834, "y0": 536, "x1": 2199, "y1": 605, "pre_space": true, "tess_run": "சொல்லுகிறது.", "dev_run": "पல்லுகறது.", "drive_sep": null, "drive_line": null}
 {"line": 5, "seq": 65, "script": "dev", "x0": 2257, "y0": 531, "x1": 2343, "y1": 588, "pre_space": true, "tess_run": "सर्व-", "dev_run": "प", "drive_sep": "सर्व-", "drive_line": "सर्व-"}
 {"line": 6, "seq": 66, "script": "dev", "x0": 319, "y0": 608, "x1": 415, "y1": 661, "pre_space": true, "tess_run": "संपन", "dev_run": "क", "drive_sep": "संपन्नं", "drive_line": "संपन्नं"}
-{"line": 6, "seq": 67, "script": "tam", "x0": 415, "y0": 615, "x1": 600, "y1": 678, "pre_space": false, "tess_run": "'என்கிற", "dev_run": "என்கற", "drive_sep": "என்கிற", "drive_line": "'என்கிற"}
-{"line": 6, "seq": 68, "script": "dev", "x0": 648, "y0": 612, "x1": 704, "y1": 670, "pre_space": true, "tess_run": "पद्‌", "dev_run": "प", "drive_sep": "पदं", "drive_line": "पदं"}
-{"line": 6, "seq": 69, "script": "dev", "x0": 748, "y0": 611, "x1": 884, "y1": 686, "pre_space": true, "tess_run": "अग्रपूजः", "dev_run": "क्रे", "drive_sep": "अग्रपूजै", "drive_line": "अग्रपूजै"}
+{"line": 6, "seq": 67, "script": "tam", "x0": 415, "y0": 615, "x1": 600, "y1": 678, "pre_space": false, "tess_run": "'என்கிற", "dev_run": "என்கற", "drive_sep": "'என்கிற", "drive_line": "'என்கிற"}
+{"line": 6, "seq": 68, "script": "dev", "x0": 648, "y0": 612, "x1": 704, "y1": 670, "pre_space": true, "tess_run": "पद्‌", "dev_run": "प", "drive_sep": "पदं अग्रपूजै", "drive_line": "पदं अग्रपूजै"}
+{"line": 6, "seq": 69, "script": "dev", "x0": 748, "y0": 611, "x1": 884, "y1": 686, "pre_space": true, "tess_run": "अग्रपूजः", "dev_run": "क्रे", "drive_sep": null, "drive_line": null}
 {"line": 6, "seq": 70, "script": "tam", "x0": 884, "y0": 625, "x1": 965, "y1": 688, "pre_space": false, "tess_run": "க்கு", "dev_run": "", "drive_sep": "க்கு", "drive_line": "க்கு"}
 {"line": 6, "seq": 71, "script": "dev", "x0": 1013, "y0": 614, "x1": 1077, "y1": 678, "pre_space": true, "tess_run": "अहं", "dev_run": "अ", "drive_sep": "अर्ह", "drive_line": "अर्ह"}
 {"line": 6, "seq": 72, "script": "tam", "x0": 1077, "y0": 617, "x1": 1210, "y1": 678, "pre_space": false, "tess_run": "மான", "dev_run": "", "drive_sep": "மான", "drive_line": "மான"}
-{"line": 6, "seq": 73, "script": "dev", "x0": 1255, "y0": 634, "x1": 1375, "y1": 675, "pre_space": true, "tess_run": "समस्त.", "dev_run": "प", "drive_sep": "समस्त-", "drive_line": "समस्त-"}
-{"line": 6, "seq": 74, "script": "dev", "x0": 1383, "y0": 622, "x1": 1583, "y1": 689, "pre_space": false, "tess_run": "-गुणविरिष्ट", "dev_run": "प", "drive_sep": "-गुणविशिष्ट", "drive_line": "-गुणविशिष्ट"}
-{"line": 6, "seq": 75, "script": "tam", "x0": 1583, "y0": 638, "x1": 1777, "y1": 697, "pre_space": false, "tess_run": "தையை", "dev_run": "प", "drive_sep": "தையை", "drive_line": "தையை"}
+{"line": 6, "seq": 73, "script": "dev", "x0": 1255, "y0": 634, "x1": 1375, "y1": 675, "pre_space": true, "tess_run": "समस्त.", "dev_run": "प", "drive_sep": "समस्त गुणविशिष्ट", "drive_line": "समस्त गुणविशिष्ट"}
+{"line": 6, "seq": 74, "script": "dev", "x0": 1383, "y0": 622, "x1": 1583, "y1": 689, "pre_space": false, "tess_run": "-गुणविरिष्ट", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 6, "seq": 75, "script": "tam", "x0": 1583, "y0": 638, "x1": 1777, "y1": 697, "pre_space": false, "tess_run": "தையை", "dev_run": "प", "drive_sep": "!தையை", "drive_line": "!தையை"}
 {"line": 6, "seq": 76, "script": "dev", "x0": 1802, "y0": 623, "x1": 1898, "y1": 680, "pre_space": true, "tess_run": "बोधि,", "dev_run": "क", "drive_sep": "बोधि", "drive_line": "बोधि"}
-{"line": 6, "seq": 77, "script": "tam", "x0": 1898, "y0": 634, "x1": 2081, "y1": 700, "pre_space": false, "tess_run": "க்கிறது.", "dev_run": "", "drive_sep": "க்கிறது.", "drive_line": "कंकीलला."}
-{"line": 6, "seq": 78, "script": "dev", "x0": 2133, "y0": 627, "x1": 2271, "y1": 684, "pre_space": true, "tess_run": "आचार्यं", "dev_run": "आय", "drive_sep": "आचार्य", "drive_line": "आचार्य"}
-{"line": 6, "seq": 79, "script": "dev", "x0": 2292, "y0": 632, "x1": 2350, "y1": 690, "pre_space": true, "tess_run": "पद्‌", "dev_run": "प", "drive_sep": "पदं", "drive_line": "पदं"}
+{"line": 6, "seq": 77, "script": "tam", "x0": 1898, "y0": 634, "x1": 2081, "y1": 700, "pre_space": false, "tess_run": "க்கிறது.", "dev_run": "", "drive_sep": "க்கிறது.", "drive_line": "க்கிறது."}
+{"line": 6, "seq": 78, "script": "dev", "x0": 2133, "y0": 627, "x1": 2271, "y1": 684, "pre_space": true, "tess_run": "आचार्यं", "dev_run": "आय", "drive_sep": "आचार्य पदं", "drive_line": "आचार्य पदं"}
+{"line": 6, "seq": 79, "script": "dev", "x0": 2292, "y0": 632, "x1": 2350, "y1": 690, "pre_space": true, "tess_run": "पद्‌", "dev_run": "प", "drive_sep": null, "drive_line": null}
 {"line": 7, "seq": 80, "script": "dev", "x0": 317, "y0": 702, "x1": 581, "y1": 766, "pre_space": true, "tess_run": "ब्रह्मविद्योपदेष्टा,", "dev_run": "ब्रह्मिप", "drive_sep": "ब्रह्मविद्योपदेष्टा", "drive_line": "ब्रह्मविद्योपदेष्टा"}
-{"line": 7, "seq": 81, "script": "tam", "x0": 581, "y0": 719, "x1": 720, "y1": 763, "pre_space": false, "tess_run": "வைச்‌", "dev_run": "இ", "drive_sep": "வைச்", "drive_line": "வைச்"}
-{"line": 7, "seq": 82, "script": "tam", "x0": 752, "y0": 716, "x1": 1106, "y1": 786, "pre_space": true, "tess_run": "சொல்லுகிறது.", "dev_run": "प", "drive_sep": "சொல்லுகிறது.", "drive_line": "சொல்லுகிறது."}
-{"line": 7, "seq": 83, "script": "dev", "x0": 1138, "y0": 730, "x1": 1198, "y1": 782, "pre_space": true, "tess_run": "गुर्‌", "dev_run": "प", "drive_sep": "गुरु", "drive_line": "गुरु"}
-{"line": 7, "seq": 84, "script": "dev", "x0": 1222, "y0": 718, "x1": 1306, "y1": 776, "pre_space": true, "tess_run": "र्द", "dev_run": "श", "drive_sep": "शब्दं", "drive_line": "शब्द"}
-{"line": 7, "seq": 85, "script": "dev", "x0": 1330, "y0": 714, "x1": 1584, "y1": 777, "pre_space": true, "tess_run": "वेदाध्यापकपरं", "dev_run": "ेदा्यापर", "drive_sep": "वेदाध्यापकपरं.", "drive_line": "वेदाध्यापकपरं."}
+{"line": 7, "seq": 81, "script": "tam", "x0": 581, "y0": 719, "x1": 720, "y1": 763, "pre_space": false, "tess_run": "வைச்‌", "dev_run": "இ", "drive_sep": "வைச் சொல்லுகிறது.", "drive_line": "வைச் சொல்லுகிறது."}
+{"line": 7, "seq": 82, "script": "tam", "x0": 752, "y0": 716, "x1": 1106, "y1": 786, "pre_space": true, "tess_run": "சொல்லுகிறது.", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 7, "seq": 83, "script": "dev", "x0": 1138, "y0": 730, "x1": 1198, "y1": 782, "pre_space": true, "tess_run": "गुर्‌", "dev_run": "प", "drive_sep": "गुरु शब्दं वेदाध्यापकपरं.", "drive_line": "गुरु शब्दं वेदाध्यापकपरं."}
+{"line": 7, "seq": 84, "script": "dev", "x0": 1222, "y0": 718, "x1": 1306, "y1": 776, "pre_space": true, "tess_run": "र्द", "dev_run": "श", "drive_sep": null, "drive_line": null}
+{"line": 7, "seq": 85, "script": "dev", "x0": 1330, "y0": 714, "x1": 1584, "y1": 777, "pre_space": true, "tess_run": "वेदाध्यापकपरं", "dev_run": "ेदा्यापर", "drive_sep": null, "drive_line": null}
 {"line": 7, "seq": 86, "script": "tam", "x0": 1648, "y0": 734, "x1": 1939, "y1": 792, "pre_space": true, "tess_run": "ஆகையால்‌", "dev_run": "இ", "drive_sep": "ஆகையால்", "drive_line": "ஆகையால்"}
 {"line": 7, "seq": 87, "script": "dev", "x0": 1998, "y0": 698, "x1": 2342, "y1": 793, "pre_space": true, "tess_run": "गस्ाब्दाचार्ाब्द-", "dev_run": "प्व्ार", "drive_sep": "गुरुशब्दाचार्यशब्द-", "drive_line": "गुरुशब्दाचार्यशब्द-"}
 {"line": 8, "seq": 88, "script": "tam", "x0": 322, "y0": 812, "x1": 568, "y1": 877, "pre_space": true, "tess_run": "ங்களுக்கு", "dev_run": "", "drive_sep": "ங்களுக்கு", "drive_line": "ங்களுக்கு"}
-{"line": 8, "seq": 89, "script": "dev", "x0": 603, "y0": 802, "x1": 763, "y1": 860, "pre_space": true, "tess_run": "पौनरुक्तय।", "dev_run": "पस", "drive_sep": "पौनरुक्तत्य।", "drive_line": "पौनरुक्तत्य।"}
-{"line": 8, "seq": 90, "script": "tam", "x0": 763, "y0": 815, "x1": 978, "y1": 864, "pre_space": false, "tess_run": "மில்லை.", "dev_run": "प", "drive_sep": "மில்லை.", "drive_line": "."}
-{"line": 8, "seq": 91, "script": "tam", "x0": 1051, "y0": 819, "x1": 1328, "y1": 881, "pre_space": true, "tess_run": "அன்றிக்கே", "dev_run": "அக", "drive_sep": "அன்றிக்கே", "drive_line": "அன்றிக்கே"}
-{"line": 8, "seq": 92, "script": "dev", "x0": 1390, "y0": 814, "x1": 1598, "y1": 870, "pre_space": true, "tess_run": "“आचिनोति", "dev_run": "क््िि", "drive_sep": "'आचिनोति", "drive_line": "'आचिनोति"}
-{"line": 8, "seq": 93, "script": "dev", "x0": 1628, "y0": 817, "x1": 1674, "y1": 880, "pre_space": true, "tess_run": "हि", "dev_run": "", "drive_sep": "हि", "drive_line": "हि"}
-{"line": 8, "seq": 94, "script": "dev", "x0": 1705, "y0": 816, "x1": 1901, "y1": 889, "pre_space": true, "tess_run": "राखार्थान्‌", "dev_run": "श््रार््", "drive_sep": "शास्त्रार्थान्", "drive_line": "शास्त्रार्थान्"}
-{"line": 8, "seq": 95, "script": "dev", "x0": 1922, "y0": 818, "x1": 2051, "y1": 877, "pre_space": true, "tess_run": "आचारे", "dev_run": "आ", "drive_sep": "आचारे", "drive_line": "आचारे"}
-{"line": 8, "seq": 96, "script": "dev", "x0": 2082, "y0": 824, "x1": 2299, "y1": 879, "pre_space": true, "tess_run": "स्थापयत्यपि", "dev_run": "सस््", "drive_sep": "स्थापयत्यपि", "drive_line": "स्थापयत्यपि"}
-{"line": 9, "seq": 97, "script": "dev", "x0": 316, "y0": 898, "x1": 525, "y1": 956, "pre_space": true, "tess_run": "स्वयमाचरते", "dev_run": "्वयमाचर", "drive_sep": "स्वयमाचरते", "drive_line": "स्वयमाचरते"}
-{"line": 9, "seq": 98, "script": "dev", "x0": 544, "y0": 902, "x1": 904, "y1": 973, "pre_space": true, "tess_run": "यस्मात्‌ तस्मादाचार्य", "dev_run": "यस्मात् तस्मादाचार्य", "drive_sep": "यस्मात् तस्मादाचार्य", "drive_line": "यस्मात् तस्मादाचार्य"}
-{"line": 9, "seq": 99, "script": "dev", "x0": 921, "y0": 904, "x1": 1030, "y1": 960, "pre_space": true, "tess_run": "उच्यते", "dev_run": "प", "drive_sep": "उच्यते", "drive_line": "उच्यते"}
-{"line": 9, "seq": 100, "script": "other", "x0": 1070, "y0": 914, "x1": 1115, "y1": 963, "pre_space": true, "tess_run": "[५", "dev_run": "", "drive_sep": null, "drive_line": "|”"}
-{"line": 9, "seq": 101, "script": "dev", "x0": 1167, "y0": 914, "x1": 1947, "y1": 983, "pre_space": true, "tess_run": "“गुब्दस्त्वन्धकारस्स्यात्‌ रुदाब्दस्तनिरोधकः", "dev_run": "गुशब्दस्त्वन्धकारस्स्यात् रशब्दस्तविरोधक", "drive_sep": "‘गुशब्दस्त्वन्धकारस्स्यात् रुशब्दस्तन्निरोधकः", "drive_line": "'गुशब्दस्त्वन्धकारस्स्यात् रुशब्दस्तनिरोधकः"}
-{"line": 9, "seq": 102, "script": "dev", "x0": 2007, "y0": 934, "x1": 2173, "y1": 975, "pre_space": true, "tess_run": "अन्धकार्‌", "dev_run": "இ", "drive_sep": "अन्धकार", "drive_line": "अन्धकार"}
-{"line": 9, "seq": 103, "script": "dev", "x0": 2192, "y0": 918, "x1": 2345, "y1": 976, "pre_space": true, "tess_run": "निरोधि-", "dev_run": "", "drive_sep": "निरोधि-", "drive_line": "निरोधि-"}
-{"line": 10, "seq": 104, "script": "dev", "x0": 314, "y0": 1012, "x1": 417, "y1": 1068, "pre_space": true, "tess_run": "त्वात्‌", "dev_run": "", "drive_sep": "त्वात्", "drive_line": "त्वात्"}
-{"line": 10, "seq": 105, "script": "dev", "x0": 446, "y0": 998, "x1": 736, "y1": 1097, "pre_space": true, "tess_run": "गुरुरित्यभिधीयते", "dev_run": "पत्यिीत", "drive_sep": "गुरुरित्यभिधीयते", "drive_line": "गुरुरित्यभिधीयते"}
-{"line": 10, "seq": 106, "script": "other", "x0": 796, "y0": 1008, "x1": 821, "y1": 1058, "pre_space": true, "tess_run": "ம்‌", "dev_run": "", "drive_sep": "ין", "drive_line": "I'"}
+{"line": 8, "seq": 89, "script": "dev", "x0": 603, "y0": 802, "x1": 763, "y1": 860, "pre_space": true, "tess_run": "पौनरुक्तय।", "dev_run": "पस", "drive_sep": "पौनरुक्त्य।", "drive_line": "पौनरुक्त्य।"}
+{"line": 8, "seq": 90, "script": "tam", "x0": 763, "y0": 815, "x1": 978, "y1": 864, "pre_space": false, "tess_run": "மில்லை.", "dev_run": "प", "drive_sep": "மில்லை. அன்றிக்கே", "drive_line": "மில்லை. அன்றிக்கே"}
+{"line": 8, "seq": 91, "script": "tam", "x0": 1051, "y0": 819, "x1": 1328, "y1": 881, "pre_space": true, "tess_run": "அன்றிக்கே", "dev_run": "அக", "drive_sep": null, "drive_line": null}
+{"line": 8, "seq": 92, "script": "dev", "x0": 1390, "y0": 814, "x1": 1598, "y1": 870, "pre_space": true, "tess_run": "“आचिनोति", "dev_run": "क््िि", "drive_sep": "‘आचिनोति हि शास्त्रार्थान् आचारे स्थापयत्यपि", "drive_line": "‘आचिनोति हि शास्त्रार्थान् आचारे स्थापयत्यपि"}
+{"line": 8, "seq": 93, "script": "dev", "x0": 1628, "y0": 817, "x1": 1674, "y1": 880, "pre_space": true, "tess_run": "हि", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 8, "seq": 94, "script": "dev", "x0": 1705, "y0": 816, "x1": 1901, "y1": 889, "pre_space": true, "tess_run": "राखार्थान्‌", "dev_run": "श््रार््", "drive_sep": null, "drive_line": null}
+{"line": 8, "seq": 95, "script": "dev", "x0": 1922, "y0": 818, "x1": 2051, "y1": 877, "pre_space": true, "tess_run": "आचारे", "dev_run": "आ", "drive_sep": null, "drive_line": null}
+{"line": 8, "seq": 96, "script": "dev", "x0": 2082, "y0": 824, "x1": 2299, "y1": 879, "pre_space": true, "tess_run": "स्थापयत्यपि", "dev_run": "सस््", "drive_sep": null, "drive_line": null}
+{"line": 9, "seq": 97, "script": "dev", "x0": 316, "y0": 898, "x1": 525, "y1": 956, "pre_space": true, "tess_run": "स्वयमाचरते", "dev_run": "्वयमाचर", "drive_sep": "स्वयमाचरते यस्मात् तस्मादाचार्य उच्यते", "drive_line": "स्वयमाचरते यस्मात् तस्मादाचार्य उच्यते"}
+{"line": 9, "seq": 98, "script": "dev", "x0": 544, "y0": 902, "x1": 904, "y1": 973, "pre_space": true, "tess_run": "यस्मात्‌ तस्मादाचार्य", "dev_run": "यस्मात् तस्मादाचार्य", "drive_sep": null, "drive_line": null}
+{"line": 9, "seq": 99, "script": "dev", "x0": 921, "y0": 904, "x1": 1030, "y1": 960, "pre_space": true, "tess_run": "उच्यते", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 9, "seq": 100, "script": "other", "x0": 1070, "y0": 914, "x1": 1115, "y1": 963, "pre_space": true, "tess_run": "[५", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 9, "seq": 101, "script": "dev", "x0": 1167, "y0": 914, "x1": 1947, "y1": 983, "pre_space": true, "tess_run": "“गुब्दस्त्वन्धकारस्स्यात्‌ रुदाब्दस्तनिरोधकः", "dev_run": "गुशब्दस्त्वन्धकारस्स्यात् रशब्दस्तविरोधक", "drive_sep": "‘गुशब्दस्त्वन्धकारस्स्यात् रुशब्दस्तन्निरोधकः । अन्धकार निरोधि-", "drive_line": "‘गुशब्दस्त्वन्धकारस्स्यात् रुशब्दस्तन्निरोधकः । अन्धकार निरोधि-"}
+{"line": 9, "seq": 102, "script": "dev", "x0": 2007, "y0": 934, "x1": 2173, "y1": 975, "pre_space": true, "tess_run": "अन्धकार्‌", "dev_run": "இ", "drive_sep": null, "drive_line": null}
+{"line": 9, "seq": 103, "script": "dev", "x0": 2192, "y0": 918, "x1": 2345, "y1": 976, "pre_space": true, "tess_run": "निरोधि-", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 10, "seq": 104, "script": "dev", "x0": 314, "y0": 1012, "x1": 417, "y1": 1068, "pre_space": true, "tess_run": "त्वात्‌", "dev_run": "", "drive_sep": "त्वात् गुरुरित्यभिधीयते", "drive_line": "त्वात् गुरुरित्यभिधीयते"}
+{"line": 10, "seq": 105, "script": "dev", "x0": 446, "y0": 998, "x1": 736, "y1": 1097, "pre_space": true, "tess_run": "गुरुरित्यभिधीयते", "dev_run": "पत्यिीत", "drive_sep": null, "drive_line": null}
+{"line": 10, "seq": 106, "script": "other", "x0": 796, "y0": 1008, "x1": 821, "y1": 1058, "pre_space": true, "tess_run": "ம்‌", "dev_run": "", "drive_sep": null, "drive_line": null}
 {"line": 10, "seq": 107, "script": "tam", "x0": 889, "y0": 1011, "x1": 1068, "y1": 1074, "pre_space": true, "tess_run": "என்கிற", "dev_run": "என்கிற", "drive_sep": "என்கிற", "drive_line": "என்கிற"}
 {"line": 10, "seq": 108, "script": "dev", "x0": 1109, "y0": 1021, "x1": 1197, "y1": 1060, "pre_space": true, "tess_run": "तृचन्‌", "dev_run": "प", "drive_sep": "वचन", "drive_line": "वचन"}
-{"line": 10, "seq": 109, "script": "tam", "x0": 1197, "y0": 1014, "x1": 1392, "y1": 1063, "pre_space": false, "tess_run": "ங்களில்‌", "dev_run": "प", "drive_sep": "ங்களில்", "drive_line": "ங்களில்"}
-{"line": 10, "seq": 110, "script": "dev", "x0": 1435, "y0": 1009, "x1": 1547, "y1": 1079, "pre_space": true, "tess_run": "प्रवृत्तिः", "dev_run": "क्रतत", "drive_sep": "प्रवृत्ति", "drive_line": "प्रवृत्ति-"}
-{"line": 10, "seq": 111, "script": "dev", "x0": 1565, "y0": 1010, "x1": 1699, "y1": 1065, "pre_space": false, "tess_run": "निमित्त", "dev_run": "", "drive_sep": "निमित्त-", "drive_line": "निमित्त-"}
-{"line": 10, "seq": 112, "script": "dev", "x0": 1707, "y0": 1010, "x1": 1779, "y1": 1072, "pre_space": false, "tess_run": "-भेद्‌।", "dev_run": "प", "drive_sep": "-भेद", "drive_line": "-भेद"}
-{"line": 10, "seq": 113, "script": "tam", "x0": 1779, "y0": 1024, "x1": 1818, "y1": 1068, "pre_space": false, "tess_run": "ம்‌", "dev_run": "प", "drive_sep": ".9 ம்", "drive_line": "ம் 5."}
-{"line": 10, "seq": 114, "script": "tam", "x0": 1864, "y0": 1021, "x1": 2345, "y1": 1092, "pre_space": true, "tess_run": "சொல்லப்பட்டிருப்‌", "dev_run": "ல", "drive_sep": "சொல்லப்பட்டிருப்", "drive_line": "சொல்லப்பட்டிருப்"}
+{"line": 10, "seq": 109, "script": "tam", "x0": 1197, "y0": 1014, "x1": 1392, "y1": 1063, "pre_space": false, "tess_run": "ங்களில்‌", "dev_run": "प", "drive_sep": "[ங்களில்", "drive_line": "[ங்களில்"}
+{"line": 10, "seq": 110, "script": "dev", "x0": 1435, "y0": 1009, "x1": 1547, "y1": 1079, "pre_space": true, "tess_run": "प्रवृत्तिः", "dev_run": "क्रतत", "drive_sep": "प्रवृत्ति - निमित्त-भेद", "drive_line": "प्रवृत्ति - निमित्त-भेद"}
+{"line": 10, "seq": 111, "script": "dev", "x0": 1565, "y0": 1010, "x1": 1699, "y1": 1065, "pre_space": false, "tess_run": "निमित्त", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 10, "seq": 112, "script": "dev", "x0": 1707, "y0": 1010, "x1": 1779, "y1": 1072, "pre_space": false, "tess_run": "-भेद्‌।", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 10, "seq": 113, "script": "tam", "x0": 1779, "y0": 1024, "x1": 1818, "y1": 1068, "pre_space": false, "tess_run": "ம்‌", "dev_run": "प", "drive_sep": "ம் சொல்லப்பட்டிருப்", "drive_line": "ம் சொல்லப்பட்டிருப்"}
+{"line": 10, "seq": 114, "script": "tam", "x0": 1864, "y0": 1021, "x1": 2345, "y1": 1092, "pre_space": true, "tess_run": "சொல்லப்பட்டிருப்‌", "dev_run": "ல", "drive_sep": null, "drive_line": null}
 {"line": 10, "seq": 115, "script": "dev", "x0": 2558, "y0": 991, "x1": 2649, "y1": 1095, "pre_space": true, "tess_run": "५4", "dev_run": "", "drive_sep": null, "drive_line": null}
 {"line": 11, "seq": 116, "script": "tam", "x0": 320, "y0": 1107, "x1": 473, "y1": 1170, "pre_space": true, "tess_run": "பதால்‌", "dev_run": "प", "drive_sep": "பதால்", "drive_line": "பதால்"}
-{"line": 11, "seq": 117, "script": "dev", "x0": 525, "y0": 1095, "x1": 693, "y1": 1154, "pre_space": true, "tess_run": "पौनरुत्तयः", "dev_run": "क", "drive_sep": "पौनरुक्त्य-", "drive_line": "पौनरुक्तय-"}
-{"line": 11, "seq": 118, "script": "dev", "x0": 701, "y0": 1100, "x1": 837, "y1": 1155, "pre_space": false, "tess_run": "-प्रसक्ति।", "dev_run": "प्", "drive_sep": "-प्रसक्ति", "drive_line": "-प्रसक्ति"}
-{"line": 11, "seq": 119, "script": "tam", "x0": 837, "y0": 1107, "x1": 1046, "y1": 1157, "pre_space": false, "tess_run": "யில்லை.", "dev_run": "प", "drive_sep": "யில்லை.", "drive_line": "யில்லை."}
-{"line": 11, "seq": 120, "script": "tam", "x0": 1100, "y0": 1111, "x1": 1228, "y1": 1177, "pre_space": true, "tess_run": "இந்த", "dev_run": "இ", "drive_sep": "இந்த", "drive_line": "இந்த"}
+{"line": 11, "seq": 117, "script": "dev", "x0": 525, "y0": 1095, "x1": 693, "y1": 1154, "pre_space": true, "tess_run": "पौनरुत्तयः", "dev_run": "क", "drive_sep": "पौनरुक्त्य - प्रसक्ति", "drive_line": "पौनरुक्त्य - प्रसक्ति"}
+{"line": 11, "seq": 118, "script": "dev", "x0": 701, "y0": 1100, "x1": 837, "y1": 1155, "pre_space": false, "tess_run": "-प्रसक्ति।", "dev_run": "प्", "drive_sep": null, "drive_line": null}
+{"line": 11, "seq": 119, "script": "tam", "x0": 837, "y0": 1107, "x1": 1046, "y1": 1157, "pre_space": false, "tess_run": "யில்லை.", "dev_run": "प", "drive_sep": "யில்லை. இந்த", "drive_line": "யில்லை. இந்த"}
+{"line": 11, "seq": 120, "script": "tam", "x0": 1100, "y0": 1111, "x1": 1228, "y1": 1177, "pre_space": true, "tess_run": "இந்த", "dev_run": "இ", "drive_sep": null, "drive_line": null}
 {"line": 11, "seq": 121, "script": "dev", "x0": 1276, "y0": 1120, "x1": 1364, "y1": 1158, "pre_space": true, "tess_run": "तवचन", "dev_run": "प", "drive_sep": "वचन", "drive_line": "वचन"}
-{"line": 11, "seq": 122, "script": "tam", "x0": 1364, "y0": 1112, "x1": 1494, "y1": 1179, "pre_space": false, "tess_run": "த்தில்‌", "dev_run": "", "drive_sep": "த்தில்", "drive_line": "த்தில்"}
-{"line": 11, "seq": 123, "script": "tam", "x0": 1525, "y0": 1114, "x1": 1744, "y1": 1164, "pre_space": true, "tess_run": "சொன்ன", "dev_run": "प", "drive_sep": "சொன்ன", "drive_line": "சொன்ன"}
+{"line": 11, "seq": 122, "script": "tam", "x0": 1364, "y0": 1112, "x1": 1494, "y1": 1179, "pre_space": false, "tess_run": "த்தில்‌", "dev_run": "", "drive_sep": "த்தில் சொன்ன", "drive_line": "த்தில் சொன்ன"}
+{"line": 11, "seq": 123, "script": "tam", "x0": 1525, "y0": 1114, "x1": 1744, "y1": 1164, "pre_space": true, "tess_run": "சொன்ன", "dev_run": "प", "drive_sep": null, "drive_line": null}
 {"line": 11, "seq": 124, "script": "dev", "x0": 1791, "y0": 1109, "x1": 1975, "y1": 1185, "pre_space": true, "tess_run": "आचार्यत्व,", "dev_run": "आर्", "drive_sep": "आचार्यत्व", "drive_line": "आचार्यत्व"}
 {"line": 11, "seq": 125, "script": "tam", "x0": 1975, "y0": 1120, "x1": 2149, "y1": 1188, "pre_space": false, "tess_run": "த்திற்கு", "dev_run": "", "drive_sep": "த்திற்கு", "drive_line": "த்திற்கு"}
 {"line": 11, "seq": 126, "script": "dev", "x0": 2200, "y0": 1130, "x1": 2344, "y1": 1171, "pre_space": true, "tess_run": "आ्रय-", "dev_run": "இ", "drive_sep": "आश्रय-", "drive_line": "आश्रय-"}
 {"line": 12, "seq": 127, "script": "tam", "x0": 317, "y0": 1218, "x1": 459, "y1": 1250, "pre_space": true, "tess_run": "னான", "dev_run": "प", "drive_sep": "னான", "drive_line": "னான"}
 {"line": 12, "seq": 128, "script": "dev", "x0": 478, "y0": 1210, "x1": 574, "y1": 1266, "pre_space": true, "tess_run": "कृष्ण्‌।", "dev_run": "स", "drive_sep": "कृष्ण", "drive_line": "कृष्ण"}
-{"line": 12, "seq": 129, "script": "tam", "x0": 574, "y0": 1207, "x1": 628, "y1": 1252, "pre_space": false, "tess_run": "ன்‌", "dev_run": "प", "drive_sep": "ன்", "drive_line": "ன்"}
-{"line": 12, "seq": 130, "script": "tam", "x0": 648, "y0": 1206, "x1": 1144, "y1": 1273, "pre_space": true, "tess_run": "நாராயணனென்றும்‌", "dev_run": "ாராயணனனறம்", "drive_sep": "நாராயணனென்றும்", "drive_line": "நாராயணனென்றும்"}
-{"line": 12, "seq": 131, "script": "tam", "x0": 1168, "y0": 1212, "x1": 1356, "y1": 1276, "pre_space": true, "tess_run": "அதற்கு", "dev_run": "அ", "drive_sep": "அதற்கு", "drive_line": "அதற்கு"}
+{"line": 12, "seq": 129, "script": "tam", "x0": 574, "y0": 1207, "x1": 628, "y1": 1252, "pre_space": false, "tess_run": "ன்‌", "dev_run": "प", "drive_sep": "'ன் நாராயணனென்றும் அதற்கு", "drive_line": "'ன் நாராயணனென்றும் அதற்கு"}
+{"line": 12, "seq": 130, "script": "tam", "x0": 648, "y0": 1206, "x1": 1144, "y1": 1273, "pre_space": true, "tess_run": "நாராயணனென்றும்‌", "dev_run": "ாராயணனனறம்", "drive_sep": null, "drive_line": null}
+{"line": 12, "seq": 131, "script": "tam", "x0": 1168, "y0": 1212, "x1": 1356, "y1": 1276, "pre_space": true, "tess_run": "அதற்கு", "dev_run": "அ", "drive_sep": null, "drive_line": null}
 {"line": 12, "seq": 132, "script": "dev", "x0": 1398, "y0": 1203, "x1": 1598, "y1": 1258, "pre_space": true, "tess_run": "प्रतिसंबन्धिः", "dev_run": "प्रतिसं््", "drive_sep": "प्रतिसंबन्धि", "drive_line": "प्रतिसंबन्धि"}
 {"line": 12, "seq": 133, "script": "tam", "x0": 1598, "y0": 1216, "x1": 1682, "y1": 1261, "pre_space": false, "tess_run": "கள்‌", "dev_run": "स ", "drive_sep": "கள்", "drive_line": "கள்"}
-{"line": 12, "seq": 134, "script": "dev", "x0": 1700, "y0": 1222, "x1": 1808, "y1": 1261, "pre_space": true, "tess_run": "सकट", "dev_run": "प", "drive_sep": "सकल", "drive_line": "सकल"}
-{"line": 12, "seq": 135, "script": "dev", "x0": 1825, "y0": 1205, "x1": 1921, "y1": 1264, "pre_space": true, "tess_run": "लोका", "dev_run": "स", "drive_sep": "लोका", "drive_line": "लोका"}
-{"line": 12, "seq": 136, "script": "tam", "x0": 1921, "y0": 1220, "x1": 2125, "y1": 1286, "pre_space": false, "tess_run": "ங்களும்‌", "dev_run": "", "drive_sep": "ங்களும்", "drive_line": "ங்களும்"}
-{"line": 12, "seq": 137, "script": "tam", "x0": 2151, "y0": 1224, "x1": 2347, "y1": 1287, "pre_space": true, "tess_run": "என்றும்‌", "dev_run": "என", "drive_sep": "என்றும்", "drive_line": "என்றும்"}
-{"line": 13, "seq": 138, "script": "dev", "x0": 312, "y0": 1307, "x1": 392, "y1": 1347, "pre_space": true, "tess_run": "स्पष्ट", "dev_run": "प", "drive_sep": "स्पष्ट", "drive_line": "स्पष्ट"}
+{"line": 12, "seq": 134, "script": "dev", "x0": 1700, "y0": 1222, "x1": 1808, "y1": 1261, "pre_space": true, "tess_run": "सकट", "dev_run": "प", "drive_sep": "सकल लोका", "drive_line": "सकल लोका"}
+{"line": 12, "seq": 135, "script": "dev", "x0": 1825, "y0": 1205, "x1": 1921, "y1": 1264, "pre_space": true, "tess_run": "लोका", "dev_run": "स", "drive_sep": null, "drive_line": null}
+{"line": 12, "seq": 136, "script": "tam", "x0": 1921, "y0": 1220, "x1": 2125, "y1": 1286, "pre_space": false, "tess_run": "ங்களும்‌", "dev_run": "", "drive_sep": "ங்களும் என்றும்", "drive_line": "ங்களும் என்றும்"}
+{"line": 12, "seq": 137, "script": "tam", "x0": 2151, "y0": 1224, "x1": 2347, "y1": 1287, "pre_space": true, "tess_run": "என்றும்‌", "dev_run": "என", "drive_sep": null, "drive_line": null}
+{"line": 13, "seq": 138, "script": "dev", "x0": 312, "y0": 1307, "x1": 392, "y1": 1347, "pre_space": true, "tess_run": "स्पष्ट", "dev_run": "प", "drive_sep": "स्पष्ट ।", "drive_line": "स्पष्ट ।"}
 {"line": 13, "seq": 139, "script": "tam", "x0": 392, "y0": 1305, "x1": 702, "y1": 1352, "pre_space": false, "tess_run": "'மாகைக்காக", "dev_run": "", "drive_sep": "மாகைக்காக", "drive_line": "மாகைக்காக"}
-{"line": 13, "seq": 140, "script": "dev", "x0": 759, "y0": 1311, "x1": 879, "y1": 1365, "pre_space": true, "tess_run": "पुराण-", "dev_run": "प", "drive_sep": "पुराण-", "drive_line": "पुराण-"}
-{"line": 13, "seq": 141, "script": "dev", "x0": 888, "y0": 1312, "x1": 975, "y1": 1351, "pre_space": false, "tess_run": "", "dev_run": "प", "drive_sep": "वचन", "drive_line": "वचन"}
-{"line": 13, "seq": 142, "script": "tam", "x0": 975, "y0": 1308, "x1": 1104, "y1": 1372, "pre_space": false, "tess_run": "த்தை", "dev_run": "", "drive_sep": "த்தை", "drive_line": "த்தை"}
+{"line": 13, "seq": 140, "script": "dev", "x0": 759, "y0": 1311, "x1": 879, "y1": 1365, "pre_space": true, "tess_run": "पुराण-", "dev_run": "प", "drive_sep": "पुराण- वचन", "drive_line": "पुराण- वचन"}
+{"line": 13, "seq": 141, "script": "dev", "x0": 888, "y0": 1312, "x1": 975, "y1": 1351, "pre_space": false, "tess_run": "", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 13, "seq": 142, "script": "tam", "x0": 975, "y0": 1308, "x1": 1104, "y1": 1372, "pre_space": false, "tess_run": "த்தை", "dev_run": "", "drive_sep": "[த்தை", "drive_line": "[த்தை"}
 {"line": 13, "seq": 143, "script": "dev", "x0": 1134, "y0": 1313, "x1": 1230, "y1": 1360, "pre_space": true, "tess_run": "उदाह्‌", "dev_run": "प", "drive_sep": "उदाह", "drive_line": "उदाह"}
 {"line": 13, "seq": 144, "script": "tam", "x0": 1230, "y0": 1306, "x1": 1457, "y1": 1370, "pre_space": false, "tess_run": "ரிக்கிறார்‌", "dev_run": "க", "drive_sep": "ரிக்கிறார்", "drive_line": "ரிக்கிறார்"}
 {"line": 13, "seq": 145, "script": "dev", "x0": 1485, "y0": 1302, "x1": 1670, "y1": 1358, "pre_space": true, "tess_run": "ममापीति,", "dev_run": "का", "drive_sep": "ममापीति.", "drive_line": "ममापीति."}
@@ -148,102 +148,102 @@
 {"line": 13, "seq": 147, "script": "dev", "x0": 1872, "y0": 1306, "x1": 2080, "y1": 1382, "pre_space": true, "tess_run": "विष्णुपुराण,", "dev_run": "वष्ुर", "drive_sep": "विष्णुपुराण", "drive_line": "विष्णुपुराण"}
 {"line": 13, "seq": 148, "script": "tam", "x0": 2080, "y0": 1316, "x1": 2208, "y1": 1384, "pre_space": false, "tess_run": "த்தில்‌", "dev_run": "", "drive_sep": "த்தில்", "drive_line": "த்தில்"}
 {"line": 13, "seq": 149, "script": "dev", "x0": 2270, "y0": 1312, "x1": 2353, "y1": 1387, "pre_space": true, "tess_run": "भूमि", "dev_run": "क", "drive_sep": "भूमि", "drive_line": "भूमि"}
-{"line": 14, "seq": 150, "script": "dev", "x0": 311, "y0": 1406, "x1": 446, "y1": 1462, "pre_space": true, "tess_run": "कचनम्‌,", "dev_run": "अ", "drive_sep": "वचनम्.", "drive_line": "वचनम्."}
-{"line": 14, "seq": 151, "script": "dev", "x0": 507, "y0": 1392, "x1": 643, "y1": 1449, "pre_space": true, "tess_run": "अखिल", "dev_run": "क्रस", "drive_sep": "अखिल", "drive_line": "अखिल"}
-{"line": 14, "seq": 152, "script": "dev", "x0": 666, "y0": 1391, "x1": 816, "y1": 1449, "pre_space": true, "tess_run": "लोकानां", "dev_run": "सोा", "drive_sep": "लोकानां", "drive_line": "लोकानां"}
-{"line": 14, "seq": 153, "script": "dev", "x0": 839, "y0": 1410, "x1": 908, "y1": 1464, "pre_space": true, "tess_run": "गुरः", "dev_run": "प", "drive_sep": "गुरुः", "drive_line": "गुरुः"}
-{"line": 14, "seq": 154, "script": "dev", "x0": 935, "y0": 1410, "x1": 1093, "y1": 1450, "pre_space": true, "tess_run": "नरायण,", "dev_run": "आ््", "drive_sep": "नारायणः", "drive_line": "नारायणः"}
-{"line": 14, "seq": 155, "script": "dev", "x0": 1120, "y0": 1396, "x1": 1238, "y1": 1450, "pre_space": true, "tess_run": "ममापि", "dev_run": "", "drive_sep": "ममापि", "drive_line": "ममापि"}
-{"line": 14, "seq": 156, "script": "dev", "x0": 1261, "y0": 1412, "x1": 1348, "y1": 1465, "pre_space": true, "tess_run": "गुरः;", "dev_run": "प", "drive_sep": "गुरुः,", "drive_line": "गुरुः,"}
+{"line": 14, "seq": 150, "script": "dev", "x0": 311, "y0": 1406, "x1": 446, "y1": 1462, "pre_space": true, "tess_run": "कचनम्‌,", "dev_run": "अ", "drive_sep": "वचनम्. अखिल लोकानां गुरुः नारायणः ममापि गुरुः,", "drive_line": "वचनम्. अखिल लोकानां गुरुः नारायणः ममापि गुरुः,"}
+{"line": 14, "seq": 151, "script": "dev", "x0": 507, "y0": 1392, "x1": 643, "y1": 1449, "pre_space": true, "tess_run": "अखिल", "dev_run": "क्रस", "drive_sep": null, "drive_line": null}
+{"line": 14, "seq": 152, "script": "dev", "x0": 666, "y0": 1391, "x1": 816, "y1": 1449, "pre_space": true, "tess_run": "लोकानां", "dev_run": "सोा", "drive_sep": null, "drive_line": null}
+{"line": 14, "seq": 153, "script": "dev", "x0": 839, "y0": 1410, "x1": 908, "y1": 1464, "pre_space": true, "tess_run": "गुरः", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 14, "seq": 154, "script": "dev", "x0": 935, "y0": 1410, "x1": 1093, "y1": 1450, "pre_space": true, "tess_run": "नरायण,", "dev_run": "आ््", "drive_sep": null, "drive_line": null}
+{"line": 14, "seq": 155, "script": "dev", "x0": 1120, "y0": 1396, "x1": 1238, "y1": 1450, "pre_space": true, "tess_run": "ममापि", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 14, "seq": 156, "script": "dev", "x0": 1261, "y0": 1412, "x1": 1348, "y1": 1465, "pre_space": true, "tess_run": "गुरः;", "dev_run": "प", "drive_sep": null, "drive_line": null}
 {"line": 14, "seq": 157, "script": "tam", "x0": 1382, "y0": 1410, "x1": 1526, "y1": 1472, "pre_space": true, "tess_run": "என்று", "dev_run": "என", "drive_sep": "என்று", "drive_line": "என்று"}
-{"line": 14, "seq": 158, "script": "dev", "x0": 1557, "y0": 1415, "x1": 1677, "y1": 1455, "pre_space": true, "tess_run": "अन्वय्‌।", "dev_run": "இ", "drive_sep": "अन्वया", "drive_line": "अन्वया"}
-{"line": 14, "seq": 159, "script": "tam", "x0": 1677, "y0": 1412, "x1": 1731, "y1": 1458, "pre_space": false, "tess_run": "ம்‌.", "dev_run": "प", "drive_sep": "ம்.", "drive_line": "iii."}
-{"line": 14, "seq": 160, "script": "tam", "x0": 1792, "y0": 1410, "x1": 1942, "y1": 1478, "pre_space": true, "tess_run": "இதில்‌", "dev_run": "இ", "drive_sep": "இதில்", "drive_line": "இதில்"}
-{"line": 14, "seq": 161, "script": "dev", "x0": 1971, "y0": 1402, "x1": 2123, "y1": 1476, "pre_space": true, "tess_run": "सर्वेलोक", "dev_run": "र्", "drive_sep": "सर्वेलोक", "drive_line": "सर्वे लोक"}
+{"line": 14, "seq": 158, "script": "dev", "x0": 1557, "y0": 1415, "x1": 1677, "y1": 1455, "pre_space": true, "tess_run": "अन्वय्‌।", "dev_run": "இ", "drive_sep": "अन्वय", "drive_line": "अन्वय"}
+{"line": 14, "seq": 159, "script": "tam", "x0": 1677, "y0": 1412, "x1": 1731, "y1": 1458, "pre_space": false, "tess_run": "ம்‌.", "dev_run": "प", "drive_sep": "ம். இதில்", "drive_line": "ம். இதில்"}
+{"line": 14, "seq": 160, "script": "tam", "x0": 1792, "y0": 1410, "x1": 1942, "y1": 1478, "pre_space": true, "tess_run": "இதில்‌", "dev_run": "இ", "drive_sep": null, "drive_line": null}
+{"line": 14, "seq": 161, "script": "dev", "x0": 1971, "y0": 1402, "x1": 2123, "y1": 1476, "pre_space": true, "tess_run": "सर्वेलोक", "dev_run": "र्", "drive_sep": "सर्वेलोक", "drive_line": "सर्वेलोक"}
 {"line": 14, "seq": 162, "script": "tam", "x0": 2123, "y0": 1415, "x1": 2349, "y1": 1484, "pre_space": false, "tess_run": "த்திற்கும்‌", "dev_run": "", "drive_sep": "த்திற்கும்", "drive_line": "த்திற்கும்"}
 {"line": 15, "seq": 163, "script": "tam", "x0": 312, "y0": 1499, "x1": 532, "y1": 1553, "pre_space": true, "tess_run": "அவனே", "dev_run": "அ", "drive_sep": "அவனே", "drive_line": "அவனே"}
 {"line": 15, "seq": 164, "script": "dev", "x0": 548, "y0": 1490, "x1": 683, "y1": 1547, "pre_space": true, "tess_run": "आचार्य", "dev_run": "आ", "drive_sep": "आचार्य", "drive_line": "आचार्य"}
-{"line": 15, "seq": 165, "script": "tam", "x0": 684, "y0": 1503, "x1": 738, "y1": 1548, "pre_space": false, "tess_run": "ன்‌", "dev_run": "प", "drive_sep": "ன்", "drive_line": "'ன்"}
-{"line": 15, "seq": 166, "script": "tam", "x0": 757, "y0": 1503, "x1": 1070, "y1": 1549, "pre_space": true, "tess_run": "என்கையால்‌", "dev_run": "पा", "drive_sep": "என்கையால்", "drive_line": "என்கையால்"}
-{"line": 15, "seq": 167, "script": "dev", "x0": 1089, "y0": 1491, "x1": 1204, "y1": 1567, "pre_space": true, "tess_run": "पूर्वोक्त", "dev_run": "पर्व्त", "drive_sep": "पूर्वोक्त", "drive_line": "पूर्वोक्त"}
-{"line": 15, "seq": 168, "script": "dev", "x0": 1217, "y0": 1510, "x1": 1309, "y1": 1554, "pre_space": true, "tess_run": "राङ्क", "dev_run": "प", "drive_sep": "शङ्का", "drive_line": "शङ्का"}
-{"line": 15, "seq": 169, "script": "dev", "x0": 1322, "y0": 1494, "x1": 1468, "y1": 1551, "pre_space": true, "tess_run": "निरस्ता,", "dev_run": "", "drive_sep": "निरस्ता.", "drive_line": "AR."}
-{"line": 16, "seq": 170, "script": "dev", "x0": 410, "y0": 1615, "x1": 754, "y1": 1671, "pre_space": true, "tess_run": "नारायण-व्यतिरिक्त", "dev_run": "ाा", "drive_sep": "नारायण-व्यतिरिक्त", "drive_line": "नारायण-व्यतिरिक्त"}
+{"line": 15, "seq": 165, "script": "tam", "x0": 684, "y0": 1503, "x1": 738, "y1": 1548, "pre_space": false, "tess_run": "ன்‌", "dev_run": "प", "drive_sep": "ன் என்கையால்", "drive_line": "ன் என்கையால்"}
+{"line": 15, "seq": 166, "script": "tam", "x0": 757, "y0": 1503, "x1": 1070, "y1": 1549, "pre_space": true, "tess_run": "என்கையால்‌", "dev_run": "पा", "drive_sep": null, "drive_line": null}
+{"line": 15, "seq": 167, "script": "dev", "x0": 1089, "y0": 1491, "x1": 1204, "y1": 1567, "pre_space": true, "tess_run": "पूर्वोक्त", "dev_run": "पर्व्त", "drive_sep": "पूर्वोक्त शङ्का निरस्ता.", "drive_line": "पूर्वोक्त शङ्का निरस्ता."}
+{"line": 15, "seq": 168, "script": "dev", "x0": 1217, "y0": 1510, "x1": 1309, "y1": 1554, "pre_space": true, "tess_run": "राङ्क", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 15, "seq": 169, "script": "dev", "x0": 1322, "y0": 1494, "x1": 1468, "y1": 1551, "pre_space": true, "tess_run": "निरस्ता,", "dev_run": "", "drive_sep": null, "drive_line": null}
+{"line": 16, "seq": 170, "script": "dev", "x0": 410, "y0": 1615, "x1": 754, "y1": 1671, "pre_space": true, "tess_run": "नारायण-व्यतिरिक्त", "dev_run": "ाा", "drive_sep": "नारायण - व्यतिरिक्त", "drive_line": "नारायण - व्यतिरिक्त"}
 {"line": 16, "seq": 171, "script": "tam", "x0": 754, "y0": 1626, "x1": 908, "y1": 1690, "pre_space": false, "tess_run": "னுக்கு", "dev_run": "ச", "drive_sep": "னுக்கு", "drive_line": "னுக்கு"}
-{"line": 16, "seq": 172, "script": "dev", "x0": 1008, "y0": 1631, "x1": 1272, "y1": 1686, "pre_space": true, "tess_run": "एताददा-गुरुत्व", "dev_run": "पा", "drive_sep": "एतादृश-गुरुत्वा", "drive_line": "एतादृश-गुरुत्व"}
-{"line": 16, "seq": 173, "script": "tam", "x0": 1272, "y0": 1624, "x1": 1767, "y1": 1696, "pre_space": false, "tess_run": "'மில்லையென்பதில்‌", "dev_run": "மில்லையென்பதில்", "drive_sep": "மில்லையென்பதில்", "drive_line": "'மில்லையென்பதில்"}
+{"line": 16, "seq": 172, "script": "dev", "x0": 1008, "y0": 1631, "x1": 1272, "y1": 1686, "pre_space": true, "tess_run": "एताददा-गुरुत्व", "dev_run": "पा", "drive_sep": "एतादृश - गुरुत्व", "drive_line": "एतादृश - गुरुत्व"}
+{"line": 16, "seq": 173, "script": "tam", "x0": 1272, "y0": 1624, "x1": 1767, "y1": 1696, "pre_space": false, "tess_run": "'மில்லையென்பதில்‌", "dev_run": "மில்லையென்பதில்", "drive_sep": "மில்லையென்பதில்", "drive_line": "மில்லையென்பதில்"}
 {"line": 16, "seq": 174, "script": "dev", "x0": 1870, "y0": 1639, "x1": 1982, "y1": 1680, "pre_space": true, "tess_run": "प्रमाण", "dev_run": "இ", "drive_sep": "प्रमाण", "drive_line": "प्रमाण"}
 {"line": 16, "seq": 175, "script": "tam", "x0": 1982, "y0": 1636, "x1": 2356, "y1": 1702, "pre_space": false, "tess_run": "ங்காட்டுகிறார்‌", "dev_run": "கறார்", "drive_sep": "ங்காட்டுகிறார்", "drive_line": "ங்காட்டுகிறார்"}
-{"line": 17, "seq": 176, "script": "dev", "x0": 315, "y0": 1705, "x1": 471, "y1": 1763, "pre_space": true, "tess_run": "(“त्वमेव", "dev_run": "क", "drive_sep": "\" त्वमेव", "drive_line": "\" त्वमेव"}
-{"line": 17, "seq": 177, "script": "dev", "x0": 501, "y0": 1725, "x1": 645, "y1": 1781, "pre_space": true, "tess_run": "बन्धुङ्च", "dev_run": "प", "drive_sep": "बन्धुश्च", "drive_line": "बन्धुश्च"}
-{"line": 17, "seq": 178, "script": "dev", "x0": 674, "y0": 1706, "x1": 930, "y1": 1781, "pre_space": true, "tess_run": "गुरुस्त्वमेवेतिः", "dev_run": "पुरु्त्वेे", "drive_sep": "गुरुस्त्वमेवेति'", "drive_line": "गुरुस्त्वमेवेति'"}
-{"line": 17, "seq": 179, "script": "other", "x0": 930, "y0": 1713, "x1": 957, "y1": 1739, "pre_space": false, "tess_run": "ர்‌", "dev_run": "", "drive_sep": "77", "drive_line": "77"}
+{"line": 17, "seq": 176, "script": "dev", "x0": 315, "y0": 1705, "x1": 471, "y1": 1763, "pre_space": true, "tess_run": "(“त्वमेव", "dev_run": "क", "drive_sep": "\" त्वमेव बन्धुश्च गुरुस्त्वमेवेति'", "drive_line": "\" त्वमेव बन्धुश्च गुरुस्त्वमेवेति'"}
+{"line": 17, "seq": 177, "script": "dev", "x0": 501, "y0": 1725, "x1": 645, "y1": 1781, "pre_space": true, "tess_run": "बन्धुङ्च", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 17, "seq": 178, "script": "dev", "x0": 674, "y0": 1706, "x1": 930, "y1": 1781, "pre_space": true, "tess_run": "गुरुस्त्वमेवेतिः", "dev_run": "पुरु्त्वेे", "drive_sep": null, "drive_line": null}
+{"line": 17, "seq": 179, "script": "other", "x0": 930, "y0": 1713, "x1": 957, "y1": 1739, "pre_space": false, "tess_run": "ர்‌", "dev_run": "", "drive_sep": null, "drive_line": null}
 {"line": 17, "seq": 180, "script": "tam", "x0": 1046, "y0": 1716, "x1": 1194, "y1": 1784, "pre_space": true, "tess_run": "இதில்‌", "dev_run": "இத", "drive_sep": "இதில்", "drive_line": "இதில்"}
 {"line": 17, "seq": 181, "script": "dev", "x0": 1230, "y0": 1725, "x1": 1406, "y1": 1766, "pre_space": true, "tess_run": "अवधारण", "dev_run": "இ", "drive_sep": "अवधारणा", "drive_line": "अवधारणा"}
-{"line": 17, "seq": 182, "script": "tam", "x0": 1406, "y0": 1722, "x1": 1446, "y1": 1766, "pre_space": false, "tess_run": "ம்‌", "dev_run": "प", "drive_sep": "ம் ம் 5.", "drive_line": "5. ம்"}
+{"line": 17, "seq": 182, "script": "tam", "x0": 1406, "y0": 1722, "x1": 1446, "y1": 1766, "pre_space": false, "tess_run": "ம்‌", "dev_run": "प", "drive_sep": "ம்", "drive_line": "ம்"}
 {"line": 17, "seq": 183, "script": "dev", "x0": 1481, "y0": 1727, "x1": 1569, "y1": 1767, "pre_space": true, "tess_run": "अन्य्‌।", "dev_run": "இ", "drive_sep": "अन्य", "drive_line": "अन्य"}
 {"line": 17, "seq": 184, "script": "tam", "x0": 1569, "y0": 1724, "x1": 1711, "y1": 1788, "pre_space": false, "tess_run": "ருக்கு", "dev_run": "இ", "drive_sep": "ருக்கு", "drive_line": "ருக்கு"}
-{"line": 17, "seq": 185, "script": "dev", "x0": 1744, "y0": 1731, "x1": 1992, "y1": 1787, "pre_space": true, "tess_run": "एतादरगुरुत्त।", "dev_run": "पा", "drive_sep": "एतादृशगुरुत्व।", "drive_line": "|एतादृशगुरुत्व।"}
-{"line": 17, "seq": 186, "script": "tam", "x0": 1992, "y0": 1727, "x1": 2358, "y1": 1783, "pre_space": false, "tess_run": "மில்லையென்", "dev_run": "மில்லை", "drive_sep": "'மில்லையென்", "drive_line": "'மில்லையென்"}
-{"line": 18, "seq": 187, "script": "tam", "x0": 310, "y0": 1808, "x1": 458, "y1": 1877, "pre_space": true, "tess_run": "கிறது.", "dev_run": "प", "drive_sep": "கிறது.", "drive_line": "கிறது."}
-{"line": 18, "seq": 188, "script": "tam", "x0": 519, "y0": 1812, "x1": 684, "y1": 1877, "pre_space": true, "tess_run": "இவ்வ", "dev_run": "இ", "drive_sep": "இவ்வ", "drive_line": "இவ்வ"}
-{"line": 18, "seq": 189, "script": "dev", "x0": 690, "y0": 1801, "x1": 720, "y1": 1859, "pre_space": false, "tess_run": "र्थ", "dev_run": "", "drive_sep": "र्थं", "drive_line": "र्थं"}
-{"line": 18, "seq": 190, "script": "dev", "x0": 745, "y0": 1803, "x1": 944, "y1": 1865, "pre_space": true, "tess_run": "सांप्रदायिक,", "dev_run": "्र", "drive_sep": "सांप्रदायिक", "drive_line": "सांप्रदायिक"}
+{"line": 17, "seq": 185, "script": "dev", "x0": 1744, "y0": 1731, "x1": 1992, "y1": 1787, "pre_space": true, "tess_run": "एतादरगुरुत्त।", "dev_run": "पा", "drive_sep": "एतादृशगुरुत्व", "drive_line": "एतादृशगुरुत्व"}
+{"line": 17, "seq": 186, "script": "tam", "x0": 1992, "y0": 1727, "x1": 2358, "y1": 1783, "pre_space": false, "tess_run": "மில்லையென்", "dev_run": "மில்லை", "drive_sep": "மில்லையென்", "drive_line": "மில்லையென்"}
+{"line": 18, "seq": 187, "script": "tam", "x0": 310, "y0": 1808, "x1": 458, "y1": 1877, "pre_space": true, "tess_run": "கிறது.", "dev_run": "प", "drive_sep": "கிறது. இவ்வ", "drive_line": "கிறது. இவ்வ"}
+{"line": 18, "seq": 188, "script": "tam", "x0": 519, "y0": 1812, "x1": 684, "y1": 1877, "pre_space": true, "tess_run": "இவ்வ", "dev_run": "இ", "drive_sep": null, "drive_line": null}
+{"line": 18, "seq": 189, "script": "dev", "x0": 690, "y0": 1801, "x1": 720, "y1": 1859, "pre_space": false, "tess_run": "र्थ", "dev_run": "", "drive_sep": "र्थं सांप्रदायिक", "drive_line": "र्थं सांप्रदायिक"}
+{"line": 18, "seq": 190, "script": "dev", "x0": 745, "y0": 1803, "x1": 944, "y1": 1865, "pre_space": true, "tess_run": "सांप्रदायिक,", "dev_run": "्र", "drive_sep": null, "drive_line": null}
 {"line": 18, "seq": 191, "script": "tam", "x0": 945, "y0": 1810, "x1": 1132, "y1": 1877, "pre_space": false, "tess_run": "மென்று", "dev_run": "", "drive_sep": "மென்று", "drive_line": "மென்று"}
 {"line": 18, "seq": 192, "script": "dev", "x0": 1162, "y0": 1803, "x1": 1258, "y1": 1865, "pre_space": true, "tess_run": "ज्ञपि,", "dev_run": "क्ा", "drive_sep": "ज्ञापि", "drive_line": "ज्ञापि"}
-{"line": 18, "seq": 193, "script": "tam", "x0": 1258, "y0": 1814, "x1": 1523, "y1": 1862, "pre_space": false, "tess_run": "க்கைக்காக", "dev_run": "  ", "drive_sep": "'க்கைக்காக", "drive_line": "'க்கைக்காக"}
-{"line": 18, "seq": 194, "script": "tam", "x0": 1554, "y0": 1819, "x1": 1872, "y1": 1884, "pre_space": true, "tess_run": "ஆளவந்தார்‌", "dev_run": "இ", "drive_sep": "ஆளவந்தார்", "drive_line": "ஆளவந்தார்"}
+{"line": 18, "seq": 193, "script": "tam", "x0": 1258, "y0": 1814, "x1": 1523, "y1": 1862, "pre_space": false, "tess_run": "க்கைக்காக", "dev_run": "  ", "drive_sep": "க்கைக்காக ஆளவந்தார்", "drive_line": "க்கைக்காக ஆளவந்தார்"}
+{"line": 18, "seq": 194, "script": "tam", "x0": 1554, "y0": 1819, "x1": 1872, "y1": 1884, "pre_space": true, "tess_run": "ஆளவந்தார்‌", "dev_run": "இ", "drive_sep": null, "drive_line": null}
 {"line": 18, "seq": 195, "script": "dev", "x0": 1900, "y0": 1812, "x1": 2044, "y1": 1888, "pre_space": true, "tess_run": "श्रीसूक्त", "dev_run": "क्रसूक्ति", "drive_sep": "श्रीसूक्ति", "drive_line": "श्रीसूक्ति"}
-{"line": 18, "seq": 196, "script": "tam", "x0": 2044, "y0": 1829, "x1": 2148, "y1": 1872, "pre_space": false, "tess_run": "யை", "dev_run": "प", "drive_sep": "யை", "drive_line": "யை"}
-{"line": 18, "seq": 197, "script": "dev", "x0": 2178, "y0": 1819, "x1": 2322, "y1": 1883, "pre_space": true, "tess_run": "उदाहर.", "dev_run": "प्ृ", "drive_sep": "उदाहर", "drive_line": "उदाहर"}
-{"line": 18, "seq": 198, "script": "tam", "x0": 2322, "y0": 1831, "x1": 2358, "y1": 1878, "pre_space": false, "tess_run": "க", "dev_run": "இ", "drive_sep": "ரூக்", "drive_line": "க்"}
+{"line": 18, "seq": 196, "script": "tam", "x0": 2044, "y0": 1829, "x1": 2148, "y1": 1872, "pre_space": false, "tess_run": "யை", "dev_run": "प", "drive_sep": "161 யை", "drive_line": "161 யை"}
+{"line": 18, "seq": 197, "script": "dev", "x0": 2178, "y0": 1819, "x1": 2322, "y1": 1883, "pre_space": true, "tess_run": "उदाहर.", "dev_run": "प्ृ", "drive_sep": "उदाहरि,", "drive_line": "उदाहरि,"}
+{"line": 18, "seq": 198, "script": "tam", "x0": 2322, "y0": 1831, "x1": 2358, "y1": 1878, "pre_space": false, "tess_run": "க", "dev_run": "இ", "drive_sep": "க", "drive_line": "க"}
 {"line": 19, "seq": 199, "script": "tam", "x0": 310, "y0": 1903, "x1": 458, "y1": 1968, "pre_space": true, "tess_run": "கிறார்‌", "dev_run": "", "drive_sep": "கிறார்", "drive_line": "கிறார்"}
-{"line": 19, "seq": 200, "script": "dev", "x0": 489, "y0": 1897, "x1": 664, "y1": 1970, "pre_space": true, "tess_run": "11 गुरुरसि", "dev_run": "सु", "drive_sep": "\" गुरुरसि", "drive_line": "\" गुरुरसि"}
-{"line": 19, "seq": 201, "script": "dev", "x0": 685, "y0": 1897, "x1": 890, "y1": 1957, "pre_space": true, "tess_run": "गतिर्चासि", "dev_run": "पि", "drive_sep": "गतिश्चासि", "drive_line": "गतिश्चासि"}
-{"line": 19, "seq": 202, "script": "dev", "x0": 912, "y0": 1898, "x1": 1040, "y1": 1952, "pre_space": true, "tess_run": "जगता\"", "dev_run": "क", "drive_sep": "जगतां'", "drive_line": "जगतां'"}
-{"line": 19, "seq": 203, "script": "tam", "x0": 1040, "y0": 1900, "x1": 1065, "y1": 1926, "pre_space": false, "tess_run": "2", "dev_run": "", "drive_sep": null, "drive_line": "??"}
+{"line": 19, "seq": 200, "script": "dev", "x0": 489, "y0": 1897, "x1": 664, "y1": 1970, "pre_space": true, "tess_run": "11 गुरुरसि", "dev_run": "सु", "drive_sep": "\" गुरुरसि गतिश्चासि जगतां '", "drive_line": "\" गुरुरसि गतिश्चासि जगतां '"}
+{"line": 19, "seq": 201, "script": "dev", "x0": 685, "y0": 1897, "x1": 890, "y1": 1957, "pre_space": true, "tess_run": "गतिर्चासि", "dev_run": "पि", "drive_sep": null, "drive_line": null}
+{"line": 19, "seq": 202, "script": "dev", "x0": 912, "y0": 1898, "x1": 1040, "y1": 1952, "pre_space": true, "tess_run": "जगता\"", "dev_run": "क", "drive_sep": null, "drive_line": null}
+{"line": 19, "seq": 203, "script": "tam", "x0": 1040, "y0": 1900, "x1": 1065, "y1": 1926, "pre_space": false, "tess_run": "2", "dev_run": "", "drive_sep": null, "drive_line": null}
 {"line": 19, "seq": 204, "script": "dev", "x0": 1094, "y0": 1896, "x1": 1174, "y1": 1958, "pre_space": true, "tess_run": "इति,", "dev_run": "इ", "drive_sep": "इति.", "drive_line": "इति."}
 {"line": 19, "seq": 205, "script": "tam", "x0": 1230, "y0": 1904, "x1": 1378, "y1": 1972, "pre_space": true, "tess_run": "இதில்‌", "dev_run": "இ", "drive_sep": "இதில்", "drive_line": "இதில்"}
-{"line": 19, "seq": 206, "script": "dev", "x0": 1405, "y0": 1897, "x1": 1542, "y1": 1968, "pre_space": true, "tess_run": "गुरुत्वेन", "dev_run": "पेन", "drive_sep": "गुरुत्वेन", "drive_line": "गुरुत्वेन"}
-{"line": 19, "seq": 207, "script": "dev", "x0": 1563, "y0": 1916, "x1": 1794, "y1": 1958, "pre_space": true, "tess_run": "प्रापकत्वमात्न।", "dev_run": "இ", "drive_sep": "प्रापकत्वमात्र।", "drive_line": "प्रापकत्वमात्रा"}
+{"line": 19, "seq": 206, "script": "dev", "x0": 1405, "y0": 1897, "x1": 1542, "y1": 1968, "pre_space": true, "tess_run": "गुरुत्वेन", "dev_run": "पेन", "drive_sep": "गुरुत्वेन प्रापकत्वमात्र।", "drive_line": "गुरुत्वेन प्रापकत्वमात्र।"}
+{"line": 19, "seq": 207, "script": "dev", "x0": 1563, "y0": 1916, "x1": 1794, "y1": 1958, "pre_space": true, "tess_run": "प्रापकत्वमात्न।", "dev_run": "இ", "drive_sep": null, "drive_line": null}
 {"line": 19, "seq": 208, "script": "tam", "x0": 1795, "y0": 1912, "x1": 2063, "y1": 1976, "pre_space": false, "tess_run": "மன்றிக்கே", "dev_run": "", "drive_sep": "மன்றிக்கே", "drive_line": "மன்றிக்கே"}
-{"line": 19, "seq": 209, "script": "dev", "x0": 2117, "y0": 1910, "x1": 2325, "y1": 1971, "pre_space": true, "tess_run": "“गतिश्चासिः", "dev_run": "कि", "drive_sep": "'गतिश्चासि'", "drive_line": "'गतिश्चासि'"}
-{"line": 19, "seq": 210, "script": "other", "x0": 2325, "y0": 1921, "x1": 2354, "y1": 1944, "pre_space": false, "tess_run": "27", "dev_run": "", "drive_sep": "27", "drive_line": "27"}
+{"line": 19, "seq": 209, "script": "dev", "x0": 2117, "y0": 1910, "x1": 2325, "y1": 1971, "pre_space": true, "tess_run": "“गतिश्चासिः", "dev_run": "कि", "drive_sep": "' गतिश्चासि'", "drive_line": "' गतिश्चासि'"}
+{"line": 19, "seq": 210, "script": "other", "x0": 2325, "y0": 1921, "x1": 2354, "y1": 1944, "pre_space": false, "tess_run": "27", "dev_run": "", "drive_sep": null, "drive_line": null}
 {"line": 20, "seq": 211, "script": "tam", "x0": 310, "y0": 2002, "x1": 455, "y1": 2067, "pre_space": true, "tess_run": "என்று", "dev_run": "என", "drive_sep": "என்று", "drive_line": "என்று"}
 {"line": 20, "seq": 212, "script": "dev", "x0": 484, "y0": 2008, "x1": 620, "y1": 2048, "pre_space": true, "tess_run": "प्राप्यत्त्‌]", "dev_run": "இ", "drive_sep": "प्राप्यत्व", "drive_line": "प्राप्यत्व"}
-{"line": 20, "seq": 213, "script": "tam", "x0": 620, "y0": 2003, "x1": 727, "y1": 2067, "pre_space": false, "tess_run": "மும்‌", "dev_run": "प", "drive_sep": "மும்", "drive_line": "மும்"}
-{"line": 20, "seq": 214, "script": "tam", "x0": 758, "y0": 1999, "x1": 1312, "y1": 2061, "pre_space": true, "tess_run": "சொல்லப்படுகையால்‌", "dev_run": "पகையால்", "drive_sep": "சொல்லப்படுகையால்", "drive_line": "சொல்லப்படுகையால்"}
-{"line": 20, "seq": 215, "script": "dev", "x0": 1340, "y0": 1989, "x1": 1476, "y1": 2062, "pre_space": true, "tess_run": "गुरवन्तर-", "dev_run": "प", "drive_sep": "गुर्वन्तर-", "drive_line": "गुर्वन्तर-"}
-{"line": 20, "seq": 216, "script": "dev", "x0": 1492, "y0": 1990, "x1": 1644, "y1": 2055, "pre_space": false, "tess_run": "तैलक्षण्य,", "dev_run": "क्", "drive_sep": "वैलक्षण्य", "drive_line": "वैलक्षण्य"}
+{"line": 20, "seq": 213, "script": "tam", "x0": 620, "y0": 2003, "x1": 727, "y1": 2067, "pre_space": false, "tess_run": "மும்‌", "dev_run": "प", "drive_sep": "மும் சொல்லப்படுகையால்", "drive_line": "மும் சொல்லப்படுகையால்"}
+{"line": 20, "seq": 214, "script": "tam", "x0": 758, "y0": 1999, "x1": 1312, "y1": 2061, "pre_space": true, "tess_run": "சொல்லப்படுகையால்‌", "dev_run": "पகையால்", "drive_sep": null, "drive_line": null}
+{"line": 20, "seq": 215, "script": "dev", "x0": 1340, "y0": 1989, "x1": 1476, "y1": 2062, "pre_space": true, "tess_run": "गुरवन्तर-", "dev_run": "प", "drive_sep": "गुर्वन्तर - वैलक्षण्य", "drive_line": "गुर्वन्तर - वैलक्षण्य"}
+{"line": 20, "seq": 216, "script": "dev", "x0": 1492, "y0": 1990, "x1": 1644, "y1": 2055, "pre_space": false, "tess_run": "तैलक्षण्य,", "dev_run": "क्", "drive_sep": null, "drive_line": null}
 {"line": 20, "seq": 217, "script": "tam", "x0": 1644, "y0": 2006, "x1": 1751, "y1": 2070, "pre_space": false, "tess_run": "மும்‌", "dev_run": "प", "drive_sep": "மும்", "drive_line": "மும்"}
-{"line": 20, "seq": 218, "script": "dev", "x0": 1777, "y0": 1996, "x1": 1897, "y1": 2072, "pre_space": true, "tess_run": "सूचित।", "dev_run": "सत", "drive_sep": "सूचित।", "drive_line": "सूचित।"}
-{"line": 20, "seq": 219, "script": "tam", "x0": 1897, "y0": 2010, "x1": 1950, "y1": 2056, "pre_space": false, "tess_run": "ம்‌.", "dev_run": "प", "drive_sep": ".9", "drive_line": "ம் ம."}
-{"line": 20, "seq": 220, "script": "tam", "x0": 2012, "y0": 2014, "x1": 2187, "y1": 2080, "pre_space": true, "tess_run": "எடுத்த", "dev_run": "எ", "drive_sep": ".9 எடுத்த", "drive_line": "எடுத்த"}
+{"line": 20, "seq": 218, "script": "dev", "x0": 1777, "y0": 1996, "x1": 1897, "y1": 2072, "pre_space": true, "tess_run": "सूचित।", "dev_run": "सत", "drive_sep": "सूचित", "drive_line": "सूचित"}
+{"line": 20, "seq": 219, "script": "tam", "x0": 1897, "y0": 2010, "x1": 1950, "y1": 2056, "pre_space": false, "tess_run": "ம்‌.", "dev_run": "प", "drive_sep": "ம். எடுத்த", "drive_line": "ம். எடுத்த"}
+{"line": 20, "seq": 220, "script": "tam", "x0": 2012, "y0": 2014, "x1": 2187, "y1": 2080, "pre_space": true, "tess_run": "எடுத்த", "dev_run": "எ", "drive_sep": null, "drive_line": null}
 {"line": 20, "seq": 221, "script": "dev", "x0": 2213, "y0": 2022, "x1": 2309, "y1": 2065, "pre_space": true, "tess_run": "तृचन्‌", "dev_run": "प", "drive_sep": "वचन", "drive_line": "वचन"}
-{"line": 20, "seq": 222, "script": "tam", "x0": 2309, "y0": 2021, "x1": 2359, "y1": 2068, "pre_space": false, "tess_run": "ங்‌", "dev_run": "प", "drive_sep": "ங்", "drive_line": "ங"}
+{"line": 20, "seq": 222, "script": "tam", "x0": 2309, "y0": 2021, "x1": 2359, "y1": 2068, "pre_space": false, "tess_run": "ங்‌", "dev_run": "प", "drive_sep": "ங்", "drive_line": "ங்"}
 {"line": 21, "seq": 223, "script": "tam", "x0": 308, "y0": 2094, "x1": 467, "y1": 2144, "pre_space": true, "tess_run": "களின்‌", "dev_run": "स", "drive_sep": "களின்", "drive_line": "களின்"}
-{"line": 21, "seq": 224, "script": "dev", "x0": 502, "y0": 2085, "x1": 574, "y1": 2143, "pre_space": true, "tess_run": "अर्थं", "dev_run": "प", "drive_sep": "अर्थ", "drive_line": "अर्थ"}
+{"line": 21, "seq": 224, "script": "dev", "x0": 502, "y0": 2085, "x1": 574, "y1": 2143, "pre_space": true, "tess_run": "अर्थं", "dev_run": "प", "drive_sep": "अर्थ,", "drive_line": "अर्थ,"}
 {"line": 21, "seq": 225, "script": "tam", "x0": 574, "y0": 2089, "x1": 704, "y1": 2164, "pre_space": false, "tess_run": "த்தை", "dev_run": "", "drive_sep": "த்தை", "drive_line": "த்தை"}
 {"line": 21, "seq": 226, "script": "dev", "x0": 740, "y0": 2086, "x1": 844, "y1": 2149, "pre_space": true, "tess_run": "संग्रहि", "dev_run": "", "drive_sep": "संग्रहि", "drive_line": "संग्रहि"}
-{"line": 21, "seq": 227, "script": "tam", "x0": 844, "y0": 2097, "x1": 930, "y1": 2162, "pre_space": false, "tess_run": "த்து", "dev_run": "प", "drive_sep": "தது", "drive_line": "தது"}
-{"line": 21, "seq": 228, "script": "tam", "x0": 970, "y0": 2093, "x1": 1130, "y1": 2160, "pre_space": true, "tess_run": "அருளி", "dev_run": "அ", "drive_sep": "அருளி", "drive_line": "அருளி"}
-{"line": 21, "seq": 229, "script": "tam", "x0": 1146, "y0": 2092, "x1": 1468, "y1": 2158, "pre_space": false, "tess_run": "ச்செய்கிறார்‌,", "dev_run": "ச்க்", "drive_sep": "ச்செய்கிறார்,", "drive_line": "ச்செய்கிறார்,"}
-{"line": 21, "seq": 230, "script": "other", "x0": 1512, "y0": 2102, "x1": 1536, "y1": 2118, "pre_space": true, "tess_run": "६६", "dev_run": "இ", "drive_sep": null, "drive_line": "66"}
-{"line": 21, "seq": 231, "script": "dev", "x0": 1538, "y0": 2086, "x1": 1696, "y1": 2145, "pre_space": false, "tess_run": "सर्वलोकं", "dev_run": "", "drive_sep": "'सर्वलोक", "drive_line": "सर्वलोक"}
+{"line": 21, "seq": 227, "script": "tam", "x0": 844, "y0": 2097, "x1": 930, "y1": 2162, "pre_space": false, "tess_run": "த்து", "dev_run": "प", "drive_sep": "த்து அருளிச்செய்கிறார்,", "drive_line": "த்து அருளிச்செய்கிறார்,"}
+{"line": 21, "seq": 228, "script": "tam", "x0": 970, "y0": 2093, "x1": 1130, "y1": 2160, "pre_space": true, "tess_run": "அருளி", "dev_run": "அ", "drive_sep": null, "drive_line": null}
+{"line": 21, "seq": 229, "script": "tam", "x0": 1146, "y0": 2092, "x1": 1468, "y1": 2158, "pre_space": false, "tess_run": "ச்செய்கிறார்‌,", "dev_run": "ச்க்", "drive_sep": null, "drive_line": null}
+{"line": 21, "seq": 230, "script": "other", "x0": 1512, "y0": 2102, "x1": 1536, "y1": 2118, "pre_space": true, "tess_run": "६६", "dev_run": "இ", "drive_sep": null, "drive_line": null}
+{"line": 21, "seq": 231, "script": "dev", "x0": 1538, "y0": 2086, "x1": 1696, "y1": 2145, "pre_space": false, "tess_run": "सर्वलोकं", "dev_run": "", "drive_sep": "'सर्वलोक", "drive_line": "'सर्वलोक"}
 {"line": 21, "seq": 232, "script": "tam", "x0": 1696, "y0": 2095, "x1": 1942, "y1": 2168, "pre_space": false, "tess_run": "த்திற்கும்‌", "dev_run": "", "drive_sep": "த்திற்கும்", "drive_line": "த்திற்கும்"}
 {"line": 21, "seq": 233, "script": "dev", "x0": 2014, "y0": 2083, "x1": 2206, "y1": 2157, "pre_space": true, "tess_run": "परमाचार्यं", "dev_run": "परमा्रय", "drive_sep": "परमाचार्य", "drive_line": "परमाचार्य"}
 {"line": 21, "seq": 234, "script": "tam", "x0": 2206, "y0": 2125, "x1": 2365, "y1": 2166, "pre_space": false, "tess_run": "னான", "dev_run": "प", "drive_sep": "னான", "drive_line": "னான"}
 {"line": 22, "seq": 235, "script": "dev", "x0": 304, "y0": 2178, "x1": 448, "y1": 2242, "pre_space": true, "tess_run": "सर्वेश्वर", "dev_run": "स्", "drive_sep": "सर्वेश्वर", "drive_line": "सर्वेश्वर"}
-{"line": 22, "seq": 236, "script": "tam", "x0": 448, "y0": 2190, "x1": 512, "y1": 2240, "pre_space": false, "tess_run": "ன்‌", "dev_run": "क", "drive_sep": "ன்", "drive_line": "oor"}
+{"line": 22, "seq": 236, "script": "tam", "x0": 448, "y0": 2190, "x1": 512, "y1": 2240, "pre_space": false, "tess_run": "ன்‌", "dev_run": "क", "drive_sep": "60T", "drive_line": "60T"}
 {"line": 22, "seq": 237, "script": "other", "x0": 516, "y0": 2198, "x1": 540, "y1": 2214, "pre_space": false, "tess_run": "5)", "dev_run": "", "drive_sep": null, "drive_line": null}
-{"line": 22, "seq": 238, "script": "tam", "x0": 581, "y0": 2193, "x1": 741, "y1": 2257, "pre_space": true, "tess_run": "என்று.", "dev_run": "என", "drive_sep": "என்று.", "drive_line": "GT."}
-{"line": 22, "seq": 239, "script": "dev", "x0": 779, "y0": 2178, "x1": 915, "y1": 2238, "pre_space": true, "tess_run": "आचारय", "dev_run": "आ", "drive_sep": "आचार्य", "drive_line": "आचार्य #TO6ळं"}
+{"line": 22, "seq": 238, "script": "tam", "x0": 581, "y0": 2193, "x1": 741, "y1": 2257, "pre_space": true, "tess_run": "என்று.", "dev_run": "என", "drive_sep": "என்று.", "drive_line": "என்று."}
+{"line": 22, "seq": 239, "script": "dev", "x0": 779, "y0": 2178, "x1": 915, "y1": 2238, "pre_space": true, "tess_run": "आचारय", "dev_run": "आ", "drive_sep": "आचार्य", "drive_line": "आचार्य"}
 {"line": 22, "seq": 240, "script": "tam", "x0": 915, "y0": 2191, "x1": 1066, "y1": 2255, "pre_space": false, "tess_run": "னுக்கு", "dev_run": "ச", "drive_sep": "னுக்கு", "drive_line": "னுக்கு"}
 {"line": 22, "seq": 241, "script": "dev", "x0": 1100, "y0": 2196, "x1": 1212, "y1": 2237, "pre_space": true, "tess_run": "पास्म्य", "dev_run": "प", "drive_sep": "पारम्य", "drive_line": "पारम्य"}
 {"line": 22, "seq": 242, "script": "tam", "x0": 1212, "y0": 2196, "x1": 1391, "y1": 2256, "pre_space": false, "tess_run": "மாவது", "dev_run": "प", "drive_sep": "மாவது", "drive_line": "மாவது"}
-{"line": 22, "seq": 243, "script": "dev", "x0": 1425, "y0": 2179, "x1": 1492, "y1": 2238, "pre_space": true, "tess_run": "परो", "dev_run": "प", "drive_sep": "परो", "drive_line": "परो"}
-{"line": 22, "seq": 244, "script": "dev", "x0": 1505, "y0": 2198, "x1": 1555, "y1": 2238, "pre_space": true, "tess_run": "मा", "dev_run": "प", "drive_sep": "मा", "drive_line": "मा"}
-{"line": 22, "seq": 245, "script": "dev", "x0": 1568, "y0": 2198, "x1": 1707, "y1": 2256, "pre_space": true, "tess_run": "यस्मात्‌", "dev_run": "प", "drive_sep": "यस्मात्", "drive_line": "यस्मात्"}
+{"line": 22, "seq": 243, "script": "dev", "x0": 1425, "y0": 2179, "x1": 1492, "y1": 2238, "pre_space": true, "tess_run": "परो", "dev_run": "प", "drive_sep": "परो मा यस्मात्", "drive_line": "परो मा यस्मात्"}
+{"line": 22, "seq": 244, "script": "dev", "x0": 1505, "y0": 2198, "x1": 1555, "y1": 2238, "pre_space": true, "tess_run": "मा", "dev_run": "प", "drive_sep": null, "drive_line": null}
+{"line": 22, "seq": 245, "script": "dev", "x0": 1568, "y0": 2198, "x1": 1707, "y1": 2256, "pre_space": true, "tess_run": "यस्मात्‌", "dev_run": "प", "drive_sep": null, "drive_line": null}
 {"line": 22, "seq": 246, "script": "tam", "x0": 1730, "y0": 2194, "x1": 1917, "y1": 2260, "pre_space": true, "tess_run": "என்கிற", "dev_run": "என்கற", "drive_sep": "என்கிற", "drive_line": "என்கிற"}
 {"line": 22, "seq": 247, "script": "dev", "x0": 1970, "y0": 2193, "x1": 2122, "y1": 2262, "pre_space": true, "tess_run": "व्युत्पत्ति।", "dev_run": "स्त्त्त", "drive_sep": "व्युत्पत्ति।", "drive_line": "व्युत्पत्ति।"}
 {"line": 22, "seq": 248, "script": "tam", "x0": 2122, "y0": 2202, "x1": 2334, "y1": 2268, "pre_space": false, "tess_run": "யின்படி", "dev_run": "प", "drive_sep": "யின்படி", "drive_line": "யின்படி"}

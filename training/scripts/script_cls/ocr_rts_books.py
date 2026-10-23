@@ -50,8 +50,14 @@ if "train_lines2" not in sys.modules:
     sys.modules["train_lines2"] = _tl
 
 import pipeline as P
+import apply_ocr_pdf as _A
 from train_classifier import Net, CLASSES
-from detect_blocks import estimate_skew, deskew_image, find_section_rules
+from detect_blocks import estimate_skew, deskew_image
+try:
+    from detect_blocks import split_page_sections
+except ImportError:
+    from detect_blocks import find_section_rules
+    split_page_sections = find_section_rules
 
 DPI = 150
 OTHER_OK = re.compile(r"^[\s।॥|.,;:!?()\[\]{}'\"“”‘’\-–—0-9]+$")
@@ -110,18 +116,51 @@ def tess_text(img, lang, tessdata, psm=7):
 
 
 def init_worker(pdf_path, tessdata):
-    global DOC, NET, DPI_ACTIVE
+    global DOC, DPI_ACTIVE
     DOC = pymupdf.open(pdf_path)
-    NET = Net()
-    try:
-        ck_path = resolve_input("script_cls.pt")
-    except SystemExit:
-        ck_path = pathlib.Path("/home/vvasuki/gitland/sanskrit-coders/maNipravALa-ocr/training/local/script_cls.pt")
-    ck = torch.load(ck_path, map_location="cpu", weights_only=False)
-    NET.load_state_dict(ck["state_dict"])
-    NET.to(torch.device("cpu")).eval()
     DPI_ACTIVE = DPI
 TESS_BIN = "/tmp/tess-root/usr/bin/tesseract" if pathlib.Path("/tmp/tess-root/usr/bin/tesseract").exists() else "/usr/bin/tesseract"
+
+
+def prepare_tessdata(src):
+    src = pathlib.Path(src)
+    if (src / "configs" / "tsv").exists():
+        return src
+    dst = pathlib.Path("/kaggle/working/tessdata")
+    dst.mkdir(parents=True, exist_ok=True)
+    (dst / "configs").mkdir(exist_ok=True)
+    for name in ("tam.traineddata", "san.traineddata"):
+        target = dst / name
+        if not target.exists():
+            try:
+                target.symlink_to(src / name)
+            except OSError:
+                target.write_bytes((src / name).read_bytes())
+    (dst / "configs" / "tsv").write_text("tessedit_create_tsv 1\n", encoding="utf-8")
+    return dst
+
+
+def projection_lines(arr):
+    dark = arr < 128
+    h, w = arr.shape
+    row = dark.sum(axis=1)
+    thr = max(2, int(0.005 * w))
+    ink = row > thr
+    runs = []
+    s = None
+    for y, v in enumerate(ink):
+        if v and s is None:
+            s = y
+        elif not v and s is not None:
+            runs.append((s, y))
+            s = None
+    if s is not None:
+        runs.append((s, h))
+    boxes = []
+    for y0, y1 in runs:
+        if y1 - y0 >= 6:
+            boxes.append((0, y0, w, y1))
+    return boxes
 
 
 def assemble_line(runs, segs, texts):
@@ -146,7 +185,9 @@ def insert_section_rules(lines, rule_ys):
     for y, text in lines:
         while ri < len(rule_ys) and rule_ys[ri] < y - 2:
             if out and out[-1] != "---":
+                out.append("")
                 out.append("---")
+                out.append("")
             ri += 1
         if text.strip():
             out.append(text.strip())
@@ -162,65 +203,25 @@ def process_page(pi):
     if abs(angle) >= 0.05:
         arr = deskew_image(arr, angle)
         gray = arr
-    meta = find_section_rules(arr, angle=angle)
+    try:
+        meta = split_page_sections(arr, angle=angle)
+    except Exception:
+        meta = {"rules": [], "header_bottom": int(arr.shape[0] * 0.06)}
     hb = int(meta["header_bottom"])
     rule_ys = [float(L["yc"]) for L in meta["rules"] if L["yc"] > hb + 2]
 
     lines = P.segment_lines(Image.fromarray(arr), 6)
-    dark = arr < 128
-    runs = []
-    for li, (x0, y0, x1, y1) in enumerate(lines):
-        words = P.word_segments(dark, x0, x1, y0, y1)
-        for wi, (wx0, wx1) in enumerate(words):
-            rr = P.classify_word(NET, CLASSES, arr, wx0, wx1, y0, y1, torch.device("cpu"))
-            if not rr:
-                continue
-            pre_space = wi == 0 or (wx0 - words[wi - 1][1]) >= P.GAP_WORD
-            for k, (script, rx0, rx1, ry0, ry1) in enumerate(rr):
-                runs.append({"line": li, "script": script, "x0": rx0, "y0": ry0,
-                             "x1": rx1, "y1": ry1,
-                             "pre_space": pre_space if k == 0 else False})
-    segs = []
-    by_line = collections.defaultdict(list)
-    for ri, r in enumerate(runs):
-        by_line[r["line"]].append(ri)
-    for li in sorted(by_line):
-        cur = []
-        for ri in by_line[li]:
-            if cur and runs[ri]["script"] != runs[cur[-1]]["script"]:
-                segs.append({"line": li, "indices": cur,
-                             "script": runs[cur[0]]["script"]})
-                cur = []
-            cur.append(ri)
-        if cur:
-            segs.append({"line": li, "indices": cur,
-                         "script": runs[cur[0]]["script"]})
-    for k, s in enumerate(segs):
-        rs = [runs[i] for i in s["indices"]]
-        s["idx"] = k
-        s["box"] = (min(r["x0"] for r in rs), min(r["y0"] for r in rs),
-                    max(r["x1"] for r in rs), max(r["y1"] for r in rs))
-    texts = {}
-    for s in segs:
-        x0, y0, x1, y1 = s["box"]
-        im = arr[max(0, y0 - 5):y1 + 5, max(0, x0 - 5):x1 + 5]
-        if im.size == 0:
+    if not lines:
+        lines = projection_lines(arr)
+    out = []
+    for x0, y0, x1, y1 in lines:
+        if y0 < hb:
             continue
-        if s["script"] in ("dev", "tam"):
-            texts[s["idx"]] = tess_text(im, "san" if s["script"] == "dev" else "tam", TESSDATA)
-        elif s["script"] == "other":
-            t = tess_text(im, "tam+san", TESSDATA)
-            if t and OTHER_OK.match(t):
-                texts[s["idx"]] = t
-    lineout = []
-    for li in sorted(by_line):
-        if lines[li][1] < hb:
-            continue
-        ss = [s for s in segs if s["line"] == li]
-        lineout.append((lines[li][1], assemble_line(runs, ss, texts)))
-    body = insert_section_rules(lineout, rule_ys)
+        im = arr[max(0, y0 - 3):y1 + 3, max(0, x0 - 3):x1 + 3]
+        text = tess_text(im, "tam+san", TESSDATA)
+        out.append((y0, text))
+    body = insert_section_rules(out, rule_ys)
     return body
-
 
 def header_number(pi, tessdata):
     page = DOC[pi]
@@ -266,6 +267,9 @@ def main():
             TESSDATA = resolve_input("tam.traineddata").parent
         except SystemExit:
             TESSDATA = pathlib.Path("/tmp/tess-root/usr/share/tesseract-ocr/5/tessdata")
+    TESSDATA = prepare_tessdata(TESSDATA)
+    _A.TESS = TESS_BIN
+    _A.TESSDATA = str(TESSDATA) + "/"
     pdf_dir = resolve_pdf_dir(args.pdf_dir)
     outdir = pathlib.Path(args.outdir) if args.outdir else (
         pathlib.Path("/kaggle/working/raw") if pathlib.Path("/kaggle/working").exists()
