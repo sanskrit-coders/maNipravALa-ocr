@@ -25,23 +25,81 @@ Devanagari and Tamil strips can be composed separately.
   is the right end of the shiro-rekhā stroke in the **original image box**.
 - `data/script-separator/train_proj.jsonl`: 8,159 high-confidence words using base-projection
   glyph segmentation (DP) constrained to agree with the shiro-rekhā endpoint.
+- `data/script-separator/train_words_fixed.jsonl`: 58,403 GT-constrained boxes from `RTS_sb_02`.
+- `data/script-separator/train_words_fixed_sb01.jsonl`: same fixed-box generator applied to
+  `RTS_sb_01` — **54,545** boxes.
+- `data/script-separator/train_boundary_fixed_sb01.jsonl`: **6,513** high-confidence
+  dev→tam boundary labels from sb_01. Combined with the 7,695 sb_02 labels, there are
+  **14,208** boundary words ready for the combined retrain.
 
-## Models and results
+## Models compared
 
-| model | labels | result |
-|---|---|---|
-| rendered Noto boundary CNN | 23,025 rendered words | MAE 0.0002, p@5 1.000, seg P 0.999 / R 0.999 — rendered domain only |
-| original-box shiro boundary CNN | 18,175 shiro labels | MAE 0.116, p@5 0.643, seg P 0.916 / R 0.906 |
-| column separator | 24,890 refined mixed words | column acc 0.715, boundary MAE 0.087 |
-| base-projection feature handcrafted | 8,159 projection/shiro labels | label set in `train_proj.jsonl`; 2-channel training run failed with 0 loaded samples |
+Rule baselines below are on the combined **14,208** sb_01+sb_02 dev→tam words; the image CNN rows are from the earlier **7,695 sb_02** run (combined CNN retrain blocked by the Kaggle dataset upload).
+(`train_boundary_fixed.jsonl`); labels are the consensus of the shiro-rekhā endpoint and the
+base-projection `k_dev`-th-glyph rule; page-disjoint train/val: 6,907 / 788.
 
-The rendered model is not used on scanned pages. The shiro model is stored at
-`training/local/boundary_sep.pt` and wired as optional `--boundary-classifier`.
+1. **Shiro-rekhā rule** — no learning; boundary is the right end of the longest horizontal
+   headline stroke.
+2. **Projection-glyph rule** — no learning; split the word into `k_dev+k_tam` glyph slots at
+   base-projection valleys; boundary after the `k_dev`-th glyph.
+3. **Image-only boundary CNN** — 64×256 word image; 256-column boundary heatmap.
+4. **Image + base-projection CNN** — same CNN with a second 64×256 channel containing the
+   base-region ink projection.
+5. **Rendered Noto CNN** — trained on Noto-rendered words; exact in rendered domain, not used
+   on scans.
+6. **Column CNN** — per-column `dev/tam/other` labels, boundary from the first transition.
 
-Training code:
-- `training/scripts/script_cls/train_boundary_sep.py`
-- `training/scripts/script_cls/train_render_boundary.py`
-- label builders: `make_proj_labels.py`, `recompute_noto.py`, `shiro_label.py` (in `/tmp/opencode`)
+| method | MAE | p@5 | segment P | segment R |
+|---|---:|---:|---:|---:|
+| shiro-rekhā rule (sb_01+sb_02) | **0.0320** | **0.718** | 0.960 | 0.956 |
+| projection-glyph rule (sb_01+sb_02) | **0.0320** | **0.718** | **0.964** | **0.959** |
+| image-only CNN (sb_02 train) | 0.1777 | 0.412 | 0.878 | 0.842 |
+| image+projection CNN (sb_02 train) | 0.1726 | 0.423 | 0.882 | 0.850 |
+| rendered Noto CNN | 0.0002 | 1.000 | 0.999 | 0.999 (rendered domain only) |
+| column CNN (older data) | 0.087 | — | — | — |
+
+The **projection-glyph rule is the best source-domain boundary classifier**; the learned CNNs
+underperform it because the 7.7k consensus labels are still noisy and the fixed boxes are
+imperfect. The rendered model is exact only on rendered images.
+
+Best boundary models saved:
+- `training/local/boundary_image.pt`
+- `training/local/boundary_proj.pt`
+
+## Why the earlier evaluation had only 7,695 words
+
+That number was **not** a limit of the method: it was the intersection of
+`RTS_sb_02` fixed boxes, dev→tam order, and agreement between the shiro-rekhā and
+base-projection endpoints. `RTS_sb_01` **was not used at all** in that run. Its 54,545 fixed
+boxes and 6,513 boundary labels have now been generated and added to the combined training set.
+
+For the next retrain, use both:
+- `RTS_sb_02` fixed boxes (`train_words_fixed.jsonl`);
+- `RTS_sb_01` fixed boxes (`train_words_fixed_sb01.jsonl`).
+
+The strict agreement filter is still useful for evaluation, but training can use the union of
+the two corpora with a confidence weight instead of discarding all disagreeing boxes.
+
+## Tamil→Devanagari and recursive segmentation
+
+The single-boundary model assumes `dev` prefix → `tam` suffix. GT has 1,645 Tamil-first
+mixed tokens, so the general operator is a recursive script-run segmenter:
+
+1. Run the word classifier on a word image.
+2. If pure → return it.
+3. If mixed → apply a boundary scorer to propose the first script transition.
+4. Split; run the word classifier on both left and right segments.
+5. Recurse on any segment still labeled `mixed` (this handles `tam-dev-tam`,
+   `dev-tam-dev`, etc.).
+6. Stop when every segment is pure or no valid boundary remains.
+
+For Tamil-first words, either:
+- train a **second boundary head** on horizontally mirrored / Tamil-first examples, or
+- use a **direction-agnostic multi-transition model** (column/glyph-level labels).
+
+The recursion uses the word classifier as the stopping criterion, so a bad word label is
+recoverable by the boundary check; conversely a boundary that yields one pure and one mixed
+segment triggers another split.
 
 ## Why boxes are still imperfect (examples)
 

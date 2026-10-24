@@ -10,8 +10,9 @@
 
 
 - Model: 64×256 word CNN, 4 classes: `dev`, `tam`, `other`, `mixed`.
-- Training data: `data/script-separator/train_words.jsonl` — **51,210** words from 1,070 pages,
-  all labeled from GT; no stored crops.
+- Training data: `data/script-separator/train_words_fixed.jsonl` — **58,403** fixed boxes from
+  `RTS_sb_02`, plus `train_words_fixed_sb01.jsonl` — **54,545** fixed boxes from `RTS_sb_01`;
+  all labeled from GT, no stored crops. Combined retrain: real per-class dev **0.999**, tam **1.000**, other **0.997**, mixed **0.983**; synthetic **0.996**.
 - Validation (real, page-disjoint): dev **0.999**, tam **1.000**, other **0.993**,
   mixed **0.986**; synthetic val **0.996**.
 - Model: `training/local/script_sep.pt`.
