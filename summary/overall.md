@@ -57,6 +57,20 @@ Classifier documents:
 - `pipeline.py` keeps safe ink-column splitting as the default; trained word/boundary/column
   models are opt-in.
 
+## OCR
+
+- **New mixed-script OCR:** Kraken 7.1.1 VGSL word recognizer, **4.1M params**, trained
+  from scratch on **15,000** word crops from the training word-image maps; evaluated on
+  **2,000** word crops from evaluation-split pages.
+- Training: 2 epochs, batch 8, CUDA, 120 px height; word crops are not stored in the repo.
+- Results on the 2,000-word evaluation set: **character accuracy 69.13%**, **word accuracy
+  35.10%**; per-script right: Tamil **86.37%**, common **63.30%**, Devanagari **48.86%**.
+- Errors: 5,808 character errors — 294 insertions, 3,497 deletions, 2,017 substitutions.
+- Model: `training/local/kraken_words_model/best_0.6842.safetensors`;
+  metrics: `training/local/kraken_words_metrics.json`.
+- This is a first word-level mixed-script model, not yet production quality; the weak
+  Devanagari accuracy and high deletion count need another training pass / better line data.
+
 ## Artifacts
 
 - `training/scripts/script_cls/pipeline.py` — production pipeline.
