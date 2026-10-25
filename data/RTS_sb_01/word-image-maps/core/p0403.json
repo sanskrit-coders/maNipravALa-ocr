@@ -1,0 +1,81 @@
+{
+ "page": "p0403",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0403.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    207,
+    21,
+    259,
+    56
+   ],
+   "text": "இக்",
+   "confidence": 0.6435,
+   "line": 1,
+   "ocr_text": "இக்‌"
+  },
+  {
+   "box": [
+    486,
+    18,
+    598,
+    54
+   ],
+   "text": "निबन्धनம்,",
+   "confidence": 0.6479,
+   "line": 1,
+   "ocr_text": "ரணம்‌,"
+  },
+  {
+   "box": [
+    610,
+    25,
+    664,
+    57
+   ],
+   "text": "தன்",
+   "confidence": 0.7185,
+   "line": 1,
+   "ocr_text": "தன்‌"
+  },
+  {
+   "box": [
+    946,
+    23,
+    1128,
+    60
+   ],
+   "text": "வந்ததென்று",
+   "confidence": 0.6385,
+   "line": 1,
+   "ocr_text": "வந்ததென்று"
+  },
+  {
+   "box": [
+    158,
+    70,
+    260,
+    103
+   ],
+   "text": "தனக்கு",
+   "confidence": 0.7487,
+   "line": 2,
+   "ocr_text": "தனக்கு"
+  },
+  {
+   "box": [
+    741,
+    72,
+    849,
+    104
+   ],
+   "text": "யறிகை.",
+   "confidence": 0.7855,
+   "line": 2,
+   "ocr_text": "யறிகை."
+  }
+ ]
+}

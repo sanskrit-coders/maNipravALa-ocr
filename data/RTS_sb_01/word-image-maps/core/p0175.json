@@ -1,0 +1,33 @@
+{
+ "page": "p0175",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0175.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    157,
+    75,
+    299,
+    108
+   ],
+   "text": "இத்தோடு",
+   "confidence": 0.6408,
+   "line": 2,
+   "ocr_text": "மித்தோடு"
+  },
+  {
+   "box": [
+    750,
+    67,
+    802,
+    102
+   ],
+   "text": "இத்",
+   "confidence": 0.6209,
+   "line": 2,
+   "ocr_text": "இத்‌"
+  }
+ ]
+}

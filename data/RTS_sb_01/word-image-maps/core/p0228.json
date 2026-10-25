@@ -1,0 +1,21 @@
+{
+ "page": "p0228",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0228.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    137,
+    24,
+    269,
+    62
+   ],
+   "text": "இவர்கள்",
+   "confidence": 0.7278,
+   "line": 1,
+   "ocr_text": "இவர்கள்‌"
+  }
+ ]
+}

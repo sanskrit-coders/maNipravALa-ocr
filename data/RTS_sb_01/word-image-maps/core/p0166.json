@@ -1,0 +1,33 @@
+{
+ "page": "p0166",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0166.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    325,
+    22,
+    452,
+    56
+   ],
+   "text": "இதற்குப்",
+   "confidence": 0.7107,
+   "line": 1,
+   "ocr_text": "இதற்குப்‌"
+  },
+  {
+   "box": [
+    327,
+    169,
+    639,
+    203
+   ],
+   "text": "தனக்கनुकूलமாகவாதல்",
+   "confidence": 0.4781,
+   "line": 4,
+   "ocr_text": "தனக்க3%ஈமாகவாதல்‌"
+  }
+ ]
+}

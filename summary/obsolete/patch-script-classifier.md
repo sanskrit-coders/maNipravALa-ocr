@@ -11,6 +11,8 @@
 
 - Model: 48×48 patch residual CNN, 4 classes (`dev/tam/other/null`).
 - Synthetic validation accuracy **0.996** (dev 1.000 / tam 0.998 / other 0.985 / null 0.986).
+- Real-page retrain from word-image maps: **69,366** training words, **1,763** evaluation
+  words; patch accuracy **0.9921** (dev **0.989** / tam **0.995** / other **0.966**).
 - Model: `training/local/script_cls.pt`.
 - Training code: `training/scripts/script_cls/train_classifier.py`.
 - Kaggle: `vishvasvasuki/manipravala-script-cls` and adaptation

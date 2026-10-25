@@ -1,0 +1,45 @@
+{
+ "page": "p0117",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0117.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    133,
+    71,
+    281,
+    103
+   ],
+   "text": "தளமாக்கி",
+   "confidence": 0.6575,
+   "line": 2,
+   "ocr_text": "தளமாக்கி"
+  },
+  {
+   "box": [
+    290,
+    73,
+    397,
+    109
+   ],
+   "text": "இத்தை",
+   "confidence": 0.673,
+   "line": 2,
+   "ocr_text": "இத்தை"
+  },
+  {
+   "box": [
+    834,
+    73,
+    906,
+    99
+   ],
+   "text": "சிலர்",
+   "confidence": 0.4869,
+   "line": 2,
+   "ocr_text": "சிலர்‌"
+  }
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "page": "p0396",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0396.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    140,
+    23,
+    336,
+    59
+   ],
+   "text": "அறியாதாரும்",
+   "confidence": 0.6316,
+   "line": 1,
+   "ocr_text": "அறியாதாரும்‌"
+  },
+  {
+   "box": [
+    358,
+    23,
+    445,
+    47
+   ],
+   "text": "உள்ள",
+   "confidence": 0.7279,
+   "line": 1,
+   "ocr_text": "உள்ள"
+  },
+  {
+   "box": [
+    464,
+    25,
+    739,
+    57
+   ],
+   "text": "அறிவைக்கொண்டு",
+   "confidence": 0.7375,
+   "line": 1,
+   "ocr_text": "அறிவைக்கொண்டு"
+  },
+  {
+   "box": [
+    752,
+    65,
+    1139,
+    105
+   ],
+   "text": "ஸ்தோத்ரம்",
+   "confidence": 0.4839,
+   "line": 2,
+   "ocr_text": "ானாஎனித்தாலுண்டான"
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "page": "p0442",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0442.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    201,
+    0,
+    460,
+    34
+   ],
+   "text": "வென்றபடியன்று.",
+   "confidence": 0.6496,
+   "line": 1,
+   "ocr_text": "வென்றபடியன்று."
+  },
+  {
+   "box": [
+    499,
+    1,
+    584,
+    35
+   ],
+   "text": "இங்கு",
+   "confidence": 0.7424,
+   "line": 1,
+   "ocr_text": "இங்கு"
+  }
+ ]
+}

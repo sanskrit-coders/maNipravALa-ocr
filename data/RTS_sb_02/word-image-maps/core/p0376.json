@@ -1,0 +1,93 @@
+{
+ "page": "p0376",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0376.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    452,
+    217,
+    591,
+    252
+   ],
+   "text": "प्रोक्तं",
+   "confidence": 0.4874,
+   "line": 1,
+   "ocr_text": "वक्तव्यमिति"
+  },
+  {
+   "box": [
+    771,
+    13,
+    777,
+    38
+   ],
+   "text": "।",
+   "confidence": 0.7087,
+   "line": 1,
+   "ocr_text": "|"
+  },
+  {
+   "box": [
+    313,
+    336,
+    335,
+    360
+   ],
+   "text": "न",
+   "confidence": 1.0348,
+   "line": 2,
+   "ocr_text": "न"
+  },
+  {
+   "box": [
+    313,
+    54,
+    357,
+    95
+   ],
+   "text": "विशेष्यचरणद्वित्वं",
+   "confidence": 0.5207,
+   "line": 2,
+   "ocr_text": "इति"
+  },
+  {
+   "box": [
+    533,
+    55,
+    744,
+    92
+   ],
+   "text": "वक्तव्यमिति",
+   "confidence": 0.5312,
+   "line": 2,
+   "ocr_text": "भीमच्छन्दबिरोधतः"
+  },
+  {
+   "box": [
+    593,
+    392,
+    728,
+    426
+   ],
+   "text": "न",
+   "confidence": 0.4941,
+   "line": 3,
+   "ocr_text": "गुरुसाहसम्‌"
+  },
+  {
+   "box": [
+    746,
+    175,
+    761,
+    200
+   ],
+   "text": "॥",
+   "confidence": 1.0466,
+   "line": 4,
+   "ocr_text": "॥"
+  }
+ ]
+}

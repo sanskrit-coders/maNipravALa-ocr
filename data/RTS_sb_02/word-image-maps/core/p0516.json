@@ -1,0 +1,57 @@
+{
+ "page": "p0516",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0516.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    87,
+    4,
+    352,
+    44
+   ],
+   "text": "இங்ஙனல்லாதபோது",
+   "confidence": 0.518,
+   "line": 1,
+   "ocr_text": "ங்ஙனல்லாதபோது"
+  },
+  {
+   "box": [
+    422,
+    53,
+    508,
+    88
+   ],
+   "text": "விடுவிக்கையாவது;",
+   "confidence": 0.4784,
+   "line": 1,
+   "ocr_text": "இங்கு"
+  },
+  {
+   "box": [
+    577,
+    300,
+    823,
+    333
+   ],
+   "text": "விடுகை.",
+   "confidence": 0.4854,
+   "line": 1,
+   "ocr_text": "கமெதென்னில்‌;"
+  },
+  {
+   "box": [
+    542,
+    195,
+    699,
+    235
+   ],
+   "text": "என்கிற",
+   "confidence": 0.4911,
+   "line": 2,
+   "ocr_text": "எனன?"
+  }
+ ]
+}

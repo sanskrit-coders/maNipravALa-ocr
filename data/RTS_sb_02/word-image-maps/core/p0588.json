@@ -1,0 +1,57 @@
+{
+ "page": "p0588",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0588.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    530,
+    10,
+    545,
+    32
+   ],
+   "text": "॥",
+   "confidence": 0.9376,
+   "line": 1,
+   "ocr_text": "॥"
+  },
+  {
+   "box": [
+    556,
+    4,
+    615,
+    34
+   ],
+   "text": "श्रीमते",
+   "confidence": 0.5918,
+   "line": 1,
+   "ocr_text": "भीः॥"
+  },
+  {
+   "box": [
+    858,
+    415,
+    873,
+    440
+   ],
+   "text": "॥",
+   "confidence": 0.912,
+   "line": 1,
+   "ocr_text": "॥"
+  },
+  {
+   "box": [
+    773,
+    114,
+    789,
+    139
+   ],
+   "text": "॥",
+   "confidence": 0.6494,
+   "line": 3,
+   "ocr_text": "|"
+  }
+ ]
+}

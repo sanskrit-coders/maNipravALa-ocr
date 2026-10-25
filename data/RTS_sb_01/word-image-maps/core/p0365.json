@@ -1,0 +1,21 @@
+{
+ "page": "p0365",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0365.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    165,
+    62,
+    292,
+    110
+   ],
+   "text": "கைவைத்துக்கொண்டு",
+   "confidence": 0.5042,
+   "line": 2,
+   "ocr_text": "ள்னாய்‌"
+  }
+ ]
+}

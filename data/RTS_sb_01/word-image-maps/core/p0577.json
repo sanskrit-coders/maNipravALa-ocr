@@ -1,0 +1,57 @@
+{
+ "page": "p0577",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0577.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    130,
+    15,
+    298,
+    49
+   ],
+   "text": "प्राणवियोगकाले",
+   "confidence": 0.7198,
+   "line": 1,
+   "ocr_text": "प्राणवियोगकाले"
+  },
+  {
+   "box": [
+    311,
+    17,
+    369,
+    49
+   ],
+   "text": "यत्नेन",
+   "confidence": 0.6634,
+   "line": 1,
+   "ocr_text": "यत्रेन"
+  },
+  {
+   "box": [
+    445,
+    18,
+    609,
+    52
+   ],
+   "text": "उपरतेऽपि",
+   "confidence": 0.5356,
+   "line": 1,
+   "ocr_text": "बिनिवेशायन्ती'\""
+  },
+  {
+   "box": [
+    626,
+    18,
+    802,
+    58
+   ],
+   "text": "என்கிற",
+   "confidence": 0.4982,
+   "line": 1,
+   "ocr_text": "எரிகளிலும்‌"
+  }
+ ]
+}

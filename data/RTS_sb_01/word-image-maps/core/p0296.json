@@ -1,0 +1,45 @@
+{
+ "page": "p0296",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0296.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    180,
+    15,
+    341,
+    53
+   ],
+   "text": "இவர்களில்",
+   "confidence": 0.5262,
+   "line": 1,
+   "ocr_text": "இவர்களில்‌"
+  },
+  {
+   "box": [
+    133,
+    155,
+    309,
+    199
+   ],
+   "text": "உடைத்தான",
+   "confidence": 0.6814,
+   "line": 4,
+   "ocr_text": "உடைத்தான"
+  },
+  {
+   "box": [
+    879,
+    162,
+    950,
+    195
+   ],
+   "text": "मोक्षம்",
+   "confidence": 0.5886,
+   "line": 4,
+   "ocr_text": "मोक्ष?"
+  }
+ ]
+}

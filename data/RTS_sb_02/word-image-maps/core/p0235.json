@@ -1,0 +1,57 @@
+{
+ "page": "p0235",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0235.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    154,
+    70,
+    295,
+    105
+   ],
+   "text": "वक्षरத்திலே",
+   "confidence": 0.4759,
+   "line": 2,
+   "ocr_text": "எாத்திலே"
+  },
+  {
+   "box": [
+    304,
+    71,
+    416,
+    97
+   ],
+   "text": "प्रथमाक्षरம்",
+   "confidence": 0.4712,
+   "line": 2,
+   "ocr_text": "प्रयमाक्षर£"
+  },
+  {
+   "box": [
+    624,
+    65,
+    785,
+    92
+   ],
+   "text": "கணக்கிலே",
+   "confidence": 0.6466,
+   "line": 2,
+   "ocr_text": "கணக்கிலே"
+  },
+  {
+   "box": [
+    601,
+    118,
+    686,
+    155
+   ],
+   "text": "இதில்",
+   "confidence": 0.5394,
+   "line": 3,
+   "ocr_text": "இதில்‌"
+  }
+ ]
+}

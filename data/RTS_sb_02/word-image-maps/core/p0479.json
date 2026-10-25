@@ -1,0 +1,57 @@
+{
+ "page": "p0479",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0479.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    104,
+    18,
+    172,
+    51
+   ],
+   "text": "என்கிற",
+   "confidence": 0.4787,
+   "line": 1,
+   "ocr_text": "லிந்த"
+  },
+  {
+   "box": [
+    294,
+    1,
+    600,
+    36
+   ],
+   "text": "யென்னென்னில்;",
+   "confidence": 0.4593,
+   "line": 1,
+   "ocr_text": "ிகமாமாகக்கடவது."
+  },
+  {
+   "box": [
+    628,
+    2,
+    738,
+    37
+   ],
+   "text": "இவை",
+   "confidence": 0.5276,
+   "line": 1,
+   "ocr_text": "இதுக்கு"
+  },
+  {
+   "box": [
+    753,
+    0,
+    870,
+    32
+   ],
+   "text": "‘‘मामेकं’’",
+   "confidence": 0.4599,
+   "line": 1,
+   "ocr_text": "अथान्तर"
+  }
+ ]
+}

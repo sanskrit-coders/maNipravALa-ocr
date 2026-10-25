@@ -1,0 +1,45 @@
+{
+ "page": "p0161",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0161.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    796,
+    18,
+    901,
+    53
+   ],
+   "text": "வருகிற",
+   "confidence": 0.7184,
+   "line": 1,
+   "ocr_text": "வருகிற"
+  },
+  {
+   "box": [
+    179,
+    123,
+    285,
+    157
+   ],
+   "text": "வருகிற",
+   "confidence": 0.7703,
+   "line": 3,
+   "ocr_text": "வருகிற"
+  },
+  {
+   "box": [
+    856,
+    110,
+    1026,
+    151
+   ],
+   "text": "कृतोपायனான",
+   "confidence": 0.4802,
+   "line": 3,
+   "ocr_text": "कृतोपायज्मण्म"
+  }
+ ]
+}

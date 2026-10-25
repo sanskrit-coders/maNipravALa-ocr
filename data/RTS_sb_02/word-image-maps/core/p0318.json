@@ -1,0 +1,45 @@
+{
+ "page": "p0318",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0318.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    416,
+    48,
+    713,
+    96
+   ],
+   "text": "கொடுத்து",
+   "confidence": 0.4804,
+   "line": 2,
+   "ocr_text": "எர்‌ரமாயிருக்கும்‌."
+  },
+  {
+   "box": [
+    765,
+    116,
+    983,
+    151
+   ],
+   "text": "செய்தேயும்",
+   "confidence": 0.5326,
+   "line": 3,
+   "ocr_text": "பொருந்தாதவை"
+  },
+  {
+   "box": [
+    201,
+    150,
+    405,
+    185
+   ],
+   "text": "கிடக்கும்.",
+   "confidence": 0.4541,
+   "line": 4,
+   "ocr_text": "ஏதேனுமொரு"
+  }
+ ]
+}

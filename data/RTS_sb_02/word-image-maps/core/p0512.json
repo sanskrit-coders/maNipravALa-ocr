@@ -1,0 +1,21 @@
+{
+ "page": "p0512",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0512.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    705,
+    0,
+    772,
+    25
+   ],
+   "text": "कठिनचेतसाम्",
+   "confidence": 0.5547,
+   "line": 1,
+   "ocr_text": "86वेतला))/"
+  }
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "page": "p0521",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0521.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    154,
+    26,
+    359,
+    60
+   ],
+   "text": "யல்லாதபோது",
+   "confidence": 0.6348,
+   "line": 1,
+   "ocr_text": "யல்லாதபோது"
+  },
+  {
+   "box": [
+    156,
+    76,
+    276,
+    110
+   ],
+   "text": "பற்றவே",
+   "confidence": 0.735,
+   "line": 2,
+   "ocr_text": "பற்றவே"
+  },
+  {
+   "box": [
+    994,
+    310,
+    1138,
+    343
+   ],
+   "text": "அடியிலே",
+   "confidence": 0.7152,
+   "line": 7,
+   "ocr_text": "அடியிலே"
+  },
+  {
+   "box": [
+    431,
+    364,
+    585,
+    398
+   ],
+   "text": "परिहारமாகப்",
+   "confidence": 0.5394,
+   "line": 8,
+   "ocr_text": "ரினாமாகப்"
+  }
+ ]
+}

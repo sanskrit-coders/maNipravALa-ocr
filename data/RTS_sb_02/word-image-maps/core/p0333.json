@@ -1,0 +1,33 @@
+{
+ "page": "p0333",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0333.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    815,
+    25,
+    987,
+    57
+   ],
+   "text": "யெண்பத்தி",
+   "confidence": 0.4525,
+   "line": 2,
+   "ocr_text": "தானுமிஓ"
+  },
+  {
+   "box": [
+    109,
+    86,
+    190,
+    118
+   ],
+   "text": "மேலனவு",
+   "confidence": 0.4796,
+   "line": 3,
+   "ocr_text": "எத்தை"
+  }
+ ]
+}

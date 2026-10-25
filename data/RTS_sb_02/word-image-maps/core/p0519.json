@@ -1,0 +1,45 @@
+{
+ "page": "p0519",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0519.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    477,
+    446,
+    629,
+    483
+   ],
+   "text": "அவையுமெல்லாம்",
+   "confidence": 0.5111,
+   "line": 1,
+   "ocr_text": "தொழிகை."
+  },
+  {
+   "box": [
+    223,
+    47,
+    467,
+    92
+   ],
+   "text": "விஷயமாம்.",
+   "confidence": 0.4875,
+   "line": 2,
+   "ocr_text": "எணாராமாக"
+  },
+  {
+   "box": [
+    242,
+    100,
+    369,
+    137
+   ],
+   "text": "पुनःप्रपत्ति",
+   "confidence": 0.4515,
+   "line": 3,
+   "ocr_text": "भावोपहतानि"
+  }
+ ]
+}

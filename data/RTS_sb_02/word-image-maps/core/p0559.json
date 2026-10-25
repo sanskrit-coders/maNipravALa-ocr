@@ -1,0 +1,57 @@
+{
+ "page": "p0559",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0559.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    453,
+    100,
+    563,
+    147
+   ],
+   "text": "संग्रहेण",
+   "confidence": 0.5256,
+   "line": 5,
+   "ocr_text": "विजातीय"
+  },
+  {
+   "box": [
+    642,
+    151,
+    825,
+    184
+   ],
+   "text": "मान्यो",
+   "confidence": 0.4915,
+   "line": 6,
+   "ocr_text": "गोपायत्ययोम्यानां"
+  },
+  {
+   "box": [
+    925,
+    153,
+    1036,
+    202
+   ],
+   "text": "मे",
+   "confidence": 0.4783,
+   "line": 6,
+   "ocr_text": "संप्रयच्छति"
+  },
+  {
+   "box": [
+    292,
+    157,
+    418,
+    198
+   ],
+   "text": "(ஸாத்யகிஸம்ஹிதை",
+   "confidence": 0.5015,
+   "line": 7,
+   "ocr_text": "தாங்களு."
+  }
+ ]
+}

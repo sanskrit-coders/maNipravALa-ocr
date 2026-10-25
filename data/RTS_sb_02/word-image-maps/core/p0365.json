@@ -1,0 +1,69 @@
+{
+ "page": "p0365",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0365.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    161,
+    40,
+    259,
+    84
+   ],
+   "text": "இப்படி",
+   "confidence": 0.5352,
+   "line": 2,
+   "ocr_text": "இப்படி"
+  },
+  {
+   "box": [
+    379,
+    126,
+    519,
+    155
+   ],
+   "text": "காணலாம்",
+   "confidence": 0.561,
+   "line": 7,
+   "ocr_text": "ம"
+  },
+  {
+   "box": [
+    725,
+    110,
+    773,
+    162
+   ],
+   "text": "श्रेयः",
+   "confidence": 0.8153,
+   "line": 8,
+   "ocr_text": "भ्रयः"
+  },
+  {
+   "box": [
+    781,
+    114,
+    867,
+    158
+   ],
+   "text": "श्रीमान्",
+   "confidence": 0.7763,
+   "line": 8,
+   "ocr_text": "श्रीमान्‌"
+  },
+  {
+   "box": [
+    769,
+    139,
+    775,
+    146
+   ],
+   "text": "लोकत्रयाश्रय”(",
+   "confidence": 0.5106,
+   "line": 9,
+   "ocr_text": "४"
+  }
+ ]
+}

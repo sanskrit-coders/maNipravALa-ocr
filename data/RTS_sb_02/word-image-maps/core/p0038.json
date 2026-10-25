@@ -1,0 +1,93 @@
+{
+ "page": "p0038",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0038.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    252,
+    22,
+    325,
+    46
+   ],
+   "text": "மீளக்",
+   "confidence": 0.7146,
+   "line": 1,
+   "ocr_text": "மீளக்‌"
+  },
+  {
+   "box": [
+    342,
+    31,
+    421,
+    56
+   ],
+   "text": "களவு",
+   "confidence": 0.6728,
+   "line": 1,
+   "ocr_text": "களவு"
+  },
+  {
+   "box": [
+    439,
+    23,
+    792,
+    57
+   ],
+   "text": "ஆகையால்",
+   "confidence": 0.4996,
+   "line": 1,
+   "ocr_text": "கொண்டாற்போலேயாம்‌:"
+  },
+  {
+   "box": [
+    890,
+    125,
+    978,
+    165
+   ],
+   "text": "विकर्मस्थान्",
+   "confidence": 0.4671,
+   "line": 1,
+   "ocr_text": "हैतुकान्‌"
+  },
+  {
+   "box": [
+    772,
+    232,
+    791,
+    253
+   ],
+   "text": "न",
+   "confidence": 0.9837,
+   "line": 3,
+   "ocr_text": "न"
+  },
+  {
+   "box": [
+    648,
+    278,
+    719,
+    312
+   ],
+   "text": "இந்த",
+   "confidence": 0.5188,
+   "line": 4,
+   "ocr_text": "இந்த"
+  },
+  {
+   "box": [
+    962,
+    271,
+    1074,
+    301
+   ],
+   "text": "संभाषणம்",
+   "confidence": 0.5234,
+   "line": 4,
+   "ocr_text": "संभाषण"
+  }
+ ]
+}

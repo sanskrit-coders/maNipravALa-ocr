@@ -1,0 +1,45 @@
+{
+ "page": "p0315",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0315.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    598,
+    171,
+    645,
+    217
+   ],
+   "text": "‘‘दैवमेवापरे",
+   "confidence": 0.4815,
+   "line": 1,
+   "ocr_text": "भक्ति"
+  },
+  {
+   "box": [
+    872,
+    176,
+    1117,
+    219
+   ],
+   "text": "துடங்கிச்",
+   "confidence": 0.4512,
+   "line": 1,
+   "ocr_text": "மிடையிடாதேயும்‌"
+  },
+  {
+   "box": [
+    687,
+    73,
+    769,
+    105
+   ],
+   "text": "மிடையிடாதேயும்",
+   "confidence": 0.4754,
+   "line": 2,
+   "ocr_text": "என்று"
+  }
+ ]
+}

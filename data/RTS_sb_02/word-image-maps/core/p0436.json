@@ -1,0 +1,33 @@
+{
+ "page": "p0436",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0436.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    322,
+    92,
+    474,
+    140
+   ],
+   "text": "काम्यं",
+   "confidence": 0.5558,
+   "line": 3,
+   "ocr_text": "अङ्गा्गिव्यपदेश"
+  },
+  {
+   "box": [
+    486,
+    145,
+    609,
+    185
+   ],
+   "text": "कैङ्कर्यस्यापचारता",
+   "confidence": 0.496,
+   "line": 4,
+   "ocr_text": "वैषम्य"
+  }
+ ]
+}

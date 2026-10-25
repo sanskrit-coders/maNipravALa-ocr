@@ -1,0 +1,81 @@
+{
+ "page": "p0380",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0380.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    787,
+    13,
+    886,
+    47
+   ],
+   "text": "நிற்கிற",
+   "confidence": 0.7552,
+   "line": 1,
+   "ocr_text": "நிற்கிற"
+  },
+  {
+   "box": [
+    814,
+    159,
+    940,
+    192
+   ],
+   "text": "இவனை",
+   "confidence": 0.5477,
+   "line": 1,
+   "ocr_text": "வுனக்கே"
+  },
+  {
+   "box": [
+    611,
+    207,
+    778,
+    242
+   ],
+   "text": "அவற்றைச்",
+   "confidence": 0.4892,
+   "line": 2,
+   "ocr_text": "இவ்‌*எத்தை"
+  },
+  {
+   "box": [
+    70,
+    262,
+    225,
+    294
+   ],
+   "text": "வுனக்கே",
+   "confidence": 0.4663,
+   "line": 3,
+   "ocr_text": "யென்று"
+  },
+  {
+   "box": [
+    184,
+    113,
+    240,
+    139
+   ],
+   "text": "மென்கை.",
+   "confidence": 0.4956,
+   "line": 3,
+   "ocr_text": "என்‌"
+  },
+  {
+   "box": [
+    921,
+    111,
+    1054,
+    144
+   ],
+   "text": "சொல்லுகிறது.",
+   "confidence": 0.4875,
+   "line": 3,
+   "ocr_text": "சுமந்தால்‌"
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "page": "p0582",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0582.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    414,
+    5,
+    449,
+    20
+   ],
+   "text": "பிறக்கும்படியா",
+   "confidence": 0.4893,
+   "line": 1,
+   "ocr_text": "ய"
+  },
+  {
+   "box": [
+    704,
+    1,
+    799,
+    17
+   ],
+   "text": "அப்போது",
+   "confidence": 0.4715,
+   "line": 1,
+   "ocr_text": "ஸா"
+  },
+  {
+   "box": [
+    998,
+    30,
+    1001,
+    32
+   ],
+   "text": "।",
+   "confidence": 1.2056,
+   "line": 1,
+   "ocr_text": "व"
+  },
+  {
+   "box": [
+    815,
+    44,
+    854,
+    86
+   ],
+   "text": "என்கிற",
+   "confidence": 0.4635,
+   "line": 2,
+   "ocr_text": "யவை"
+  },
+  {
+   "box": [
+    875,
+    44,
+    896,
+    86
+   ],
+   "text": "படியே",
+   "confidence": 0.612,
+   "line": 2,
+   "ocr_text": "த"
+  },
+  {
+   "box": [
+    797,
+    95,
+    914,
+    128
+   ],
+   "text": "पिण्डं",
+   "confidence": 0.5342,
+   "line": 3,
+   "ocr_text": "स्वरिष्येभ्यः"
+  },
+  {
+   "box": [
+    95,
+    138,
+    160,
+    170
+   ],
+   "text": "नान्तर्धाय",
+   "confidence": 0.5174,
+   "line": 4,
+   "ocr_text": "तथा"
+  },
+  {
+   "box": [
+    286,
+    128,
+    465,
+    179
+   ],
+   "text": "याति",
+   "confidence": 0.533,
+   "line": 4,
+   "ocr_text": "दा्िंशदपचारवग"
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "page": "p0319",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0319.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    339,
+    130,
+    398,
+    154
+   ],
+   "text": "அது",
+   "confidence": 0.6633,
+   "line": 3,
+   "ocr_text": "அது"
+  },
+  {
+   "box": [
+    419,
+    122,
+    489,
+    153
+   ],
+   "text": "தான்",
+   "confidence": 0.7203,
+   "line": 3,
+   "ocr_text": "தான்‌"
+  },
+  {
+   "box": [
+    968,
+    162,
+    1102,
+    194
+   ],
+   "text": "பண்ணும்",
+   "confidence": 0.5666,
+   "line": 4,
+   "ocr_text": "பண்ணும்‌"
+  }
+ ]
+}

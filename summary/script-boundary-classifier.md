@@ -55,16 +55,19 @@ base-projection `k_dev`-th-glyph rule; page-disjoint train/val: 6,907 / 788.
 | projection-glyph rule (sb_01+sb_02) | **0.0320** | **0.718** | **0.964** | **0.959** |
 | image-only CNN (sb_02 train) | 0.1777 | 0.412 | 0.878 | 0.842 |
 | image+projection CNN (sb_02 train) | 0.1726 | 0.423 | 0.882 | 0.850 |
+| **image+projection CNN (sb_01+sb_02 retrain)** | **0.1551** | **0.456** | **0.891** | **0.862** |
 | rendered Noto CNN | 0.0002 | 1.000 | 0.999 | 0.999 (rendered domain only) |
 | column CNN (older data) | 0.087 | — | — | — |
 
-The **projection-glyph rule is the best source-domain boundary classifier**; the learned CNNs
-underperform it because the 7.7k consensus labels are still noisy and the fixed boxes are
-imperfect. The rendered model is exact only on rendered images.
+The **projection-glyph rule is still the best source-domain boundary classifier**. The
+combined CNN improves substantially over the earlier image-only CNN but remains well behind
+the rule (MAE 0.1551 vs 0.0320). The rendered model is exact only on rendered images.
 
 Best boundary models saved:
 - `training/local/boundary_image.pt`
 - `training/local/boundary_proj.pt`
+- `training/local/boundary_combined.pt` — combined retrain (14,208 words; 1,431 page-disjoint
+  validation words; MAE 0.1551, p@5 0.456, segment P 0.891 / R 0.862).
 
 ## Why the earlier evaluation had only 7,695 words
 

@@ -1,0 +1,45 @@
+{
+ "page": "p0327",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0327.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    268,
+    236,
+    461,
+    281
+   ],
+   "text": "இம்மூன்றின்",
+   "confidence": 0.4615,
+   "line": 1,
+   "ocr_text": "சேர்த்தியுண்டு,"
+  },
+  {
+   "box": [
+    355,
+    385,
+    437,
+    419
+   ],
+   "text": "இந்த",
+   "confidence": 0.4745,
+   "line": 1,
+   "ocr_text": "அங்கு"
+  },
+  {
+   "box": [
+    944,
+    0,
+    958,
+    27
+   ],
+   "text": "தலைக்கட்டிற்று.",
+   "confidence": 0.6109,
+   "line": 1,
+   "ocr_text": "ல"
+  }
+ ]
+}

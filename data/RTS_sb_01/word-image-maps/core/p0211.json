@@ -1,0 +1,81 @@
+{
+ "page": "p0211",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0211.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    467,
+    25,
+    654,
+    60
+   ],
+   "text": "செய்தேயிறே",
+   "confidence": 0.7164,
+   "line": 1,
+   "ocr_text": "செய்தேயிறே"
+  },
+  {
+   "box": [
+    679,
+    27,
+    739,
+    59
+   ],
+   "text": "நாம்",
+   "confidence": 0.7534,
+   "line": 1,
+   "ocr_text": "நாம்‌"
+  },
+  {
+   "box": [
+    845,
+    119,
+    989,
+    158
+   ],
+   "text": "வேண்டா,",
+   "confidence": 0.715,
+   "line": 3,
+   "ocr_text": "வேண்டா,"
+  },
+  {
+   "box": [
+    744,
+    166,
+    845,
+    198
+   ],
+   "text": "अभिसन्धि",
+   "confidence": 0.668,
+   "line": 4,
+   "ocr_text": "अभिसन्धि"
+  },
+  {
+   "box": [
+    852,
+    174,
+    1010,
+    206
+   ],
+   "text": "பண்ணவும்",
+   "confidence": 0.6753,
+   "line": 4,
+   "ocr_text": "பண்ணவும்‌"
+  },
+  {
+   "box": [
+    1020,
+    174,
+    1163,
+    210
+   ],
+   "text": "வேண்டா,",
+   "confidence": 0.5836,
+   "line": 4,
+   "ocr_text": "வேண்டா,"
+  }
+ ]
+}

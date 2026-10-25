@@ -1,0 +1,33 @@
+{
+ "page": "p0225",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0225.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    572,
+    5,
+    662,
+    50
+   ],
+   "text": "नरादिकेषु",
+   "confidence": 0.6165,
+   "line": 1,
+   "ocr_text": "कार्तयुगं"
+  },
+  {
+   "box": [
+    670,
+    3,
+    743,
+    39
+   ],
+   "text": "आद्यं",
+   "confidence": 0.493,
+   "line": 1,
+   "ocr_text": "स्वधर्म"
+  }
+ ]
+}

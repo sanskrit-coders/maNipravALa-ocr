@@ -1,0 +1,69 @@
+{
+ "page": "p0422",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0422.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    549,
+    3,
+    639,
+    33
+   ],
+   "text": "जीवात्मा",
+   "confidence": 0.6334,
+   "line": 1,
+   "ocr_text": "जीवात्मा"
+  },
+  {
+   "box": [
+    542,
+    58,
+    900,
+    93
+   ],
+   "text": "பண்ணினபடியாமத்தனை.",
+   "confidence": 0.6213,
+   "line": 2,
+   "ocr_text": "பண்ணினபடியாமத்தனை."
+  },
+  {
+   "box": [
+    939,
+    54,
+    1047,
+    93
+   ],
+   "text": "एकप्रयोगந்",
+   "confidence": 0.4614,
+   "line": 2,
+   "ocr_text": "ரித்‌"
+  },
+  {
+   "box": [
+    69,
+    119,
+    154,
+    157
+   ],
+   "text": "தானே",
+   "confidence": 0.6444,
+   "line": 3,
+   "ocr_text": "தானே"
+  },
+  {
+   "box": [
+    71,
+    214,
+    162,
+    248
+   ],
+   "text": "அதின்",
+   "confidence": 0.5287,
+   "line": 5,
+   "ocr_text": "ழிருக்க"
+  }
+ ]
+}

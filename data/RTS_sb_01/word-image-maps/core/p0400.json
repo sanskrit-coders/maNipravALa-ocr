@@ -1,0 +1,57 @@
+{
+ "page": "p0400",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0400.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    280,
+    15,
+    470,
+    48
+   ],
+   "text": "தனித்தனியே",
+   "confidence": 0.6777,
+   "line": 1,
+   "ocr_text": "தனித்தனியே"
+  },
+  {
+   "box": [
+    1031,
+    25,
+    1160,
+    59
+   ],
+   "text": "அல்லாத",
+   "confidence": 0.6554,
+   "line": 1,
+   "ocr_text": "அல்லாத"
+  },
+  {
+   "box": [
+    348,
+    64,
+    460,
+    91
+   ],
+   "text": "போலே",
+   "confidence": 0.5663,
+   "line": 2,
+   "ocr_text": "போலே"
+  },
+  {
+   "box": [
+    967,
+    70,
+    1131,
+    114
+   ],
+   "text": "ஆகையால்",
+   "confidence": 0.5881,
+   "line": 2,
+   "ocr_text": "ஆகையால்‌"
+  }
+ ]
+}

@@ -1,0 +1,81 @@
+{
+ "page": "p0483",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0483.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    354,
+    136,
+    382,
+    158
+   ],
+   "text": "वा",
+   "confidence": 0.7509,
+   "line": 1,
+   "ocr_text": "बा"
+  },
+  {
+   "box": [
+    682,
+    124,
+    711,
+    145
+   ],
+   "text": "वा",
+   "confidence": 0.922,
+   "line": 1,
+   "ocr_text": "बा"
+  },
+  {
+   "box": [
+    718,
+    114,
+    775,
+    145
+   ],
+   "text": "मोक्षं",
+   "confidence": 0.608,
+   "line": 1,
+   "ocr_text": "लभते"
+  },
+  {
+   "box": [
+    454,
+    178,
+    549,
+    203
+   ],
+   "text": "लभते",
+   "confidence": 0.4611,
+   "line": 2,
+   "ocr_text": "(००७"
+  },
+  {
+   "box": [
+    230,
+    230,
+    465,
+    269
+   ],
+   "text": "தோற்றுகைக்காக",
+   "confidence": 0.6268,
+   "line": 3,
+   "ocr_text": "தோற்றுகைக்காக"
+  },
+  {
+   "box": [
+    474,
+    219,
+    614,
+    262
+   ],
+   "text": "வத்தனை.",
+   "confidence": 0.6214,
+   "line": 3,
+   "ocr_text": "வத்தனை."
+  }
+ ]
+}

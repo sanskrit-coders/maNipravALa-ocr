@@ -1,0 +1,93 @@
+{
+ "page": "p0317",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0317.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    103,
+    51,
+    232,
+    98
+   ],
+   "text": "அதடியாக",
+   "confidence": 0.5012,
+   "line": 2,
+   "ocr_text": "அதடியாக"
+  },
+  {
+   "box": [
+    249,
+    43,
+    345,
+    88
+   ],
+   "text": "வருகிற",
+   "confidence": 0.5464,
+   "line": 2,
+   "ocr_text": "வருகிற"
+  },
+  {
+   "box": [
+    169,
+    147,
+    323,
+    183
+   ],
+   "text": "அப்போதும்",
+   "confidence": 0.4899,
+   "line": 5,
+   "ocr_text": "அப்போதும்‌"
+  },
+  {
+   "box": [
+    742,
+    125,
+    836,
+    161
+   ],
+   "text": "இதின்",
+   "confidence": 0.5162,
+   "line": 5,
+   "ocr_text": "இதின்‌"
+  },
+  {
+   "box": [
+    284,
+    238,
+    387,
+    269
+   ],
+   "text": "யென்று",
+   "confidence": 0.5803,
+   "line": 7,
+   "ocr_text": "பென்று"
+  },
+  {
+   "box": [
+    501,
+    278,
+    604,
+    314
+   ],
+   "text": "இப்படி",
+   "confidence": 0.6634,
+   "line": 8,
+   "ocr_text": "இப்படி"
+  },
+  {
+   "box": [
+    775,
+    262,
+    860,
+    312
+   ],
+   "text": "வரும்",
+   "confidence": 0.8613,
+   "line": 8,
+   "ocr_text": "வரும்‌"
+  }
+ ]
+}

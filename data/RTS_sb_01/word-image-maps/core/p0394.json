@@ -1,0 +1,129 @@
+{
+ "page": "p0394",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0394.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    344,
+    6,
+    464,
+    47
+   ],
+   "text": "‘‘वपुरादिषु",
+   "confidence": 0.5404,
+   "line": 1,
+   "ocr_text": "*““वपुरादिषु"
+  },
+  {
+   "box": [
+    471,
+    9,
+    534,
+    41
+   ],
+   "text": "योऽपि",
+   "confidence": 0.6518,
+   "line": 1,
+   "ocr_text": "योऽपि"
+  },
+  {
+   "box": [
+    541,
+    12,
+    607,
+    43
+   ],
+   "text": "कोऽपि",
+   "confidence": 0.6775,
+   "line": 1,
+   "ocr_text": "कोऽपि"
+  },
+  {
+   "box": [
+    614,
+    24,
+    640,
+    44
+   ],
+   "text": "वा",
+   "confidence": 0.9802,
+   "line": 1,
+   "ocr_text": "वा"
+  },
+  {
+   "box": [
+    647,
+    16,
+    777,
+    52
+   ],
+   "text": "गुणतोऽसानि",
+   "confidence": 0.6892,
+   "line": 1,
+   "ocr_text": "गुणतोऽसानि"
+  },
+  {
+   "box": [
+    783,
+    27,
+    827,
+    48
+   ],
+   "text": "यथा",
+   "confidence": 0.7301,
+   "line": 1,
+   "ocr_text": "यथा"
+  },
+  {
+   "box": [
+    834,
+    19,
+    925,
+    48
+   ],
+   "text": "तथाविधः",
+   "confidence": 0.5847,
+   "line": 1,
+   "ocr_text": "ரில"
+  },
+  {
+   "box": [
+    937,
+    28,
+    941,
+    49
+   ],
+   "text": "।",
+   "confidence": 0.4537,
+   "line": 1,
+   "ocr_text": "।"
+  },
+  {
+   "box": [
+    951,
+    20,
+    1000,
+    50
+   ],
+   "text": "तदयं",
+   "confidence": 0.9823,
+   "line": 1,
+   "ocr_text": "तदयं"
+  },
+  {
+   "box": [
+    1008,
+    26,
+    1042,
+    48
+   ],
+   "text": "तव",
+   "confidence": 0.7979,
+   "line": 1,
+   "ocr_text": "तब"
+  }
+ ]
+}

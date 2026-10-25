@@ -1,0 +1,45 @@
+{
+ "page": "p0402",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0402.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    579,
+    10,
+    1048,
+    61
+   ],
+   "text": "என்கிறதாகவுமாம்.",
+   "confidence": 0.5648,
+   "line": 1,
+   "ocr_text": "இச்‌ரரிஈஸ்ஸ-க்கவிரண்டுக்கும்‌"
+  },
+  {
+   "box": [
+    325,
+    66,
+    575,
+    106
+   ],
+   "text": "என்கிற",
+   "confidence": 0.5281,
+   "line": 2,
+   "ocr_text": "எர்ந்தன்னிலும்‌"
+  },
+  {
+   "box": [
+    613,
+    117,
+    733,
+    166
+   ],
+   "text": "இப்படி",
+   "confidence": 0.5105,
+   "line": 3,
+   "ocr_text": "யையைக்‌"
+  }
+ ]
+}

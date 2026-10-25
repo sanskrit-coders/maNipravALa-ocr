@@ -1,0 +1,21 @@
+{
+ "page": "p0258",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0258.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    226,
+    0,
+    314,
+    58
+   ],
+   "text": "नमो",
+   "confidence": 0.5168,
+   "line": 1,
+   "ocr_text": "9503०"
+  }
+ ]
+}

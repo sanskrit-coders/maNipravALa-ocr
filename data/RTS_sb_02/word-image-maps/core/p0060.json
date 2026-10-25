@@ -1,0 +1,69 @@
+{
+ "page": "p0060",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0060.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    125,
+    20,
+    296,
+    53
+   ],
+   "text": "उत्तरखण्डத்தில்",
+   "confidence": 0.4831,
+   "line": 1,
+   "ocr_text": "ணத்தில்‌"
+  },
+  {
+   "box": [
+    308,
+    17,
+    433,
+    50
+   ],
+   "text": "श्रीमच्छब्दம்",
+   "confidence": 0.6063,
+   "line": 1,
+   "ocr_text": "அம்‌"
+  },
+  {
+   "box": [
+    1042,
+    20,
+    1106,
+    56
+   ],
+   "text": "இவ்",
+   "confidence": 0.6637,
+   "line": 1,
+   "ocr_text": "இவ்‌"
+  },
+  {
+   "box": [
+    128,
+    68,
+    260,
+    101
+   ],
+   "text": "விடத்தில்",
+   "confidence": 0.6189,
+   "line": 2,
+   "ocr_text": "விடத்தில்‌"
+  },
+  {
+   "box": [
+    536,
+    116,
+    572,
+    150
+   ],
+   "text": "कूटस्थसंप्रदाय",
+   "confidence": 0.5332,
+   "line": 3,
+   "ocr_text": "इद\""
+  }
+ ]
+}

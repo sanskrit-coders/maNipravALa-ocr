@@ -1,0 +1,69 @@
+{
+ "page": "p0099",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0099.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    1113,
+    21,
+    1171,
+    63
+   ],
+   "text": "தன்",
+   "confidence": 0.6358,
+   "line": 1,
+   "ocr_text": "தன்‌"
+  },
+  {
+   "box": [
+    293,
+    124,
+    642,
+    158
+   ],
+   "text": "அதெங்ஙனேயென்னில்,",
+   "confidence": 0.6152,
+   "line": 3,
+   "ocr_text": "அதெங்ஙனேயென்னில்‌,"
+  },
+  {
+   "box": [
+    747,
+    125,
+    803,
+    157
+   ],
+   "text": "தன்",
+   "confidence": 0.7688,
+   "line": 3,
+   "ocr_text": "தன்‌"
+  },
+  {
+   "box": [
+    801,
+    173,
+    911,
+    199
+   ],
+   "text": "போலே",
+   "confidence": 0.741,
+   "line": 4,
+   "ocr_text": "போலே"
+  },
+  {
+   "box": [
+    554,
+    218,
+    646,
+    250
+   ],
+   "text": "स्वरूपेण",
+   "confidence": 0.7968,
+   "line": 5,
+   "ocr_text": "स्वरूपेण"
+  }
+ ]
+}

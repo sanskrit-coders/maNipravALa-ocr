@@ -1,0 +1,81 @@
+{
+ "page": "p0514",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0514.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    155,
+    22,
+    208,
+    52
+   ],
+   "text": "भवतु",
+   "confidence": 0.8303,
+   "line": 1,
+   "ocr_text": "भवतु"
+  },
+  {
+   "box": [
+    221,
+    11,
+    239,
+    42
+   ],
+   "text": "ते",
+   "confidence": 0.7121,
+   "line": 1,
+   "ocr_text": "ते"
+  },
+  {
+   "box": [
+    252,
+    11,
+    294,
+    44
+   ],
+   "text": "यदि",
+   "confidence": 0.9946,
+   "line": 1,
+   "ocr_text": "यदि"
+  },
+  {
+   "box": [
+    306,
+    11,
+    465,
+    50
+   ],
+   "text": "जीवितुमिच्छसि",
+   "confidence": 0.8004,
+   "line": 1,
+   "ocr_text": "जीवितुमिच्छसि"
+  },
+  {
+   "box": [
+    614,
+    17,
+    681,
+    48
+   ],
+   "text": "प्रयतो",
+   "confidence": 0.5692,
+   "line": 1,
+   "ocr_text": "त्वश्रैनं"
+  },
+  {
+   "box": [
+    693,
+    28,
+    877,
+    58
+   ],
+   "text": "भूत्वा",
+   "confidence": 0.5103,
+   "line": 1,
+   "ocr_text": "शरणागतवत्सलम्‌"
+  }
+ ]
+}

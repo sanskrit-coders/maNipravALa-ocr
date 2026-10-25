@@ -10,14 +10,14 @@
 
 
 - Model: 64×256 word CNN, 4 classes: `dev`, `tam`, `other`, `mixed`.
-- Training data: `data/script-separator/train_words_fixed.jsonl` — **58,403** fixed boxes from
-  `RTS_sb_02`, plus `train_words_fixed_sb01.jsonl` — **54,545** fixed boxes from `RTS_sb_01`;
-  all labeled from GT, no stored crops. Combined retrain: real per-class dev **0.999**, tam **1.000**, other **0.997**, mixed **0.983**; synthetic **0.996**.
-- Validation (real, page-disjoint): dev **0.999**, tam **1.000**, other **0.993**,
-  mixed **0.986**; synthetic val **0.996**.
-- Model: `training/local/script_sep.pt`.
-- Training code: `training/scripts/script_cls/train_script_sep.py`.
-- Kaggle: `vishvasvasuki/rts-script-sep-train`.
+- Boxes: TSV↔GT alignment rebuilt with TSV text/width DP + column filtering; **112,948**
+  boxes. Outlier gaps and wrong-column boxes are filtered.
+- Retraining still fails because some **GT line/word assignments are wrong**, not just the
+  alignment. Example: `RTS_sb_02/core/p0538.jpg` line 4, GT word `कुरु’’` is assigned a box
+  whose image is Tamil (`ிளிஈத்தை`).
+- Latest local retrain: real dev **0.676**, tam **0.777**, mixed **0.151**; not usable.
+  Old `script_sep.pt` retained; faux pages not regenerated.
+
 
 Usage: `--word-classifier training/local/script_sep.pt`.
 

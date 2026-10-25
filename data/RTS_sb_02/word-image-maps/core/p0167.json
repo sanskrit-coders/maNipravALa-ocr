@@ -1,0 +1,57 @@
+{
+ "page": "p0167",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0167.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    187,
+    16,
+    273,
+    42
+   ],
+   "text": "யாலே",
+   "confidence": 0.7522,
+   "line": 1,
+   "ocr_text": "யாலே"
+  },
+  {
+   "box": [
+    287,
+    20,
+    326,
+    50
+   ],
+   "text": "तत्",
+   "confidence": 0.966,
+   "line": 1,
+   "ocr_text": "तत्‌"
+  },
+  {
+   "box": [
+    581,
+    52,
+    1003,
+    91
+   ],
+   "text": "தாத்பர்யம்.",
+   "confidence": 0.4754,
+   "line": 2,
+   "ocr_text": "எஎர்ரிரங்களாகவோதபட்டது."
+  },
+  {
+   "box": [
+    185,
+    206,
+    402,
+    244
+   ],
+   "text": "अनिबद्धप्रलापश्च",
+   "confidence": 0.5714,
+   "line": 5,
+   "ocr_text": "अधिकारानुरूप"
+  }
+ ]
+}

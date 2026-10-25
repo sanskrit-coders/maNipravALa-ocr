@@ -1,0 +1,57 @@
+{
+ "page": "p0324",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0324.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    134,
+    15,
+    179,
+    47
+   ],
+   "text": "गतो",
+   "confidence": 0.7211,
+   "line": 1,
+   "ocr_text": "गतो"
+  },
+  {
+   "box": [
+    193,
+    22,
+    266,
+    44
+   ],
+   "text": "भक्त्या",
+   "confidence": 0.6618,
+   "line": 1,
+   "ocr_text": "भक्त्या"
+  },
+  {
+   "box": [
+    334,
+    57,
+    413,
+    109
+   ],
+   "text": "शास्त्रजन्यतत्वज्ञानकर्मयोगादि",
+   "confidence": 0.6428,
+   "line": 2,
+   "ocr_text": "परमभक्ति"
+  },
+  {
+   "box": [
+    420,
+    57,
+    512,
+    109
+   ],
+   "text": "பிறந்த",
+   "confidence": 0.4662,
+   "line": 2,
+   "ocr_text": "யானது"
+  }
+ ]
+}

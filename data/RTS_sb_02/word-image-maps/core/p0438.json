@@ -1,0 +1,33 @@
+{
+ "page": "p0438",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0438.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    410,
+    5,
+    473,
+    20
+   ],
+   "text": "இங்கு",
+   "confidence": 0.4839,
+   "line": 1,
+   "ocr_text": "து"
+  },
+  {
+   "box": [
+    904,
+    352,
+    982,
+    385
+   ],
+   "text": "வென்னில்;",
+   "confidence": 0.459,
+   "line": 8,
+   "ocr_text": "என்ற"
+  }
+ ]
+}

@@ -31,14 +31,26 @@ Classifier documents:
 
 ## Current state
 
-- Word boxes: the earlier **projection+DP** mapping is replaced by the GT-constrained
-  **base-projection valley** segmenter. It produces 58,403 sb_02 boxes + 54,545 sb_01 boxes;
-  sb_02 shared/merged boxes drop from 5,301 to 0, and width/char outliers from 21.7% to 6.0%.
-- Word classifier (4-class `dev/tam/other/mixed`) retrained on sb_01+sb_02 fixed boxes:
-  real per-class dev 0.999 / tam 1.000 / other 0.997 / mixed 0.983; synthetic 0.996.
+- Word-image maps: **95,411 high-confidence box→text entries** across **2,203 pages**,
+  stored as `data/RTS_sb_*/word-image-maps/{comm,core}/pNNNN.json` (render-and-DP alignment,
+  confidence ≥ 0.45).
+- Word boxes: rebuilt from Tesseract-TSV candidate spaces + DP; 112,948 boxes
+  (58,403 sb_02 + 54,545 sb_01), 84,667 boundaries. 1,716 lines used the projection fallback.
+- Word classifier retraining is blocked at the **GT line/word ↔ image assignment** level:
+  e.g. `p0538` core line 4 has GT `कुरु’’` on a box whose image is Tamil. TSV alignment is
+  improved, but labels are still wrong for some lines. Old `script_sep.pt` retained; faux
+  pages not regenerated.
+- Patch script classifier retrained on **training split** word-image maps and evaluated on
+  **evaluation split** pages: patch accuracy **0.9921** (dev 0.989 / tam 0.995 / other 0.966).
+  Model: `training/local/script_cls.pt`; backup of the synthetic model:
+  `/tmp/opencode/script_cls_synth_backup.pt`.
 - Script boundary: on 14,208 sb_01+sb_02 dev→tam words, the **projection-glyph rule** is best
-  (boundary MAE 0.0320, p@5 0.718, segment P 0.964 / R 0.959). Image CNN variants are weaker
-  (MAE 0.173–0.178, P ~0.88). The rendered-Noto CNN is exact only on rendered images.
+  (boundary MAE 0.0320, p@5 0.718, segment P 0.964 / R 0.959). The combined image+projection
+  CNN retrain reaches MAE 0.1551 / p@5 0.456 / segment P 0.891 / R 0.862; earlier image CNN
+  variants were MAE 0.173–0.178. The rendered-Noto CNN is exact only on rendered images.
+- GT-free projection-valley word separation with **TSV word boundaries** reaches boundary F1
+  **0.745** at a **7 px** cutoff (P 0.809 / R 0.690). Earlier lower numbers came from bad
+  projected word boxes, not from the gap distribution. See `lines_to_words.md`.
 - Remaining gaps: **Tamil-first words** (1,645; ~4%) need multi-boundary/recursive treatment;
   the production word separator still needs GT-free word counts; the combined boundary CNN
   retrain is blocked by a Kaggle dataset upload issue.
@@ -54,5 +66,6 @@ Classifier documents:
 - `training/local/boundary_sep.pt` — optional shiro-trained boundary model.
 - `training/local/boundary_image.pt`, `boundary_proj.pt` — comparison CNNs.
 - `training/local/column_sep.pt` — optional column model.
-- `training/local/script_cls.pt` — patch script classifier.
+- `training/local/script_cls.pt` — patch script classifier retrained on word-image maps.
+- `data/RTS_sb_*/word-image-maps/` — per-page high-confidence word image→text maps.
 - `evaluation/summary.md` — legacy full evaluation (block/line CER, baselines).

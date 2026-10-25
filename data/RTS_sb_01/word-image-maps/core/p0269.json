@@ -1,0 +1,57 @@
+{
+ "page": "p0269",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0269.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    864,
+    13,
+    1010,
+    50
+   ],
+   "text": "இப்போது",
+   "confidence": 0.5656,
+   "line": 1,
+   "ocr_text": "இப்போது"
+  },
+  {
+   "box": [
+    402,
+    75,
+    483,
+    107
+   ],
+   "text": "வரும்",
+   "confidence": 0.9037,
+   "line": 2,
+   "ocr_text": "வரும்‌"
+  },
+  {
+   "box": [
+    169,
+    169,
+    275,
+    212
+   ],
+   "text": "இப்படி",
+   "confidence": 0.5894,
+   "line": 4,
+   "ocr_text": "இப்படி"
+  },
+  {
+   "box": [
+    547,
+    168,
+    825,
+    203
+   ],
+   "text": "\"அற்பசாரங்களவை",
+   "confidence": 0.5667,
+   "line": 4,
+   "ocr_text": "“அற்பசாரங்களவை"
+  }
+ ]
+}

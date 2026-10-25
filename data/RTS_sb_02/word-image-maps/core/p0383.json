@@ -1,0 +1,69 @@
+{
+ "page": "p0383",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0383.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    200,
+    32,
+    469,
+    73
+   ],
+   "text": "சொல்லுமிடங்களில்",
+   "confidence": 0.5554,
+   "line": 2,
+   "ocr_text": "சொல்லுமிடங்களில்‌"
+  },
+  {
+   "box": [
+    478,
+    31,
+    533,
+    53
+   ],
+   "text": "उपाय",
+   "confidence": 0.6195,
+   "line": 2,
+   "ocr_text": "उपाय"
+  },
+  {
+   "box": [
+    188,
+    136,
+    304,
+    169
+   ],
+   "text": "स्वरूपமும்",
+   "confidence": 0.4755,
+   "line": 4,
+   "ocr_text": "மும்‌"
+  },
+  {
+   "box": [
+    311,
+    132,
+    395,
+    165
+   ],
+   "text": "भरமும்",
+   "confidence": 0.5907,
+   "line": 4,
+   "ocr_text": "மும்‌"
+  },
+  {
+   "box": [
+    402,
+    127,
+    497,
+    161
+   ],
+   "text": "फलமும்",
+   "confidence": 0.5845,
+   "line": 4,
+   "ocr_text": "ரகமும்‌"
+  }
+ ]
+}

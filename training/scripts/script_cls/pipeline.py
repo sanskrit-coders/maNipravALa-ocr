@@ -243,8 +243,9 @@ def load_column_classifier(path, device):
 
 
 def _snap_split(dark, y0, y1, x, lo, hi, rad):
-    best = x; bestv = 10**9
-    for c in range(max(lo, x - rad), min(hi, x + rad) + 1):
+    hi = min(hi, dark.shape[1] - 1)
+    best = min(max(x, 0), hi); bestv = 10**9
+    for c in range(max(0, lo, x - rad), min(hi, x + rad) + 1):
         v = int(dark[y0:y1, c].sum())
         if v < bestv:
             bestv = v; best = c
@@ -282,6 +283,7 @@ def split_mixed_word(boundary_net, word_net, word_classes, arr, x0, x1, y0, y1, 
         lab, conf = word_label(word_net, word_classes, arr, x0, x1, y0, y1, dev)
         if lab in ("dev", "tam") and conf >= 0.9:
             return _whole_word_run(arr, x0, x1, y0, y1, [[lab, x0, x1]])
+    x0 = max(0, x0); x1 = min(x1, arr.shape[1])
     crop = arr[y0:y1, x0:x1]
     im = Image.fromarray(crop).resize((BND_W, BND_H), Image.BILINEAR)
     xb = torch.from_numpy(1.0 - np.asarray(im, dtype=np.float32) / 255.0).unsqueeze(0).unsqueeze(0).to(dev)
@@ -290,7 +292,7 @@ def split_mixed_word(boundary_net, word_net, word_classes, arr, x0, x1, y0, y1, 
     f = p / max(1, BND_W - 1)
     x = x0 + int(round(f * (x1 - x0)))
     dark = arr < 128
-    x = _snap_split(dark, y0, y1, x, x0, x1, max(2, int(0.04 * (x1 - x0))))
+    x = min(x1 - 1, max(x0, _snap_split(dark, y0, y1, x, x0, x1, max(2, int(0.04 * (x1 - x0))))))
     # dev part earlier, Tamil later
     rs = dark[y0:y1, x0:x]
     cs = np.where(rs.any(axis=0))[0]

@@ -1,0 +1,21 @@
+{
+ "page": "p0385",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0385.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    131,
+    191,
+    682,
+    228
+   ],
+   "text": "विश्वासः”",
+   "confidence": 0.4699,
+   "line": 5,
+   "ocr_text": "(1111८01"
+  }
+ ]
+}

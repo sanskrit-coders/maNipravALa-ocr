@@ -1,0 +1,117 @@
+{
+ "page": "p0516",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0516.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    147,
+    21,
+    214,
+    45
+   ],
+   "text": "प्रपन्नाः",
+   "confidence": 0.5184,
+   "line": 1,
+   "ocr_text": "प्रपाः"
+  },
+  {
+   "box": [
+    227,
+    20,
+    327,
+    49
+   ],
+   "text": "परायणम्",
+   "confidence": 0.7754,
+   "line": 1,
+   "ocr_text": "परायणम्‌"
+  },
+  {
+   "box": [
+    353,
+    20,
+    372,
+    41
+   ],
+   "text": "न",
+   "confidence": 1.1331,
+   "line": 1,
+   "ocr_text": "न"
+  },
+  {
+   "box": [
+    382,
+    10,
+    425,
+    43
+   ],
+   "text": "तेषां",
+   "confidence": 0.6535,
+   "line": 1,
+   "ocr_text": "तेषां"
+  },
+  {
+   "box": [
+    434,
+    14,
+    556,
+    46
+   ],
+   "text": "यमसालोक्यं",
+   "confidence": 0.9182,
+   "line": 1,
+   "ocr_text": "यमसालोक्यं"
+  },
+  {
+   "box": [
+    567,
+    25,
+    585,
+    46
+   ],
+   "text": "न",
+   "confidence": 1.0581,
+   "line": 1,
+   "ocr_text": "न"
+  },
+  {
+   "box": [
+    595,
+    26,
+    616,
+    47
+   ],
+   "text": "च",
+   "confidence": 0.9777,
+   "line": 1,
+   "ocr_text": "च"
+  },
+  {
+   "box": [
+    626,
+    16,
+    643,
+    47
+   ],
+   "text": "ते",
+   "confidence": 0.7745,
+   "line": 1,
+   "ocr_text": "ते"
+  },
+  {
+   "box": [
+    495,
+    73,
+    606,
+    105
+   ],
+   "text": "பாசுரங்களுக்கு",
+   "confidence": 0.4692,
+   "line": 2,
+   "ocr_text": "*18மான"
+  }
+ ]
+}

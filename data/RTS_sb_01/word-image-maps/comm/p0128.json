@@ -1,0 +1,21 @@
+{
+ "page": "p0128",
+ "block": "comm",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/comm/p0128.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    1051,
+    82,
+    1085,
+    108
+   ],
+   "text": "ब्रह्मपद",
+   "confidence": 0.54,
+   "line": 2,
+   "ocr_text": "तत्‌"
+  }
+ ]
+}

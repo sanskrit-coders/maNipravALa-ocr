@@ -1,0 +1,45 @@
+{
+ "page": "p0500",
+ "block": "comm",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/comm/p0500.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    181,
+    22,
+    336,
+    52
+   ],
+   "text": "संबन्धज्ञानमात्रம்",
+   "confidence": 0.5019,
+   "line": 1,
+   "ocr_text": "ளாம்‌"
+  },
+  {
+   "box": [
+    757,
+    443,
+    774,
+    446
+   ],
+   "text": "–",
+   "confidence": 0.8161,
+   "line": 3,
+   "ocr_text": "-"
+  },
+  {
+   "box": [
+    400,
+    198,
+    600,
+    231
+   ],
+   "text": "நல்ல",
+   "confidence": 0.4555,
+   "line": 5,
+   "ocr_text": "ரிசுரகேளையும்‌"
+  }
+ ]
+}

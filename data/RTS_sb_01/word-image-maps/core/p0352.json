@@ -1,0 +1,81 @@
+{
+ "page": "p0352",
+ "block": "core",
+ "vol": 1,
+ "image": "data/RTS_sb_01/images/core/p0352.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    726,
+    24,
+    923,
+    57
+   ],
+   "text": "என்கிறபடியே",
+   "confidence": 0.6836,
+   "line": 1,
+   "ocr_text": "என்கிறபடியே"
+  },
+  {
+   "box": [
+    935,
+    21,
+    1099,
+    51
+   ],
+   "text": "யணியிடாத",
+   "confidence": 0.5771,
+   "line": 1,
+   "ocr_text": "யணியிடாத"
+  },
+  {
+   "box": [
+    444,
+    67,
+    522,
+    100
+   ],
+   "text": "பின்பு",
+   "confidence": 0.6185,
+   "line": 2,
+   "ocr_text": "பின்பு"
+  },
+  {
+   "box": [
+    371,
+    112,
+    479,
+    139
+   ],
+   "text": "போலே",
+   "confidence": 0.6279,
+   "line": 3,
+   "ocr_text": "போலே"
+  },
+  {
+   "box": [
+    822,
+    112,
+    968,
+    152
+   ],
+   "text": "पुरुषार्थமாம்",
+   "confidence": 0.496,
+   "line": 3,
+   "ocr_text": "पुरुषार्थ"
+  },
+  {
+   "box": [
+    980,
+    117,
+    1071,
+    148
+   ],
+   "text": "போது",
+   "confidence": 0.8029,
+   "line": 3,
+   "ocr_text": "போது"
+  }
+ ]
+}

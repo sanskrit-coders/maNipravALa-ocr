@@ -1,0 +1,69 @@
+{
+ "page": "p0341",
+ "block": "core",
+ "vol": 2,
+ "image": "data/RTS_sb_02/images/core/p0341.jpg",
+ "method": "render-dp-v1",
+ "words": [
+  {
+   "box": [
+    356,
+    78,
+    443,
+    116
+   ],
+   "text": "இதின்",
+   "confidence": 0.5469,
+   "line": 2,
+   "ocr_text": "இஇன்‌"
+  },
+  {
+   "box": [
+    732,
+    71,
+    860,
+    97
+   ],
+   "text": "சொன்ன",
+   "confidence": 0.6526,
+   "line": 2,
+   "ocr_text": "சொன்ன"
+  },
+  {
+   "box": [
+    540,
+    123,
+    606,
+    149
+   ],
+   "text": "द्वयம்.",
+   "confidence": 0.4799,
+   "line": 3,
+   "ocr_text": "சாம்‌."
+  },
+  {
+   "box": [
+    638,
+    121,
+    698,
+    156
+   ],
+   "text": "இது",
+   "confidence": 0.5231,
+   "line": 3,
+   "ocr_text": "இது"
+  },
+  {
+   "box": [
+    327,
+    223,
+    430,
+    250
+   ],
+   "text": "பண்ணி",
+   "confidence": 0.5315,
+   "line": 5,
+   "ocr_text": "பண்ணி"
+  }
+ ]
+}
