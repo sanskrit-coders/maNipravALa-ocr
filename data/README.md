@@ -15,6 +15,36 @@
   `doc_curation` repo root; `--vol 02` same; `--root` or `$MANIPRAVALA_OCR_ROOT`
   point at this repo, else a sibling `maNipravALa-ocr` is auto-detected).
 
+## Word-image maps
+
+`data/RTS_sb_*/word-image-maps/{core,comm}/pXXXX.json` are high-confidence word
+image→text maps built by aligning each page's GT text to Tesseract TSV word boxes with a
+rendered-word/image similarity DP (confidence ≥ 0.45).
+
+Each JSON has `image`, `page`, `block`, `vol`, `method`, and sorted `words`:
+`box` (`[x0,y0,x1,y1]` page pixels), `text` (GT), `confidence`, `line` (TSV line), and
+`ocr_text`. No crops are stored here; crop from `image` with `box`.
+
+Current coverage: **95,411 maps over 2,203 pages**. These maps are the input for word-level
+OCR training/evaluation and for real-page word/script classifier adaptation. They are
+**not** a replacement for page GT or the TSV: TSV supplies candidate boxes, maps supply the
+verified box→text pairs.
+
+## Training data types and usage
+
+| data | path | how it is used |
+|---|---|---|
+| page scans | `data/RTS_sb_*/images/{core,comm}/pXXXX.jpg` | source pixels for every crop; train/eval pages are separated by `training/split_train.jsonl` / `evaluation/split_eval.jsonl`. |
+| page-part GT | `data/RTS_sb_*/gt/{core,comm}/pXXXX.txt` | alignment target for word maps; OCR/classifier evaluation text. |
+| word-image maps | `data/RTS_sb_*/word-image-maps/{core,comm}/pXXXX.json` | high-confidence word crops + text: Kraken word OCR train/eval, script classifier adaptation, word classifier adaptation. |
+| Tesseract TSV | `training/metadata/tsv_*/pXXXX_{core,comm}.tsv` | candidate word boxes and rough `tam+san` OCR text; used only for box proposals/alignment, never as GT. |
+| line images + GT | `training/local/lines/` and `manifest.jsonl` | line-level GT/line boxes; line assignment and line classifier checks. |
+| word classifier data | `data/script-separator/train_words_fixed.jsonl`, `train_words_fixed_sb01.jsonl` | labeled word boxes for `dev/tam/other/mixed` training. |
+| boundary data | `train_boundary_fixed*.jsonl`, `train_shiro.jsonl`, `train_proj.jsonl`, `train_refined.jsonl`, `train_noto.jsonl` | mixed-word boundary labels; rule/CNN training and comparison. |
+| synthetic corpus | `data/texts/{core,commentary}/` | rendered word/line/patch examples for word, script, boundary, and OCR pre-training. |
+| split lists | `training/split_train.jsonl`, `evaluation/split_eval.jsonl` | page-disjoint train/eval partitions; **never train on eval paths**. |
+| Kraken word crops | generated under `/tmp/opencode/kraken_words_all` (not committed) | train/eval word OCR from word-image maps; uploaded as Kaggle dataset `vishvasvasuki/rts-word-image-ocr`. |
+
 ## GT generation (`training/scripts/make_gt.py`)
 Aligns every boxed crop image to its unit text body (`training/metadata/units_{core,commentary}.jsonl`)
 and writes byte-exact substring GT: each `gt/{core,comm}/pXXXX.txt` is a raw substring of the unit body

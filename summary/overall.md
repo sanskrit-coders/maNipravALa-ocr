@@ -59,17 +59,17 @@ Classifier documents:
 
 ## OCR
 
-- **New mixed-script OCR:** Kraken 7.1.1 VGSL word recognizer, **4.1M params**, trained
-  from scratch on **15,000** word crops from the training word-image maps; evaluated on
-  **2,000** word crops from evaluation-split pages.
-- Training: 2 epochs, batch 8, CUDA, 120 px height; word crops are not stored in the repo.
-- Results on the 2,000-word evaluation set: **character accuracy 69.13%**, **word accuracy
-  35.10%**; per-script right: Tamil **86.37%**, common **63.30%**, Devanagari **48.86%**.
-- Errors: 5,808 character errors — 294 insertions, 3,497 deletions, 2,017 substitutions.
-- Model: `training/local/kraken_words_model/best_0.6842.safetensors`;
+- **Mixed-script word OCR:** Kraken 7.1.1 VGSL, **4.1M params**, trained on **92,976**
+  word crops from the training word-image maps; evaluated on **2,435** word crops from
+  evaluation-split pages.
+- **Training:** Kaggle GPU (`vishvasvasuki/rts-word-ocr-train`), dataset
+  `vishvasvasuki/rts-word-image-ocr`, batch 16, early stopping; best checkpoint at epoch 3
+  (13 epochs run, best val score 0.8900).
+- **Evaluation:** character accuracy **90.34%**, word accuracy **80.53%**; per-script right:
+  Tamil **94.31%**, Devanagari **88.81%**.
+- Errors: 2,167 character errors — 306 insertions, 1,096 deletions, 765 substitutions.
+- Model: `training/local/kraken_words_model/best_0.8900.safetensors`;
   metrics: `training/local/kraken_words_metrics.json`.
-- This is a first word-level mixed-script model, not yet production quality; the weak
-  Devanagari accuracy and high deletion count need another training pass / better line data.
 
 ## Artifacts
 
