@@ -23,10 +23,15 @@ Classifier documents:
 | column separator | 64×256 word image | `dev/tam/other` per column (256) |
 | line script | 64×1024 line image | `dev/tam/other` per line |
 
-## Current pipeline
+## Pipelines
+`line separator` → `patch classifier` → `faux page construction` →
+`Drive OCR` → `OCR collation`.
+
+
+Alternate
 
 `line separator` → `word separator (projection-valley)` → `word classifier` →
-`script boundary classifier (projection-glyph rule)` → `faux page construction` →
+`script boundary classifier (Shiro-rekhā rule)` → `faux page construction` →
 `Drive OCR` → `OCR collation`.
 
 ## Current state
