@@ -19,4 +19,9 @@
   `vishvasvasuki/manipravala-script-cls-ft-replay`.
 
 The patch classifier is the base for safe word/run splits (`pipeline.py::classify_word`).
-It is weaker on this book’s font than the word-level classifier.
+
+## Production lessons (2026-10 / 2026-11)
+
+- **Why it is the active classifier (`pipeline.py --linewise`):** After retraining on the 69,366 verified `word-image-maps` crops (0.9921 real-page accuracy), `script_cls.pt` + linewise strip packing produced `raw/drive/local/4.drive.md` on Volume 4 (1,569 faux pages, >99.8% text completeness, near-zero Latin hallucinations), outperforming both the wordwise Shiro-rekhā pipeline (`4.drive.wordwise.md`) and Kraken word OCR (`tesseract/4.md`).
+- **Known pipeline bug with `"other"` labels:** `pipeline.py` currently composes only `script in ("dev", "tam")` and omits `"other"` segments. When a narrow digit (such as the middle `०` in `१०२`) or a parenthesis `)` is classified as `"other"`, it is dropped from the faux page (`।। १ २ ।।`, `(द्वया-`). Fix: absorb `"other"` runs into the adjacent `dev` or `tam` run before composing faux pages.
+- **Limitation on dense intra-word Manipravalam (Volumes 1–3):** Earlier Volume 1 faux pages (`faux-pages-linewise-fixed`, Oct 24) were built *before* the Oct 26 real-page retraining of `script_cls.pt` and used the synthetic `word_cls.pt` override, which misrouted real Tamil words onto Devanagari pages. Even with the retrained `script_cls.pt`, splitting inside mixed words (`आचार्यसम्बन्धத்தினுடைய`) produces short bound-morpheme suffixes (`த்தினுடைய`, `வுக்கு`) that lose line context if not grouped or padded.

@@ -48,6 +48,9 @@ GOOGLE_KEY = os.environ.get("GOOGLE_KEY", "/home/vvasuki/gitland/vvasuki-git/sys
 TAG_FONT = os.environ.get("TAG_FONT", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
 if not pathlib.Path(TAG_FONT).exists():
     TAG_FONT = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+TAM_ANCHOR_FONT = "/usr/share/fonts/truetype/noto/NotoSerifTamil-Regular.ttf"
+DEV_ANCHOR_FONT = "/usr/share/fonts/sanskrit-fonts/ttf-devanagari/noto/NotoSansDevanagari-Regular.ttf"
+ANCHOR_STRIP_RE = re.compile(r"\s*[\[\(\{]?[கஙசकखग]{1,4}[\]\)\}]?\s*$")
 
 SCRIPT_COLORS = {"dev": (200, 0, 0), "tam": (0, 120, 0), "other": (0, 0, 220)}
 GAP_WORD = 10
@@ -68,6 +71,8 @@ def load_classifier(path, device):
 
 def word_segments(dark, x0, x1, y0, y1):
     sub = dark[y0:y1, x0:x1]
+    H = sub.shape[0]
+    m0, m1 = int(0.25 * H), max(int(0.25 * H) + 1, int(0.75 * H))
     col = sub.any(axis=0)
     segs = []
     x = 0
@@ -90,7 +95,7 @@ def word_segments(dark, x0, x1, y0, y1):
                 x = y
             else:
                 break
-        if x - a >= 6:
+        if x - a >= 6 and sub[m0:m1, a:x].any():
             segs.append((x0 + a, x0 + x))
     return segs
 
@@ -454,28 +459,45 @@ def classify_word_hybrid(patch_net, patch_classes, word_net, word_classes, arr,
 
 
 def _safe_split_x(dark, y0, y1, target, lo, hi, max_d=28):
-    """Nearest column with no ink in the word's vertical band."""
+    """Nearest column with zero (or minimal Shiro-rekhā overhang) ink."""
     target = int(target)
+    lo_c = max(lo + MIN_RUN, target - max_d)
+    hi_c = min(hi - MIN_RUN, target + max_d)
     for d in range(max_d + 1):
         for c in (target - d, target + d):
-            if lo <= c <= hi and not dark[y0:y1, c].any():
+            if lo_c <= c <= hi_c and not dark[y0:y1, c].any():
                 return c
-    return None
+    best_c, best_score = None, 1e9
+    for c in range(lo_c, hi_c + 1):
+        ink = int(dark[y0:y1, c].sum())
+        if ink <= 6:
+            score = ink + 0.05 * abs(c - target)
+            if score < best_score:
+                best_score = score
+                best_c = c
+    return best_c
 
 
 def _merge_short_runs(merged, y0, y1):
-    """Fold tiny edge/mark runs into the larger neighbouring script run.
-
-    Devanagari repha/anusvara marks are separate ink components and are easily
-    labelled as the other script.  They are much narrower than a word, so
-    absorbing them into the adjacent larger run keeps the glyph complete.
+    """Fold tiny edge/mark/other runs into the larger neighbouring script run
+    and collapse adjacent identical script labels.
     """
-    min_w = max(8, int(0.45 * max(1, y1 - y0)))
+    min_w = max(MIN_RUN, int(0.45 * max(1, y1 - y0)))
     changed = True
     while changed and len(merged) > 1:
         changed = False
+        collapsed = []
+        for r in merged:
+            if collapsed and collapsed[-1][0] == r[0]:
+                collapsed[-1][2] = r[2]
+                changed = True
+            else:
+                collapsed.append(r)
+        merged = collapsed
+        if len(merged) <= 1:
+            break
         for i, r in enumerate(merged):
-            if r[2] - r[1] >= min_w:
+            if r[0] != "other" and (r[2] - r[1]) >= min_w:
                 continue
             left = merged[i - 1] if i > 0 else None
             right = merged[i + 1] if i + 1 < len(merged) else None
@@ -488,7 +510,13 @@ def _merge_short_runs(merged, y0, y1):
             del merged[i]
             changed = True
             break
-    return merged
+    collapsed = []
+    for r in merged:
+        if collapsed and collapsed[-1][0] == r[0]:
+            collapsed[-1][2] = r[2]
+        else:
+            collapsed.append(r)
+    return collapsed
 
 
 def _whole_word_run(arr, x0, x1, y0, y1, merged):
@@ -510,10 +538,14 @@ def classify_word(net, classes, arr, x0, x1, y0, y1, dev, dark=None):
         dark = arr < 128
     sub = dark[y0:y1, x0:x1]
     rows = np.where(sub.any(axis=1))[0]
-    if len(rows) == 0:
+    cols = np.where(sub.any(axis=0))[0]
+    if len(rows) == 0 or len(cols) == 0:
         return None
     cy = y0 + (int(rows[0]) + int(rows[-1])) // 2
-    xs = list(range(x0 + 20, max(x0 + 21, x1 - 20), STRIDE))
+    if x1 - x0 <= 40:
+        xs = [(x0 + x1) // 2]
+    else:
+        xs = list(range(x0 + 20, max(x0 + 21, x1 - 20), STRIDE))
     if not xs:
         return None
     patches = []
@@ -533,9 +565,9 @@ def classify_word(net, classes, arr, x0, x1, y0, y1, dev, dark=None):
     xb = (1.0 - xb / 255.0)
     with torch.no_grad():
         probs = net(xb).softmax(1).cpu().numpy()
+    di, ti, oi = classes.index("dev"), classes.index("tam"), classes.index("other")
     labels = []
     for p in probs:
-        di, ti, oi = classes.index("dev"), classes.index("tam"), classes.index("other")
         m = max((p[di], "dev"), (p[ti], "tam"), (p[oi], "other"))
         labels.append(m[1] if m[0] > 0.45 else "null")
     runs = []
@@ -553,10 +585,14 @@ def classify_word(net, classes, arr, x0, x1, y0, y1, dev, dark=None):
         else:
             merged.append([lb, rx0, rx1])
     if not merged:
-        return []
+        mp = probs.mean(axis=0)
+        best_lb = max((mp[di], "dev"), (mp[ti], "tam"), (mp[oi], "other"))[1]
+        merged = [[best_lb, x0, x1]]
     merged = _merge_short_runs(merged, y0, y1)
+    if len(merged) == 1:
+        return _whole_word_run(arr, x0, x1, y0, y1, merged)
     # First/last runs always use the full word bounds; internal splits must
-    # fall on an ink-free column so no glyph is cut in half.
+    # fall on an ink-free (or minimal overhang) column so no glyph is cut in half.
     bounds = [x0]
     for k in range(1, len(merged)):
         target = (merged[k - 1][2] + merged[k][1]) // 2
@@ -569,13 +605,13 @@ def classify_word(net, classes, arr, x0, x1, y0, y1, dev, dark=None):
     for k, (lb, _, _) in enumerate(merged):
         lo, hi = bounds[k], bounds[k + 1]
         if hi - lo < MIN_RUN:
-            continue
-        rs = (arr[y0:y1, lo:hi] < 128)
+            return _whole_word_run(arr, x0, x1, y0, y1, merged)
+        rs = dark[y0:y1, lo:hi]
         rws = np.where(rs.any(axis=1))[0]
-        cols = np.where(rs.any(axis=0))[0]
-        if len(rws) == 0 or len(cols) == 0:
-            continue
-        out.append((lb, lo + int(cols[0]), lo + int(cols[-1]) + 1,
+        ccs = np.where(rs.any(axis=0))[0]
+        if len(rws) == 0 or len(ccs) == 0:
+            return _whole_word_run(arr, x0, x1, y0, y1, merged)
+        out.append((lb, lo + int(ccs[0]), lo + int(ccs[-1]) + 1,
                     y0 + int(rws[0]), y0 + int(rws[-1]) + 1))
     return out
 
@@ -601,6 +637,30 @@ def make_segments(runs):
     return segs
 
 
+def _compact_crop_whitespace(c, max_gap=36, keep_gap=22, pad=4):
+    """Trim leading/trailing blank columns and compact wide internal blank gaps."""
+    ink = (c < 165).any(axis=0)
+    cols = np.where(ink)[0]
+    if len(cols) == 0:
+        return c
+    c = c[:, max(0, int(cols[0]) - pad):min(c.shape[1], int(cols[-1]) + pad + 1)]
+    ink = (c < 165).any(axis=0)
+    keep = np.ones(c.shape[1], dtype=bool)
+    i = 0
+    W = len(ink)
+    while i < W:
+        if ink[i]:
+            i += 1
+            continue
+        j = i
+        while j < W and not ink[j]:
+            j += 1
+        if j - i > max_gap:
+            keep[i + keep_gap:j] = False
+        i = j
+    return c[:, keep]
+
+
 def compose_faux(arr, runs, path, tag_start=1):
     """Stack script-pure line strips on one page, one strip per row.
 
@@ -610,55 +670,136 @@ def compose_faux(arr, runs, path, tag_start=1):
     crops = []
     for r in runs:
         _, x0, x1, y0, y1 = r
-        py = max(6, int(0.25 * max(1, y1 - y0)))
-        c = arr[max(0, y0 - py):y1 + py, max(0, x0 - 6):x1 + 6]
+        py = max(3, int(0.10 * max(1, y1 - y0)))
+        c = arr[max(0, y0 - py):y1 + py, max(0, x0 - 4):x1 + 4]
+        c = _compact_crop_whitespace(c)
         h = c.shape[0]
-        s = 90.0 / max(1, h)
+        s = 82.0 / max(1, h)
         s = max(s, 0.6)
         im = Image.fromarray(c).resize((max(1, int(round(c.shape[1] * s))),
                                        max(1, int(round(h * s)))), Image.LANCZOS)
         crops.append(im)
-    W = min(1780, max(700, max(im.width for im in crops) + 210))
-    H = 40 + len(crops) * 120
+    W = min(1840, max(760, max(im.width for im in crops) + 320))
+    ROW_PITCH = 136
+    H = 40 + len(crops) * ROW_PITCH
     page = Image.new("L", (W, H), 255)
     dr = ImageDraw.Draw(page)
     font = ImageFont.truetype(TAG_FONT, 44)
+    p_str = str(path)
+    anchor_txt = None
+    anchor_font = None
+    if "_tam_" in p_str and pathlib.Path(TAM_ANCHOR_FONT).exists():
+        anchor_txt = "[கஙச]"
+        anchor_font = ImageFont.truetype(TAM_ANCHOR_FONT, 36)
+    elif "_dev_" in p_str and pathlib.Path(DEV_ANCHOR_FONT).exists():
+        anchor_txt = "[कखग]"
+        anchor_font = ImageFont.truetype(DEV_ANCHOR_FONT, 36)
     for k, im in enumerate(crops):
-        y = 20 + k * 120
-        dr.text((20, y + 12), f"#T{tag_start + k:02d}", font=font, fill=0)
-        if im.width > W - 190:
-            s = (W - 190) / im.width
+        y = 20 + k * ROW_PITCH
+        dr.text((16, y + 10), f"#T{tag_start + k:02d}", font=font, fill=0)
+        max_im_w = W - 300 if anchor_txt else W - 165
+        if im.width > max_im_w:
+            s = max_im_w / im.width
             im = im.resize((max(1, int(im.width * s)), max(1, int(im.height * s))), Image.LANCZOS)
-        page.paste(im, (180, y))
+        page.paste(im, (146, y))
+        if anchor_txt and im.width < 460:
+            dr.text((146 + im.width + 36, y + 16), anchor_txt, font=anchor_font, fill=0)
     page.convert("RGB").save(path, quality=92)
     return len(crops)
+
+
+TAG_TOKEN_RE = re.compile(r"(?:^|(?<=\s))#\s*([T1Il7]?)\s*([O01-4][O0\dSDBI/]|[O0\d])")
+DIGIT_MAP = str.maketrans({"O": "0", "o": "0", "D": "0", "S": "5", "B": "8", "I": "1", "l": "1", "/": "7"})
+
+
+def _match_tags_in_line(s, n, prev_idx=-1):
+    matches = []
+    cur_prev = prev_idx
+    for m in TAG_TOKEN_RE.finditer(s):
+        raw_num = m.group(2).translate(DIGIT_MAP)
+        if not raw_num.isdigit():
+            continue
+        val = int(raw_num)
+        if val == 0 and 0 <= cur_prev + 1 < n:
+            idx = cur_prev + 1
+        elif 1 <= val <= n:
+            idx = val - 1
+        else:
+            continue
+        matches.append((m.start(), m.end(), idx))
+        cur_prev = idx
+    return matches
+
 
 def parse_tagged(txt, n):
     """Map Drive OCR output lines to tag indices 1..n.
 
-    Returns list of length n (text or None). Text after a tag on the same line,
-    and all untagged continuation lines, belong to that tag; text before the
-    first tag of a line also continues the previous tag."""
+    Handles OCR misreads of #Txx (such as #122 for #T22 or #TOS for #T05) and
+    pairs multi-tag empty blocks 1-to-1 with subsequent untagged lines.
+    """
     texts = [None] * n
-    cur = None
+    pending_tags = []
+    untagged_buf = []
+
+    def _append_dedup(cur, addition):
+        addition = ANCHOR_STRIP_RE.sub("", addition).strip()
+        if not addition:
+            return cur
+        if not cur:
+            return addition
+        if cur.endswith(addition):
+            return cur
+        return cur + " " + addition
+
+    def flush_pending():
+        nonlocal pending_tags, untagged_buf
+        if not pending_tags:
+            untagged_buf = []
+            return
+        if len(pending_tags) == 1:
+            idx = pending_tags[0]
+            for u in untagged_buf:
+                texts[idx] = _append_dedup(texts[idx], u)
+        elif len(untagged_buf) == len(pending_tags):
+            for idx, u in zip(pending_tags, untagged_buf):
+                texts[idx] = _append_dedup(texts[idx], u)
+        elif untagged_buf:
+            for idx, u in zip(pending_tags[-len(untagged_buf):], untagged_buf):
+                texts[idx] = _append_dedup(texts[idx], u)
+        pending_tags = []
+        untagged_buf = []
+
     for line in txt.splitlines():
         s = line.strip()
         if not s or s == "---" or s.startswith("![") or s.startswith("[image") or s.startswith("<data:"):
             continue
         s = s.replace("**", "")
         s = MD_ESC_RE.sub(r"\1", s)
-        pieces = []
-        pos = 0
-        for m in TAG_RE.finditer(s):
-            pieces.append((cur, s[pos:m.start()]))
-            cur = int(m.group(1)) - 1
-            pos = m.end()
-        pieces.append((cur, s[pos:]))
-        for idx, t in pieces:
-            t = t.strip()
-            if idx is None or not t or not (0 <= idx < n):
-                continue
-            texts[idx] = (texts[idx] + " " + t) if texts[idx] else t
+        s = ANCHOR_STRIP_RE.sub("", s).strip()
+        if not s:
+            continue
+        last_idx = pending_tags[-1] if pending_tags else -1
+        ms = _match_tags_in_line(s, n, last_idx)
+        if not ms:
+            if pending_tags:
+                untagged_buf.append(s)
+            continue
+        pre = ANCHOR_STRIP_RE.sub("", s[:ms[0][0]]).strip()
+        if pre and pending_tags:
+            untagged_buf.append(pre)
+        for i, (st, en, idx) in enumerate(ms):
+            nxt_st = ms[i + 1][0] if i + 1 < len(ms) else len(s)
+            inline = ANCHOR_STRIP_RE.sub("", s[en:nxt_st]).strip()
+            if inline:
+                flush_pending()
+                texts[idx] = _append_dedup(texts[idx], inline)
+                pending_tags = [idx]
+                untagged_buf = []
+            else:
+                if untagged_buf:
+                    flush_pending()
+                pending_tags.append(idx)
+    flush_pending()
     return texts
 
 
@@ -711,8 +852,11 @@ def main():
     bnd_net = load_boundary_classifier(args.boundary_classifier, dev) if args.boundary_classifier else None
     import pymupdf
     doc = pymupdf.open(args.pdf)
-    lo, hi = (int(x) if x else None for x in args.pages.split(":"))
-    indices = range(lo or 0, hi if hi is not None else len(doc))
+    if ":" in args.pages:
+        lo, hi = (int(x) if x else None for x in args.pages.split(":"))
+        indices = range(lo or 0, hi if hi is not None else len(doc))
+    else:
+        indices = [int(x) for x in args.pages.split(",") if x.strip()]
     out_dir = REPO / args.out if not pathlib.Path(args.out).is_absolute() else pathlib.Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
     workdir = pathlib.Path(args.workdir)
@@ -724,8 +868,10 @@ def main():
     stem = pathlib.Path(args.pdf).stem
 
     def ocr_drive(files):
-        for i in range(0, len(files), args.faux_batch):
-            chunk = files[i:i + args.faux_batch]
+        todo = [p for p in files if not pathlib.Path(str(p) + ".txt").exists()
+                or pathlib.Path(str(p) + ".txt").stat().st_size == 0]
+        for i in range(0, len(todo), args.faux_batch):
+            chunk = todo[i:i + args.faux_batch]
             print(f"  Drive batch {i//args.faux_batch + 1}: {len(chunk)} faux pages", flush=True)
             r = subprocess.run([VENV_PY, str(DRIVE_HELPER), "--key", GOOGLE_KEY] + [str(p) for p in chunk],
                                capture_output=True, text=True)
@@ -753,6 +899,7 @@ def main():
                 if missing:
                     print(f"  WARN {path.name}: {len(missing)}/{len(chunk)} tags missing -> retry page", flush=True)
                     retry_path = faux_dir / f"{path.stem}_retry.jpg"
+                    pathlib.Path(str(retry_path) + ".txt").unlink(missing_ok=True)
                     compose_faux(arr, [(chunk[m]["idx"], chunk[m]["box"][0], chunk[m]["box"][2],
                                         chunk[m]["box"][1], chunk[m]["box"][3]) for m in missing],
                                    retry_path, tag_start=1)
@@ -801,13 +948,22 @@ def main():
                 hb = int(meta.get("header_bottom", 0)) if split_page_sections is not None else 0
                 entries = []
                 for li in sorted(by_line):
-                    texts = [r["text"] for r in by_line[li] if r["text"]]
-                    if not texts:
+                    parts = []
+                    first = True
+                    for r in by_line[li]:
+                        t = r["text"] or ""
+                        if not t:
+                            continue
+                        if not first and r["pre_space"]:
+                            parts.append(" ")
+                        parts.append(t)
+                        first = False
+                    if not parts:
                         continue
                     y = min(r["y0"] for r in by_line[li] if r["text"])
                     if y < hb:
                         continue
-                    entries.append((y, " ".join(texts)))
+                    entries.append((y, "".join(parts)))
                 body = insert_section_rules(entries, rule_ys)
                 printed = pi + 1 - args.page_offset
                 if printed <= 0:
@@ -828,6 +984,7 @@ def main():
         page_runs = []
         for li, (lx0, ly0, lx1, ly1) in enumerate(lines):
             words = word_segments(dark, lx0, lx1, ly0, ly1)
+            line_runs = []
             for wi, (wx0, wx1) in enumerate(words):
                 if bnd_net is not None:
                     rr = split_mixed_word(bnd_net, word_net, word_classes, arr, wx0, wx1, ly0, ly1, dev)
@@ -840,10 +997,41 @@ def main():
                     continue
                 pre_space = wi == 0 or (wx0 - words[wi - 1][1]) >= GAP_WORD
                 for k, (script, rx0, rx1, ry0, ry1) in enumerate(rr):
-                    page_runs.append({
-                        "page": pi, "line": li, "word": wi, "seq": len(page_runs),
+                    if k == 0:
+                        ps = pre_space
+                    else:
+                        prev_script, _, prev_rx1, _, _ = rr[k - 1]
+                        is_intraword = (prev_script == "dev" and script == "tam" and (rx0 - prev_rx1) <= 5)
+                        ps = not is_intraword
+                    line_runs.append({
+                        "page": pi, "line": li, "word": wi, "seq": len(page_runs) + len(line_runs),
                         "script": script, "x0": rx0, "y0": ry0, "x1": rx1, "y1": ry1,
-                        "pre_space": pre_space if k == 0 else False, "text": None})
+                        "pre_space": ps, "text": None})
+            def _is_punct_or_other(q):
+                if q["script"] == "other":
+                    return True
+                w = q["x1"] - q["x0"]
+                sub = dark[q["y0"]:q["y1"], q["x0"]:q["x1"]]
+                rows = np.where(sub.any(axis=1))[0]
+                ink_h = (int(rows[-1]) - int(rows[0]) + 1) if len(rows) else 0
+                return ink_h < 18 or (w < 22 and ink_h < 28)
+            for idx, r in enumerate(line_runs):
+                if _is_punct_or_other(r):
+                    left = next((line_runs[j] for j in range(idx - 1, -1, -1)
+                                 if not _is_punct_or_other(line_runs[j]) and line_runs[j]["script"] in ("dev", "tam")), None)
+                    right = next((line_runs[j] for j in range(idx + 1, len(line_runs))
+                                  if not _is_punct_or_other(line_runs[j]) and line_runs[j]["script"] in ("dev", "tam")), None)
+                    if left is not None and right is not None:
+                        gap_l = r["x0"] - left["x1"]
+                        gap_r = right["x0"] - r["x1"]
+                        r["script"] = right["script"] if (gap_r <= 8 and gap_l > 12) else left["script"]
+                    elif left is not None:
+                        r["script"] = left["script"]
+                    elif right is not None:
+                        r["script"] = right["script"]
+                    else:
+                        r["script"] = "dev"
+            page_runs.extend(line_runs)
         if line_net is not None:
             by_line = {}
             for r in page_runs:

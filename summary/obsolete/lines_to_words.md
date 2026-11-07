@@ -76,8 +76,8 @@ The large gaps are between words. The only internal gap above 5 px is an 8 px ga
 `விஷயமென்கிறார்`; all other internal gaps on this line are 2–5 px. This confirms that the
 earlier `word(8px)`/`word(9px)` intra-word examples were artefacts of the old projected boxes.
 
-## Next steps
+## Status (why moved to `obsolete/`)
 
-- Retrain the word classifier on the rebuilt boxes.
-- Train the line-image detector on the rebuilt boundaries.
-- Regenerate the faux pages only after those checks pass.
+- Projection-valley word separation (`7 px` cutoff at 300 dpi, boundary F1 **0.745**, P **0.809**, R **0.690**) separates most inter-word spaces from intra-word gaps, but **~25% boundary error** (0.9 false splits/line, 1.7 missed splits/line) cascades when downstream stages expect exact single-word crops.
+- More critically, feeding **isolated word crops** (instead of multi-word phrase/line strips) to Google Drive OCR (`faux-pages-wordwise-shiro-rekhA` → `4.drive.wordwise.md`) starves Drive's document OCR of horizontal line context, causing it to drop 76%–100% of Devanagari tokens on mixed pages and hallucinate Latin strings.
+- For faux-page Drive OCR, `pipeline.py` should keep **linewise phrase strips** (`make_segments`) rather than emitting isolated word crops.

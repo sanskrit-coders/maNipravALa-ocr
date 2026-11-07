@@ -4,8 +4,20 @@
   `images/{core,comm}/pXXXX.jpg` (deskewed block crops via detect_blocks),
   `metadata/{pages.csv,blocks.json,skew.json}`, `gt/{core,comm}/` (page-part GT; gold for eval blocks, auto/needs-review otherwise).
 - `data/RTS_sb_02/` = Vol.2 (02.pdf, 616 pp, adhikaras 23-32). Same layout, GT generated (1117 files, 15 needs-review).
-- `data/RTS_5c/` = the 5-commentary edition volumes (`RTS_5c_01`…`RTS_5c_04`), kept for
-  reference only; all evaluation uses `RTS_sb_*` (the canonical volumes above).
+- `data/RTS_5c/` = early pilot crops from the 5-commentary edition volumes (`RTS_5c_01`…`RTS_5c_04`), kept for
+  reference only; all classifier/recognizer evaluation uses `RTS_sb_*` (the canonical volumes above).
+- **Target 5-commentaries edition (`/media/vvasuki/vData/.../rts/5-comm/ra-tra-sA_5-commentaries_{1..4}.pdf`):**
+  - **Volumes 1–3 (`1.pdf` 656 pp, `2.pdf` 754 pp, `3.pdf` 754 pp):** Contain the *mūlam* and the 5 classical Manipravalam commentaries (`(सा.दी.)`, `(सा.स्वा.)`, `(सा.प्र.)`, `(सा.वि.)`, `(सा.सं.)`) with dense **intra-word Manipravalam** (`श्रियःபதியாய்`, `ब्रह्माவுக்கு`, `आचार्यसम्बन्धத்தினுடைய`).
+  - **Volume 4 (`4.pdf` 806 pp, printed page = `pdf_index + 1 − 10`):** Is the **Anubandham (Appendix)** and contains **zero classical intra-word Manipravalam**:
+    1. Modern Tamil chapter summaries (printed pp. 1–34, pure Tamil).
+    2. Quoted Sanskrit verses in Devanagari + Tamil *padavurai* (`ப-ரை`, hyphen-separated lemma/gloss such as `अयं देहभृत्- இந்த ஜீவன்`) + Tamil translations (printed pp. 35–407 & 534–780).
+    3. Pure Devanagari Sanskrit commentaries (`अधिकारसङ्ग्रहः - सव्याख्यानः` and `कारिकादर्पणम्`, printed pp. 408–533; only the running header is Tamil).
+    4. Divya Prabandham pasurams & Tamil commentary (printed pp. 781–794, pure Tamil; pp. 795–796 blank).
+  - **Generated faux PDFs & manifests (`/media/vvasuki/vData/.../rts/5-comm/`):**
+    - `faux-pages-linewise-patch/ra-tra-sA_5-commentaries_4_faux.pdf` (1,569 pp, 150 dpi) + manifest — linewise phrase strips from retrained `script_cls.pt`; produced the clean `raw/drive/local/4.drive.md`.
+    - `faux-pages-wordwise-shiro-rekhA/ra-tra-sA_5-commentaries_4_faux.pdf` (2,390 pp, 150 dpi) + manifest — isolated word/sub-word crops; failed in Drive OCR due to context starvation (`raw/drive/local/4.drive.wordwise.md`).
+    - `faux-pages-linewise-fixed/ra-tra-sA_5-commentaries_1_faux.pdf` (2,407 pp, 300 dpi, Oct 24 — built prior to the Oct 26 real-page retraining of `script_cls.pt`).
+    - `faux-pages-non-linewise/ra-tra-sA_5-commentaries_1_faux.pdf` (3,463 pp, Oct 22).
 - Splits are path lists partitioning the above (no copies):
   `training/split_train.jsonl`, `evaluation/split_eval.jsonl` (+ `evaluation/eval_index.jsonl`),
   each row `{image, gt, page, block, unit, status}` with repo-relative `data/...` paths.

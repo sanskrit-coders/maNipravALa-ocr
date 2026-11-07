@@ -698,3 +698,23 @@ probability-averaging the two checkpoints *hurts* CTC decoding (0.315) — no en
   (none seen so far); (c) can a recognizer trained on faux-page fragments (rather than line
   crops) approach Drive's 0.114 while running locally? (d) how far does a lightly fine-tuned
   PP-OCRv4 get on the same fragment regime?
+
+## 9. Full-volume lessons (`ra-tra-sA_5-commentaries_4.pdf` & `1.pdf`, 2026-10 / 2026-11)
+
+Applying the candidate pipelines to all 806 pages of Volume 4 (`ra-tra-sA_5-commentaries_4.pdf`) and auditing against the high-resolution scans established five production lessons:
+
+1. **Linewise phrase strips (`faux-pages-linewise-patch` → `raw/drive/local/4.drive.md`) solved Volume 4:**
+   - Using the real-page retrained 48×48 patch classifier (`script_cls.pt`, **0.9921** val accuracy on 69,366 `word-image-maps` words), `pipeline.py --linewise` packed 1,569 faux pages (79 Drive batches of 20 pages) and reconstructed 24,209 lines (1,165,663 chars).
+   - Across all 10 audited pages (`5, 100, 109, 141, 158, 380, 408, 437, 534, 700`) and a full-volume scan check, `4.drive.md` is **>99.8% complete** with only 30 ≥3-letter Latin words across 3.18 MB (all genuine English front-matter/printer stamps) and only 6 leaked `#T` tags.
+   - All 23 unparsed faux pages out of 1,569 were verified to be 1-unit margin specks (`n_units = 1`), so zero text lines were lost.
+2. **Wordwise Shiro-rekhā faux pages (`faux-pages-wordwise-shiro-rekhA` → `4.drive.wordwise.md`) failed catastrophically in Drive OCR:**
+   - Emitting 2,390 faux pages of isolated word and sub-word crops starved Google Drive OCR of horizontal line context and suffered from `script_sep.pt` cross-script bleeding.
+   - On mixed pages (100, 109, 141, 534, 700), Drive OCR dropped **76%–100% of Devanagari words** and replaced Sanskrit verses/glosses with Latin garbage (`_qq4Hq sed: 47:`, `3அÀ 3544-`, `tafuqGiiH`). `4.drive.corrected2.md` inherited this corruption when it merged `wordwise` lines into `4.drive.md`.
+3. **Kraken wordwise OCR (`best_0.8900.safetensors` → `raw/tesseract/4.md`) is too noisy for standalone transcription:**
+   - Despite 90.34% character accuracy / 80.53% word accuracy on held-out `word-image-maps` crops, a ~10% character error rate yields ~100,000 character errors across Volume 4 and 1,456 spurious intra-word script-confusion tokens (`एா`, `எः`, `५ெ`, `तர்`).
+4. **Volume 4 is an Anubandham (no intra-word Manipravalam); Page 408's `(द्रयाணன்` was a Tesseract hallucination:**
+   - Volume 4 consists of pure Tamil chapter summaries (pp. 1–34), Devanagari Sanskrit verses with hyphenated Tamil *padavurai* glosses (`अयं देहभृत्- இந்த ஜீவன்`, pp. 35–407 & 534–780), pure Sanskrit commentaries (pp. 408–533), and Tamil pasurams (pp. 781–794).
+   - On printed page 408 (PDF index 417), the scan contains pure Devanagari `(द्वया-)`. Legacy `script-split-tesseract/v4.md` split `(द्वया` and `-)`, routing `-)` to Tamil Tesseract which hallucinated `ணன்`/`னை`/`ண்` → `(द्रयाணன்`. `4.drive.md` read `(द्वया-` correctly.
+5. **What remains for Volumes 1–3 (`ra-tra-sA_5-commentaries_{1,2,3}.pdf`):**
+   - Volumes 1–3 contain dense intra-word Manipravalam (`आचार्यसम्बन्धத்தினுடைய`). Earlier Volume 1 faux pages (`faux-pages-linewise-fixed`, Oct 24) predate the Oct 26 real-page retraining of `script_cls.pt`.
+   - Before running Volumes 1–3, `pipeline.py` must be updated to: (a) absorb `"other"` runs (digits like `०` in `१०२`, dandas, parentheses) into adjacent script segments instead of dropping them, (b) keep consecutive same-script runs grouped as phrase strips (never isolated words), and (c) use the retrained `script_cls.pt` with safe ink-free/Shiro-rekhā splitting or in-place masked full-line strips.

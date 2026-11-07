@@ -21,6 +21,7 @@
 
 Usage: `--word-classifier training/local/script_sep.pt`.
 
-The classifier identifies mixed words reliably. The remaining problem is splitting a mixed word:
-connected-component inference feeds aksharas to a word-level model, so the boundary model /
-column separator is required for the split.
+The classifier identifies mixed words on synthetic/in-domain data, but was moved to `obsolete/` for two reasons:
+
+1. **Wrong training source used for retrain:** The failed retrain (`dev` 0.676 / `tam` 0.777 / `mixed` 0.151) used `train_words_fixed.jsonl` (line-level TSV↔GT width DP, which still had line-assignment errors like `p0538`) instead of the **95,411 high-confidence `word-image-maps`** (`confidence ≥ 0.45`) that succeeded for `script_cls.pt` (0.9921 accuracy).
+2. **End-to-end failure in `faux-pages-wordwise-shiro-rekhA` (`4.drive.wordwise.md`):** Using the un-retrained `script_sep.pt` in the Volume 4 wordwise pipeline misclassified numerous Tamil words (`உடையவர்களுடை`, `தீர்மானங்கள`, `அநுஸரிக்கவேண்`) onto Devanagari faux pages and triggered spurious Shiro-rekhā splits that sliced Sanskrit visargas/matras (`ीः-`, `ा-`) onto Tamil faux pages. When those isolated word/sub-word fragments were sent to Google Drive OCR, Drive collapsed from context starvation.

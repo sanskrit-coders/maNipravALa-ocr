@@ -178,9 +178,17 @@ Tamil `பிறப்பிக்கைக்கும்,` crop.
 - A 2-channel boundary CNN (image + base-projection channel) was specified, but the last
   Kaggle run loaded **0 samples** due to a dataset/JSONL path issue; it produced no metric yet.
 
-## Next improvements
+## End-to-end post-mortem (`faux-pages-wordwise-shiro-rekhA` → `4.drive.wordwise.md`, 2026-10-27)
 
-- Train the 2-channel (image + base-projection) boundary CNN on `train_proj.jsonl` once the
-  loader path issue is fixed.
-- Handle Tamil-first words explicitly (`tam-dev(-tam)` is ~4% of mixed tokens).
-- Filter/repair remaining merged boxes before retraining.
+1. **Oracle boundary accuracy vs. end-to-end OCR utility:**
+   - On known `dev→tam` mixed words (`train_boundary_fixed*.jsonl`, 14,208 words), the Shiro-rekhā / projection-glyph rule achieves **0.0320 MAE** (segment P **0.964** / R **0.959**).
+   - However, when run end-to-end in `wordwise-shiro` mode on Volume 4 (`faux-pages-wordwise-shiro-rekhA/ra-tra-sA_5-commentaries_4_faux.pdf`, 2,390 faux pages → `raw/drive/local/4.drive.wordwise.md`), the output lost **76%–100% of Devanagari text** on mixed pages (pp. 100, 109, 141, 534, 700) and replaced Sanskrit verses/glosses with Latin garbage (`_qq4Hq sed: 47:`, `3அÀ 3544-`, `tafuqGiiH`).
+2. **Root causes of the `wordwise-shiro` failure:**
+   - **Google Drive OCR requires line/phrase context:** Emitting isolated 1-word and half-word crops onto faux pages deprives Drive OCR of baseline, word-spacing, and language-model context. Short Sanskrit stems and 1–2 akshara Tamil suffixes (`வுக்கு`, `ளாலும்,`, `ीः-`, `ा-`) are either dropped (`\`) or misread as Latin/symbols.
+   - **Upstream false positives from `script_sep.pt`:** When pure words or hyphenated Sanskrit glosses (`अयं देहभृत्-`) are mislabeled `mixed` by `script_sep.pt`, the Shiro-rekhā rule cuts after the headline and sends trailing visargas, dandas, or hyphens (`ीः-`, `ति-`, `-)` ) as tiny strips to the Tamil faux page.
+3. **The Page 408 `(द्वया-)` → `(द्रयाணன்` misdiagnosis:**
+   - Printed page 408 (PDF index 417) of Volume 4 is **100% pure Devanagari Sanskrit commentary** (`अधिकारसङ्ग्रहः - सव्याख्यानः`). Lines 4, 10, and 21 contain the Sanskrit abbreviation `(द्वया-)`.
+   - In the earlier `script-split-tesseract/v4.md` run, `(द्वया-)` was split before `-)` so `(द्वया` went to Sanskrit Tesseract (read as `(द्रया`) and `-)` went to Tamil Tesseract, which hallucinated Tamil `ணன்`, `னை`, `ண்`—producing `(द्रयाணன்`, `(द्रया னை`, `(द्रया ண்`.
+   - The linewise Drive pipeline (`4.drive.md`) read `(द्वया-)` **correctly** as `द्वया-` / `(द्वया-`. Treating `(द्रयाணன்` as a "lost mixed word" was an artifact of trusting corrupted Tesseract output without checking the scan.
+4. **How Shiro-rekhā splitting should be used (if needed on Volumes 1–3):**
+   - Never emit split words as isolated wordwise crops. Keep split runs inside **linewise phrase segments** (`make_segments`), absorb punctuation/visargas (`other`) into the parent script run, and enforce a minimum strip width/akshara count before splitting.

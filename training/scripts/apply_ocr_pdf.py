@@ -61,8 +61,80 @@ def tesseract_boxes(img_path, psm, lang=None):
     return boxes
 
 
+def segment_lines_projection(a):
+    dark = a < 128
+    H, W = dark.shape
+    sub = dark[:, int(0.04 * W):int(0.96 * W)]
+    row_sum = sub.sum(axis=1).astype(np.float32)
+    is_rule = np.zeros(H, dtype=bool)
+    for y in range(H):
+        if row_sum[y] > 0.35 * sub.shape[1]:
+            r = sub[y]
+            changes = np.diff(np.concatenate(([0], r.view(np.int8), [0])))
+            starts = np.where(changes == 1)[0]
+            ends = np.where(changes == -1)[0]
+            if len(starts) and (ends - starts).max() > 0.30 * sub.shape[1]:
+                is_rule[max(0, y - 3):min(H, y + 4)] = True
+    clean_sum = row_sum.copy()
+    clean_sum[is_rule] = 0
+    smooth = np.convolve(clean_sum, [0.25, 0.5, 0.25], mode="same")
+    thr = max(8.0, 0.04 * np.percentile(smooth[smooth > 0], 75)) if (smooth > 0).any() else 8.0
+    in_line = smooth > thr
+    bands = []
+    y = 0
+    while y < H:
+        if not in_line[y]:
+            y += 1
+            continue
+        y0 = y
+        while y < H and in_line[y]:
+            y += 1
+        y1 = y
+        if y1 - y0 >= 16:
+            bands.append((y0, y1))
+    if not bands:
+        return []
+    single_hs = [b[1] - b[0] for b in bands if 32 <= (b[1] - b[0]) <= 75]
+    unit_h = float(np.median(single_hs)) if single_hs else 52.0
+    pitches = []
+    for i in range(len(bands) - 1):
+        if (bands[i][1] - bands[i][0]) <= 75 and (bands[i + 1][1] - bands[i + 1][0]) <= 75:
+            d = 0.5 * (bands[i + 1][0] + bands[i + 1][1]) - 0.5 * (bands[i][0] + bands[i][1])
+            if 50 <= d <= 85:
+                pitches.append(d)
+    pitch = float(np.median(pitches)) if pitches else (unit_h + 14.0)
+    final_bands = []
+    for y0, y1 in bands:
+        cur = y0
+        while (y1 - cur) > unit_h + 0.60 * pitch:
+            n_rem = max(2, int(round(((y1 - cur) - unit_h) / pitch)) + 1)
+            expected = cur + int(round((y1 - cur) / n_rem))
+            lo = max(cur + int(0.65 * unit_h), expected - int(0.30 * pitch))
+            hi = min(y1 - int(0.65 * unit_h), expected + int(0.30 * pitch))
+            if hi <= lo:
+                cut = expected
+            else:
+                cut = lo + int(np.argmin(smooth[lo:hi]))
+            final_bands.append((cur, cut))
+            cur = cut
+        final_bands.append((cur, y1))
+    boxes = []
+    for i, (y0, y1) in enumerate(final_bands):
+        lo_lim = final_bands[i - 1][1] if i > 0 else 0
+        hi_lim = final_bands[i + 1][0] if i + 1 < len(final_bands) else H
+        py0 = max(lo_lim, y0 - 3)
+        py1 = min(hi_lim, y1 + 3)
+        cols = np.where(dark[py0:py1, :].any(axis=0))[0]
+        if len(cols) == 0 or (cols[-1] - cols[0]) < 35:
+            continue
+        boxes.append([int(cols[0]), int(py0), int(cols[-1]) + 1, int(py1)])
+    return boxes
+
+
 def segment_lines(img, psm=6):
     a = np.asarray(img)
+    if not pathlib.Path(TESS).exists():
+        return segment_lines_projection(a)
     dark = a < 128
     row_dark = dark.sum(axis=1)
 
@@ -70,7 +142,7 @@ def segment_lines(img, psm=6):
         img.save(f.name)
         boxes = tesseract_boxes(f.name, psm)
     if not boxes:
-        return []
+        return segment_lines_projection(a)
 
     hs = sorted(b[3] - b[1] for b in boxes)
     med = hs[len(hs) // 2]
