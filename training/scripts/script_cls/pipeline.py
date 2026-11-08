@@ -42,14 +42,19 @@ from apply_ocr_pdf import segment_lines  # noqa: E402
 BASE = pathlib.Path(__file__).resolve().parents[2]
 REPO = BASE.parent if BASE.name == "training" else BASE
 
+HERE = pathlib.Path(__file__).resolve().parent
 VENV_PY = os.environ.get("DRIVE_PY", "/home/vvasuki/gitland/python_venv/bin/python")
-DRIVE_HELPER = pathlib.Path(os.environ.get("DRIVE_HELPER", str(pathlib.Path(__file__).resolve().parent / "drive_ocr_images.py")))
+DRIVE_HELPER = pathlib.Path(os.environ.get("DRIVE_HELPER", str(HERE / "drive_ocr_images.py")))
 GOOGLE_KEY = os.environ.get("GOOGLE_KEY", "/home/vvasuki/gitland/vvasuki-git/sysconf/kunchikA/google/proofing/ocr_app_oauth.json")
 TAG_FONT = os.environ.get("TAG_FONT", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
 if not pathlib.Path(TAG_FONT).exists():
-    TAG_FONT = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+    TAG_FONT = str(HERE / "DejaVuSans.ttf") if (HERE / "DejaVuSans.ttf").exists() else "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
 TAM_ANCHOR_FONT = "/usr/share/fonts/truetype/noto/NotoSerifTamil-Regular.ttf"
+if not pathlib.Path(TAM_ANCHOR_FONT).exists() and (HERE / "NotoSerifTamil-Regular.ttf").exists():
+    TAM_ANCHOR_FONT = str(HERE / "NotoSerifTamil-Regular.ttf")
 DEV_ANCHOR_FONT = "/usr/share/fonts/sanskrit-fonts/ttf-devanagari/noto/NotoSansDevanagari-Regular.ttf"
+if not pathlib.Path(DEV_ANCHOR_FONT).exists() and (HERE / "NotoSansDevanagari-Regular.ttf").exists():
+    DEV_ANCHOR_FONT = str(HERE / "NotoSansDevanagari-Regular.ttf")
 ANCHOR_STRIP_RE = re.compile(r"\s*[\[\(\{]?\s*(?:க\s*ங[சஞடண\u0bcd\sர]*|क\s*ख[गघङच\s]*)\s*[\]\)\}]?\s*$")
 
 SCRIPT_COLORS = {"dev": (200, 0, 0), "tam": (0, 120, 0), "other": (0, 0, 220)}
@@ -561,10 +566,18 @@ def classify_word(net, classes, arr, x0, x1, y0, y1, dev, dark=None):
             continue
         patch[sy0 - py0:sy1 - py0, sx0 - px0:sx1 - px0] = arr[sy0:sy1, sx0:sx1]
         patches.append(patch)
-    xb = torch.from_numpy(np.stack(patches)).unsqueeze(1).float().to(dev)
-    xb = (1.0 - xb / 255.0)
+    probs_list = []
     with torch.no_grad():
-        probs = net(xb).softmax(1).cpu().numpy()
+        for bi in range(0, len(patches), 32):
+            xb = (1.0 - torch.from_numpy(np.stack(patches[bi:bi + 32])).unsqueeze(1).float() / 255.0)
+            try:
+                cur_dev = next(net.parameters()).device
+                probs_list.append(net(xb.to(cur_dev)).softmax(1).cpu().numpy())
+            except torch.OutOfMemoryError:
+                torch.cuda.empty_cache()
+                net.to("cpu")
+                probs_list.append(net(xb).softmax(1).cpu().numpy())
+    probs = np.concatenate(probs_list, axis=0)
     di, ti, oi = classes.index("dev"), classes.index("tam"), classes.index("other")
     labels = []
     for p in probs:
@@ -664,14 +677,18 @@ def _compact_crop_whitespace(c, max_gap=36, keep_gap=22, pad=4):
 def compose_faux(arr, runs, path, tag_start=1):
     """Stack script-pure line strips on one page, one strip per row.
 
-    runs: (idx, x0, x1, y0, y1).  Each strip is a whole line segment (not a
-    single word), so pages are dense and OCR sees line context.
+    runs: (idx, x0, x1, y0, y1) or (r_arr, idx, x0, x1, y0, y1).  Each strip is a
+    whole line segment (not a single word), so pages are dense and OCR sees line context.
     """
     crops = []
     for r in runs:
-        _, x0, x1, y0, y1 = r
+        if len(r) == 6:
+            r_arr, _, x0, x1, y0, y1 = r
+        else:
+            _, x0, x1, y0, y1 = r
+            r_arr = arr
         py = max(3, int(0.10 * max(1, y1 - y0)))
-        c = arr[max(0, y0 - py):y1 + py, max(0, x0 - 4):x1 + 4]
+        c = r_arr[max(0, y0 - py):y1 + py, max(0, x0 - 4):x1 + 4]
         c = _compact_crop_whitespace(c)
         h = c.shape[0]
         s = 82.0 / max(1, h)
@@ -777,7 +794,8 @@ def parse_tagged(txt, n):
 
     for line in txt.splitlines():
         s = line.strip()
-        if not s or s == "---" or s.startswith("![") or s.startswith("[image") or s.startswith("<data:"):
+        if (not s or s == "---" or s.startswith("___") or s.startswith("![")
+                or s.startswith("[image") or s.startswith("<data:")):
             continue
         s = s.replace("**", "")
         s = MD_ESC_RE.sub(r"\1", s)
@@ -794,6 +812,8 @@ def parse_tagged(txt, n):
         if pre and pending_tags:
             untagged_buf.append(pre)
         for i, (st, en, idx) in enumerate(ms):
+            if texts[idx] is None:
+                texts[idx] = ""
             nxt_st = ms[i + 1][0] if i + 1 < len(ms) else len(s)
             inline = ANCHOR_STRIP_RE.sub("", s[en:nxt_st]).strip()
             if inline:
@@ -836,9 +856,9 @@ def main():
     ap.add_argument("--column-classifier", default="")
     ap.add_argument("--boundary-classifier", default="")
     ap.add_argument("--chunk", type=int, default=40)
-    ap.add_argument("--page-batch", type=int, default=10,
+    ap.add_argument("--page-batch", type=int, default=20,
                     help="pages to compose before one Drive API batch")
-    ap.add_argument("--faux-batch", type=int, default=10,
+    ap.add_argument("--faux-batch", type=int, default=30,
                     help="faux pages sent to Drive per helper invocation")
     ap.add_argument("--md-dir", default="")
     ap.add_argument("--page-offset", type=int, default=0)
@@ -848,7 +868,8 @@ def main():
     args = ap.parse_args()
 
     dev = torch.device(args.device if torch.cuda.is_available() else "cpu")
-    net, classes = load_classifier(REPO / args.classifier, dev)
+    cls_path = pathlib.Path(args.classifier) if pathlib.Path(args.classifier).exists() else (REPO / args.classifier)
+    net, classes = load_classifier(cls_path, dev)
     word_net, word_classes = (load_word_classifier(args.word_classifier, dev)
                               if args.word_classifier else (None, None))
     line_net, line_classes = (load_line_classifier(args.line_classifier, dev)
@@ -870,7 +891,18 @@ def main():
     faux_dir.mkdir(parents=True, exist_ok=True)
     if args.overlay:
         (workdir / "overlay").mkdir(parents=True, exist_ok=True)
-    runs_dump = open(out_dir / "runs.jsonl", "w", encoding="utf-8")
+    page_list = list(indices)
+    resuming = False
+    if args.md_dir:
+        md_dir_path = pathlib.Path(args.md_dir)
+        done_pages = {pi for pi in page_list
+                      if (md_dir_path / f"p{pi:05d}.md").exists()
+                      and (md_dir_path / f"p{pi:05d}.md").stat().st_size > 0}
+        if done_pages:
+            resuming = True
+            print(f"Skipping {len(done_pages)}/{len(page_list)} already-completed pages in {args.md_dir}", flush=True)
+            page_list = [pi for pi in page_list if pi not in done_pages]
+    runs_dump = open(out_dir / "runs.jsonl", "a" if resuming else "w", encoding="utf-8")
     stem = pathlib.Path(args.pdf).stem
 
     def ocr_drive(files):
@@ -888,29 +920,63 @@ def main():
                 raise SystemExit(r.returncode)
 
     pending = []
-    page_list = list(indices)
 
     def flush_batch(batch):
-        ocr_drive([p for (_, _, _, fs) in batch for p, _ in fs])
-        parsed = []
+        tag = "line" if args.linewise else "sep"
+        faux_chunks = []
+        for script in ("dev", "tam"):
+            items = [(pi, arr, page_runs, s)
+                     for (pi, arr, page_runs, segs) in batch
+                     for s in segs if s["script"] == script]
+            if not items:
+                continue
+            for ci in range(0, len(items), args.chunk):
+                chunk = items[ci:ci + args.chunk]
+                if len(batch) == 1:
+                    path = faux_dir / f"p{batch[0][0]:04d}_{tag}_{script}_{ci:03d}.jpg"
+                else:
+                    path = faux_dir / f"b{batch[0][0]:04d}_{batch[-1][0]:04d}_{tag}_{script}_{ci:03d}.jpg"
+                if not path.exists():
+                    n = compose_faux(
+                        None,
+                        [(item_arr, s["idx"], s["box"][0], s["box"][2], s["box"][1], s["box"][3])
+                         for (_, item_arr, _, s) in chunk],
+                        path,
+                    )
+                    assert n == len(chunk)
+                faux_chunks.append((path, chunk))
+        try:
+            from detect_blocks import split_page_sections
+        except ImportError:
+            split_page_sections = None
+        meta_futures = {}
+        meta_pool = None
+        if args.md_dir and split_page_sections is not None:
+            from concurrent.futures import ThreadPoolExecutor
+            meta_pool = ThreadPoolExecutor(max_workers=4)
+            for pi, arr, _, _ in batch:
+                meta_futures[pi] = meta_pool.submit(split_page_sections, arr)
+        ocr_drive([p for p, _ in faux_chunks])
+        parsed_chunks = []
         retry_jobs = []
-        for pi, arr, page_runs, faux_files in batch:
-            chunks = []
-            for path, chunk in faux_files:
-                txt_path = pathlib.Path(str(path) + ".txt")
-                texts = (parse_tagged(txt_path.read_text(encoding="utf-8"), len(chunk))
-                         if txt_path.exists() else [None] * len(chunk))
-                chunks.append((path, chunk, texts))
-                missing = [k for k, t in enumerate(texts) if t is None]
-                if missing:
-                    print(f"  WARN {path.name}: {len(missing)}/{len(chunk)} tags missing -> retry page", flush=True)
-                    retry_path = faux_dir / f"{path.stem}_retry.jpg"
-                    pathlib.Path(str(retry_path) + ".txt").unlink(missing_ok=True)
-                    compose_faux(arr, [(chunk[m]["idx"], chunk[m]["box"][0], chunk[m]["box"][2],
-                                        chunk[m]["box"][1], chunk[m]["box"][3]) for m in missing],
-                                   retry_path, tag_start=1)
-                    retry_jobs.append((retry_path, missing, texts))
-            parsed.append((pi, page_runs, chunks))
+        for path, chunk in faux_chunks:
+            txt_path = pathlib.Path(str(path) + ".txt")
+            texts = (parse_tagged(txt_path.read_text(encoding="utf-8"), len(chunk))
+                     if txt_path.exists() else [None] * len(chunk))
+            parsed_chunks.append((path, chunk, texts))
+            missing = [k for k, t in enumerate(texts) if t is None]
+            if missing:
+                print(f"  WARN {path.name}: {len(missing)}/{len(chunk)} tags missing -> retry page", flush=True)
+                retry_path = faux_dir / f"{path.stem}_retry.jpg"
+                pathlib.Path(str(retry_path) + ".txt").unlink(missing_ok=True)
+                compose_faux(
+                    None,
+                    [(chunk[m][1], chunk[m][3]["idx"], chunk[m][3]["box"][0], chunk[m][3]["box"][2],
+                      chunk[m][3]["box"][1], chunk[m][3]["box"][3]) for m in missing],
+                    retry_path,
+                    tag_start=1,
+                )
+                retry_jobs.append((retry_path, missing, texts))
         ocr_drive([rp for rp, _, _ in retry_jobs])
         for retry_path, missing, texts in retry_jobs:
             rt = pathlib.Path(str(retry_path) + ".txt")
@@ -918,10 +984,10 @@ def main():
             for m, t in zip(missing, rtexts):
                 if t is not None:
                     texts[m] = t
-        for pi, page_runs, chunks in parsed:
-            for _, chunk, texts in chunks:
-                for s, t in zip(chunk, texts):
-                    page_runs[s["indices"][0]]["text"] = t
+        for _, chunk, texts in parsed_chunks:
+            for (_, _, page_runs, s), t in zip(chunk, texts):
+                page_runs[s["indices"][0]]["text"] = t
+        for pi, arr, page_runs, _ in batch:
             by_line = {}
             for r in page_runs:
                 by_line.setdefault(r["line"], []).append(r)
@@ -939,19 +1005,16 @@ def main():
                         first = False
                     f.write("".join(parts) + "\n")
             if args.md_dir:
-                try:
-                    from detect_blocks import split_page_sections
-                except ImportError:
-                    split_page_sections = None
                 rule_ys = []
-                if split_page_sections is not None:
+                meta = {}
+                if pi in meta_futures:
                     try:
-                        meta = split_page_sections(arr)
+                        meta = meta_futures[pi].result()
                         rule_ys = [L["yc"] for L in meta["rules"]
                                    if L["yc"] > meta["header_bottom"] + 2]
                     except Exception:
                         rule_ys = []
-                hb = int(meta.get("header_bottom", 0)) if split_page_sections is not None else 0
+                hb = int(meta.get("header_bottom", 0)) if meta else 0
                 entries = []
                 for li in sorted(by_line):
                     parts = []
@@ -981,6 +1044,8 @@ def main():
             for r in page_runs:
                 runs_dump.write(json.dumps(r, ensure_ascii=False) + "\n")
             print(f"page {pi}: done", flush=True)
+        if meta_pool is not None:
+            meta_pool.shutdown(wait=False)
 
     for q, pi in enumerate(page_list):
         pix = doc[pi].get_pixmap(dpi=args.dpi, colorspace=pymupdf.csGRAY)
@@ -1068,20 +1133,7 @@ def main():
                              outline=SCRIPT_COLORS[r["script"]], width=3)
             ov.save(workdir / "overlay" / f"p{pi:04d}.jpg", quality=90)
 
-        faux_files = []
-        for script in ("dev", "tam"):
-            subset = [s for s in segs if s["script"] == script]
-            if not subset:
-                continue
-            for ci in range(0, len(subset), args.chunk):
-                chunk = subset[ci:ci + args.chunk]
-                tag = "line" if args.linewise else "sep"
-                path = faux_dir / f"p{pi:04d}_{tag}_{script}_{ci:03d}.jpg"
-                n = compose_faux(arr, [(s["idx"], s["box"][0], s["box"][2],
-                                        s["box"][1], s["box"][3]) for s in chunk], path)
-                assert n == len(chunk)
-                faux_files.append((path, chunk))
-        pending.append((pi, arr, page_runs, faux_files))
+        pending.append((pi, arr, page_runs, segs))
         if len(pending) >= args.page_batch or q == len(page_list) - 1:
             flush_batch(pending)
             pending = []

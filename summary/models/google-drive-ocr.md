@@ -7,9 +7,9 @@
 | Property | Specification |
 |---|---|
 | **Wrapper script** | [`training/scripts/script_cls/drive_ocr_images.py`](../../training/scripts/script_cls/drive_ocr_images.py) |
-| **Python environment** | `/home/vvasuki/gitland/python_venv/bin/python` (`doc_curation` + `google-api-python-client`) |
-| **API mechanism** | Uploads `.jpg`/`.pdf` faux pages to Google Drive as `application/vnd.google-apps.document` and exports `text/plain` (`.jpg.txt`), then deletes the temporary remote Drive file |
-| **Input** | Script-pure (`_dev_` or `_tam_`) faux-page images containing up to 40 tagged phrase/line strips (`#T01`..`#T40`) |
+| **Python environment** | `/home/vvasuki/gitland/python_venv/bin/python` (`doc_curation` + `google-api-python-client`, with self-contained `DriveClient` fallback for Kaggle kernels) |
+| **API mechanism** | Uploads `.jpg`/`.pdf` faux pages in parallel (`ThreadPoolExecutor`, `--workers`, default `5`) to Google Drive as `application/vnd.google-apps.document` and exports `mime_type="text/plain"` (`.jpg.txt`, avoiding embedded base64 images and reducing `.txt` file size by 250×), then deletes the temporary remote Drive file |
+| **Input** | Script-pure (`_dev_` or `_tam_`) faux-page images containing up to 40 tagged phrase/line strips (`#T01`..`#T40`), batch-packed across `--page-batch` PDF pages |
 | **Output** | UTF-8 text file (`{faux_path}.txt`) with `#T01`..`#T40` markers and recognized Devanāgarī or Tamil text |
 
 ## Why Script-Pure Phrase-Strip Faux Pages Are Required

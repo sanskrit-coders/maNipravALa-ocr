@@ -76,14 +76,16 @@ All retired/experimental models (`script_sep.pt`, `word_cls.pt`, boundary CNNs, 
   - On rows where `im.width < 460` px (1–2 word segments or short suffixes like `மான,`, `என்று,`, `முமாம்.`), the 4 ASCII characters of `#Txx` would otherwise rival or outnumber the Indic glyphs on the line, causing Drive's line-level script detector to misdecode lookalike Tamil words in ASCII (`என்று,` → `6T601M,`, `மான,` → `LD IT 60T,`, `முமாம்.` → `(LOLOLD.`).
   - `compose_faux` draws a crisp 6-consonant script anchor `36` px to the right of narrow strips: **`கஙசஞடண`** (36-pt `NotoSerifTamil-Regular`) on `_tam_` pages and **`कखगघङच`** (36-pt `NotoSansDevanagari-Regular`) on `_dev_` pages. These phonotactically impossible alphabet sequences force Drive's line script classifier into Tamil/Devanāgarī with 100% reliability and are stripped by `ANCHOR_STRIP_RE` during parsing.
 
-### Stage 7: Batched Google Drive Document OCR & Missing-Tag Retry
-- **Implementation:** [`pipeline.py::ocr_drive`](../training/scripts/script_cls/pipeline.py#L868-L880) and [`flush_batch`](../training/scripts/script_cls/pipeline.py#L885-L915), calling [`drive_ocr_images.py`](../training/scripts/script_cls/drive_ocr_images.py).
-- Sends up to `--faux-batch 10` faux `.jpg` images per invocation to Google Drive (`application/vnd.google-apps.document` upload + plain-text export).
-- If any tag on a faux page returns `None`, `flush_batch` invalidates any stale `*_retry.jpg.txt`, composes a `*_retry.jpg` page containing only the missing crops, and re-runs Drive OCR on the retry batch.
+### Stage 7: Cross-Page Batch Packing, Parallel Google Drive OCR & Missing-Tag Retry
+- **Implementation:** [`pipeline.py::ocr_drive`](../training/scripts/script_cls/pipeline.py#L884-L896) and [`flush_batch`](../training/scripts/script_cls/pipeline.py#L900-L975), calling [`drive_ocr_images.py`](../training/scripts/script_cls/drive_ocr_images.py).
+- **Cross-page segment packing:** Across each batch of `--page-batch` (default `20`–`25`) PDF pages, all `dev` segments and all `tam` segments are packed into full `--chunk 40` faux pages (`b{first:04d}_{last:04d}_sep_{script}_{ci:03d}.jpg`). This eliminates partial 1–6 segment tail pages at the end of individual PDF pages and reduces total faux pages and Drive API calls by ~2× (~1.3–1.4 faux pages per PDF page).
+- **Parallel `text/plain` Drive OCR (`drive_ocr_images.py`):** Uses a `ThreadPoolExecutor` (`--workers`, default `5`–`6` threads) with thread-local `DriveClient` instances and exports Google Docs using `mime_type="text/plain"` (instead of `text/markdown`, avoiding ~380 KB embedded base64 PNGs and shrinking `.jpg.txt` files by 250× to ~1.5–5 KB) with exponential backoff + jitter (up to 6 attempts).
+- **Retry on genuinely missing tags:** If any tag on a faux page returns `None`, `flush_batch` invalidates any stale `*_retry.jpg.txt`, composes a `*_retry.jpg` page containing only the missing crops, and re-runs Drive OCR on the retry batch.
 
 ### Stage 8: Fault-Tolerant Tag Parsing, Continuation Deduplication & Reassembly
-- **Implementation:** [`pipeline.py::_match_tags_in_line`](../training/scripts/script_cls/pipeline.py#L715-L731), [`parse_tagged`](../training/scripts/script_cls/pipeline.py#L734-L804), and [`insert_section_rules`](../training/scripts/script_cls/pipeline.py#L807-L817).
+- **Implementation:** [`pipeline.py::_match_tags_in_line`](../training/scripts/script_cls/pipeline.py#L715-L731), [`parse_tagged`](../training/scripts/script_cls/pipeline.py#L734-L814), and [`insert_section_rules`](../training/scripts/script_cls/pipeline.py#L817-L827).
 - **Tag regex (`TAG_TOKEN_RE`):** Matches `#\s*([T1Il7]?)\s*([O01-4][O0\dSDBI/]|[O0\d])` without a trailing `\b` assertion (since Python `re` treats Devanāgarī/Tamil base letters as `\w`), translating OCR confusions (`O/o/D→0`, `S→5`, `B→8`, `I/l→1`, `/→7`) and resolving truncated 1-digit `#TO` tags as `prev_idx + 1`.
+- **Recognized empty-crop initialization:** Whenever tag `idx` is matched in `ms`, `texts[idx]` is initialized to `""` (if `None`) before checking for inline/untagged continuation text. Thus decorative rules or specks whose `#Txx` tag was read by Drive OCR (leaving only the stripped script anchor) remain `""` rather than `None` and do not trigger false-positive retry pages.
 - **Boundary-word deduplication (`_append_dedup`):** Strips `ANCHOR_STRIP_RE` (`கஙசஞடண` / `कखगघङच`) and deduplicates both whole-line repeats and boundary-word repeats (`cw[-1] == aw[0]`) when Drive wraps a wide strip onto an untagged continuation line.
 - **Line & section reassembly:** Places each parsed segment text into `page_runs[s["indices"][0]]["text"]`, joins runs per printed line using `r["pre_space"]`, inserts `---` horizontal section rules from `detect_blocks.split_page_sections`, and writes `[[P{printed}]]` Markdown pages.
 
@@ -91,6 +93,7 @@ All retired/experimental models (`script_sep.pt`, `word_cls.pt`, boundary CNNs, 
 
 ## CLI Usage
 
+### Single-Volume / Sample-Page Run
 ```bash
 /home/vvasuki/gitland/python_venv/bin/python \
   training/scripts/script_cls/pipeline.py \
@@ -101,6 +104,13 @@ All retired/experimental models (`script_sep.pt`, `word_cls.pt`, boundary CNNs, 
   --md-dir /path/to/md_dir \
   --page-offset 16 \
   --overlay
+```
+
+### Full 4-Volume Parallel Kaggle Run
+[`training/scripts/script_cls/ocr_5comm_kaggle.py`](../training/scripts/script_cls/ocr_5comm_kaggle.py) dispatches Volumes 1–4 (`656, 754, 754, 806` pages) concurrently across 4 Kaggle kernels (2 CPU + 2 GPU) and downloads the assembled outputs to `raw/word-split-drive/{1,2,3,4}.md`:
+```bash
+/home/vvasuki/gitland/python_venv/bin/python \
+  training/scripts/script_cls/ocr_5comm_kaggle.py --push --monitor
 ```
 
 > [!IMPORTANT]

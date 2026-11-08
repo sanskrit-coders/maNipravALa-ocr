@@ -1,193 +1,281 @@
 #!/usr/bin/env python3
-"""Resumable Kaggle driver for linewiseScriptSepDriveOCR over the 5-commentary books.
+"""Parallel Kaggle driver for word-split Drive OCR over the 4 RTS 5-commentary volumes.
 
-Each Kaggle run handles one contiguous page chunk of one volume, writes one md
-file per A4 page, and exits.  The driver downloads completed pages immediately,
-stores them under the target raw/.ocr_state/ tree, and rebuilds the volume md
-after every chunk.  A failed or quota-stopped run loses at most one chunk.
+Pushes 4 parallel Kaggle kernels (one per volume, 2 CPU + 2 GPU to maximize concurrent
+slots) and downloads each volume's assembled {vol}.md and per-page md_v{vol}.tar.gz into:
+  raw/word-split-drive/{1,2,3,4}.md
+  raw/.ocr_state/word_split_v{1,2,3,4}/p*.md
 
 Usage:
-  python3 training/scripts/script_cls/ocr_5comm_kaggle.py \
-      --volumes 1 --chunk 50 [--max-chunks 1]
+  python3 training/scripts/script_cls/ocr_5comm_kaggle.py [--push] [--monitor]
 """
 import argparse
 import json
 import pathlib
-import re
 import shutil
 import subprocess
+import tarfile
 import time
 
-TARGET = pathlib.Path(
+KAGGLE = "/home/vvasuki/.local/bin/kaggle"
+TARGET_RAW = pathlib.Path(
     "/home/vvasuki/gitland/vishvAsa/rAmAnujIyam/content/tattvam/"
-    "venkaTa-nAtha-shAkhA/venkaTanAthaH/rahasya-traya-sAraH/5-tIkAH/raw")
-STATE = TARGET / ".ocr_state"
-KERNEL_ID = "vishvasvasuki/rts-5comm-ocr-run"
-KERNEL_TITLE = "rts-5comm-ocr-run"
-DATASETS = ["vishvasvasuki/manipravala-rts-5comm",
-            "vishvasvasuki/rts-ocr-code",
-            "vishvasvasuki/rts-ocr-secret"]
-VOLUMES = {1: (656, 16), 2: (754, 16), 3: (754, 16), 4: (806, 10)}
+    "venkaTa-nAtha-shAkhA/venkaTanAthaH/rahasya-traya-sAraH/5-tIkAH/raw"
+)
+OUT_DIR = TARGET_RAW / "word-split-drive"
+STATE_DIR = TARGET_RAW / ".ocr_state"
 
-KERNEL_TEMPLATE = r'''import os,sys,subprocess,pathlib
-IN=pathlib.Path('/kaggle/input')
-def find(name):
-    hits=sorted(IN.rglob(name))
-    if not hits: raise SystemExit('missing '+name)
-    return hits[0]
-for mod in ['pymupdf','googleapiclient','oauth2client','google_auth_oauthlib']:
-    try: __import__(mod)
-    except Exception: subprocess.run([sys.executable,'-m','pip','install','-q',mod],check=False)
-hits=sorted(IN.rglob('pipeline.py'))
-code_dir=str([h for h in hits if 'rts-ocr-code' in str(h)][0].parent) if any('rts-ocr-code' in str(h) for h in hits) else str(hits[0].parent)
-sys.path.insert(0,code_dir)
-os.environ['PYTHONPATH']=code_dir+':'+os.environ.get('PYTHONPATH','')
-src=find('tam.traineddata').parent
-td=pathlib.Path('/kaggle/working/tessdata'); (td/'configs').mkdir(parents=True,exist_ok=True)
-for n in ['tam.traineddata','san.traineddata']:
-    if not (td/n).exists(): (td/n).symlink_to(src/n)
-eng=pathlib.Path('/usr/share/tesseract-ocr/5/tessdata/eng.traineddata')
-if eng.exists() and not (td/'eng.traineddata').exists(): (td/'eng.traineddata').symlink_to(eng)
-(td/'configs'/'tsv').write_text('tessedit_create_tsv 1\n')
-os.environ['TESS_BIN']='/usr/bin/tesseract'
-os.environ['TESSDATA']=str(td)
-os.environ['TESS_LINE_LANG']='eng'
-os.environ['DRIVE_PY']=sys.executable
-os.environ['DRIVE_HELPER']=str(pathlib.Path(code_dir)/'drive_ocr_images.py')
-key=find('ocr_app_oauth.json')
-sec=pathlib.Path('/kaggle/working/secret'); sec.mkdir(parents=True,exist_ok=True)
-for n in ['ocr_app_oauth.json','tokens.json']:
-    s=key.parent/n
-    if s.exists(): (sec/n).write_bytes(s.read_bytes())
-os.environ['GOOGLE_KEY']=str(sec/'ocr_app_oauth.json')
-pdf=find('ra-tra-sA_5-commentaries_@VOL@.pdf')
-cmd=[sys.executable,str(pathlib.Path(code_dir)/'pipeline.py'),
- '--pdf',str(pdf),'--pages','@START@:@END@','--out','/kaggle/working/out',
- '--workdir','/kaggle/working/work','--classifier',str(pathlib.Path(code_dir)/'script_cls.pt'),
- '--linewise','--page-batch','10','--faux-batch','10','--chunk','40','--dpi','300',
- '--md-dir','/kaggle/working/md','--page-offset','@OFFSET@']
-print('RUN',' '.join(cmd),flush=True)
-r=subprocess.run(cmd)
-print('return',r.returncode,flush=True)
-if r.returncode: raise SystemExit(r.returncode)
+KERNELS = {
+    1: ("vishvasvasuki/rts-5comm-ocr-run", "rts-5comm-ocr-run", 656, 16, True),
+    2: ("vishvasvasuki/rts-5comm-chunk", "rts-5comm-chunk", 754, 16, True),
+    3: ("vishvasvasuki/rts-5comm-chunk", "rts-5comm-chunk", 754, 16, True),
+    4: ("vishvasvasuki/rts-5comm-ocr-run", "rts-5comm-ocr-run", 806, 10, True),
+}
+
+WATCH_KERNELS = {
+    1: ["vishvasvasuki/rts-5comm-ocr-run", "vishvasvasuki/rts-5comm-ocr"],
+    2: ["vishvasvasuki/rts-5comm-chunk", "vishvasvasuki/rts-5comm-ocr-2"],
+    3: ["vishvasvasuki/rts-5comm-chunk"],
+    4: ["vishvasvasuki/rts-5comm-ocr-run"],
+}
+
+DATASETS = [
+    "vishvasvasuki/manipravala-rts-5comm",
+    "vishvasvasuki/rts-ocr-code",
+    "vishvasvasuki/rts-ocr-secret",
+]
+
+KERNEL_TEMPLATE = r'''import os, sys, subprocess, pathlib, tarfile, shutil
+
+IN = pathlib.Path('/kaggle/input')
+for mod, imp in [('pymupdf', 'pymupdf'), ('google-api-python-client', 'googleapiclient'),
+                 ('oauth2client', 'oauth2client'), ('google-auth-oauthlib', 'google_auth_oauthlib')]:
+    try:
+        __import__(imp)
+    except Exception:
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', mod], check=False)
+
+src_code_dir = next(h.parent for h in IN.rglob('DejaVuSans.ttf'))
+code_dir = pathlib.Path('/tmp/code')
+if code_dir.exists():
+    shutil.rmtree(code_dir)
+shutil.copytree(src_code_dir, code_dir)
+
+# Ensure split_page_sections runs in a 4-thread pool concurrently with ocr_drive
+p_file = code_dir / 'pipeline.py'
+p_txt = p_file.read_text(encoding='utf-8')
+if 'meta_pool = ThreadPoolExecutor' not in p_txt:
+    p_txt = p_txt.replace(
+        '        ocr_drive([p for p, _ in faux_chunks])',
+        '        try:\n'
+        '            from detect_blocks import split_page_sections\n'
+        '        except ImportError:\n'
+        '            split_page_sections = None\n'
+        '        meta_futures = {}\n'
+        '        meta_pool = None\n'
+        '        if args.md_dir and split_page_sections is not None:\n'
+        '            from concurrent.futures import ThreadPoolExecutor\n'
+        '            meta_pool = ThreadPoolExecutor(max_workers=4)\n'
+        '            for pi, arr, _, _ in batch:\n'
+        '                meta_futures[pi] = meta_pool.submit(split_page_sections, arr)\n'
+        '        ocr_drive([p for p, _ in faux_chunks])',
+        1
+    ).replace(
+        '                try:\n'
+        '                    from detect_blocks import split_page_sections\n'
+        '                except ImportError:\n'
+        '                    split_page_sections = None\n'
+        '                rule_ys = []\n'
+        '                if split_page_sections is not None:\n'
+        '                    try:\n'
+        '                        meta = split_page_sections(arr)\n'
+        '                        rule_ys = [L["yc"] for L in meta["rules"]\n'
+        '                                   if L["yc"] > meta["header_bottom"] + 2]\n'
+        '                    except Exception:\n'
+        '                        rule_ys = []\n'
+        '                hb = int(meta.get("header_bottom", 0)) if split_page_sections is not None else 0',
+        '                rule_ys = []\n'
+        '                meta = {}\n'
+        '                if pi in meta_futures:\n'
+        '                    try:\n'
+        '                        meta = meta_futures[pi].result()\n'
+        '                        rule_ys = [L["yc"] for L in meta["rules"]\n'
+        '                                   if L["yc"] > meta["header_bottom"] + 2]\n'
+        '                    except Exception:\n'
+        '                        rule_ys = []\n'
+        '                hb = int(meta.get("header_bottom", 0)) if meta else 0',
+        1
+    )
+    p_file.write_text(p_txt, encoding='utf-8')
+
+sys.path.insert(0, str(code_dir))
+os.environ['PYTHONPATH'] = str(code_dir) + ':' + os.environ.get('PYTHONPATH', '')
+os.environ['TESS_BIN'] = '/nonexistent/tesseract'
+os.environ['DRIVE_PY'] = sys.executable
+os.environ['DRIVE_HELPER'] = str(code_dir / 'drive_ocr_images.py')
+os.environ['TAG_FONT'] = str(code_dir / 'DejaVuSans.ttf')
+os.environ['DRIVE_WORKERS'] = '5'
+
+key = next(IN.rglob('ocr_app_oauth.json'))
+sec = pathlib.Path('/tmp/secret')
+sec.mkdir(parents=True, exist_ok=True)
+for n in ['ocr_app_oauth.json', 'tokens.json']:
+    s = key.parent / n
+    if s.exists():
+        (sec / n).write_bytes(s.read_bytes())
+os.environ['GOOGLE_KEY'] = str(sec / 'ocr_app_oauth.json')
+
+pdf = next(IN.rglob('ra-tra-sA_5-commentaries_@VOL@.pdf'))
+total = @TOTAL@
+offset = @OFFSET@
+vol = @VOL@
+
+md_dir = pathlib.Path('/tmp/md')
+out_dir = pathlib.Path('/tmp/out')
+work_dir = pathlib.Path('/tmp/work')
+md_dir.mkdir(parents=True, exist_ok=True)
+
+def save_outputs():
+    parts = [f'+++\ntitle = "{vol}"\n+++\n']
+    non_empty = 0
+    for pi in range(total):
+        f = md_dir / f'p{pi:05d}.md'
+        if not f.exists():
+            continue
+        txt = f.read_text(encoding='utf-8').strip()
+        lines = [ln for ln in txt.splitlines() if ln.strip()]
+        if len(lines) <= 1:
+            continue
+        parts.append(txt + '\n')
+        non_empty += 1
+    out_md = pathlib.Path(f'/kaggle/working/{vol}.md')
+    tmp_md = pathlib.Path(f'/kaggle/working/{vol}.md.tmp')
+    tmp_md.write_text('\n'.join(parts), encoding='utf-8')
+    tmp_md.replace(out_md)
+    tar_tmp = pathlib.Path(f'/kaggle/working/md_v{vol}.tar.gz.tmp')
+    tar_out = pathlib.Path(f'/kaggle/working/md_v{vol}.tar.gz')
+    with tarfile.open(tar_tmp, 'w:gz') as tf:
+        for f in sorted(md_dir.glob('p*.md')):
+            tf.add(f, arcname=f.name)
+    tar_tmp.replace(tar_out)
+    print(f'SAVED /kaggle/working/{vol}.md ({non_empty} non-empty pages)', flush=True)
+
+chunk_size = 100
+for start in range(0, total, chunk_size):
+    end = min(total, start + chunk_size)
+    cmd = [
+        sys.executable, str(code_dir / 'pipeline.py'),
+        '--pdf', str(pdf),
+        '--pages', f'{start}:{end}',
+        '--out', str(out_dir),
+        '--workdir', str(work_dir),
+        '--classifier', str(code_dir / 'script_cls.pt'),
+        '--page-batch', '25',
+        '--faux-batch', '40',
+        '--chunk', '40',
+        '--dpi', '300',
+        '--md-dir', str(md_dir),
+        '--page-offset', str(offset),
+    ]
+    print('RUN', ' '.join(cmd), flush=True)
+    r = subprocess.run(cmd)
+    if (work_dir / 'faux').exists():
+        shutil.rmtree(work_dir / 'faux', ignore_errors=True)
+    save_outputs()
+    if r.returncode != 0:
+        raise SystemExit(r.returncode)
 '''
 
 
-def kernel_metadata():
-    return {
-        "id": KERNEL_ID,
-        "title": KERNEL_TITLE,
-        "code_file": "run_chunk.py",
+def push_volume(vol):
+    kid, title, total, offset, use_gpu = KERNELS[vol]
+    wdir = pathlib.Path(f"/tmp/kpush/v{vol}")
+    wdir.mkdir(parents=True, exist_ok=True)
+    code = (KERNEL_TEMPLATE
+            .replace("@VOL@", str(vol))
+            .replace("@TOTAL@", str(total))
+            .replace("@OFFSET@", str(offset)))
+    (wdir / "run_vol.py").write_text(code, encoding="utf-8")
+    meta = {
+        "id": kid,
+        "title": title,
+        "code_file": "run_vol.py",
         "language": "python",
         "kernel_type": "script",
         "is_private": True,
-        "enable_gpu": False,
+        "enable_gpu": use_gpu,
+        "enable_tpu": False,
         "enable_internet": True,
         "dataset_sources": DATASETS,
         "competition_sources": [],
         "kernel_sources": [],
         "model_sources": [],
     }
-
-
-def run_kaggle(vol, start, end, offset, work):
-    work.mkdir(parents=True, exist_ok=True)
-    code = (KERNEL_TEMPLATE.replace("@VOL@", str(vol))
-            .replace("@START@", str(start)).replace("@END@", str(end))
-            .replace("@OFFSET@", str(offset)))
-    (work / "run_chunk.py").write_text(code, encoding="utf-8")
-    (work / "kernel-metadata.json").write_text(json.dumps(kernel_metadata(), indent=2),
-                                               encoding="utf-8")
-    print(f"push v{vol} {start}:{end}", flush=True)
-    p = subprocess.run(["kaggle", "kernels", "push"], cwd=work,
+    (wdir / "kernel-metadata.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    r = subprocess.run([KAGGLE, "kernels", "push", "-p", str(wdir)],
                        capture_output=True, text=True)
-    print(p.stdout[-1000:], p.stderr[-1000:], flush=True)
-    if p.returncode:
-        return False
-    while True:
-        q = subprocess.run(["kaggle", "kernels", "status", KERNEL_ID],
-                           capture_output=True, text=True)
-        st = q.stdout.strip().splitlines()[-1] if q.stdout.strip() else ""
-        print(st, flush=True)
-        if "COMPLETE" in st or "ERROR" in st or "CANCEL" in st:
-            break
-        time.sleep(60)
-    out = work / "out"
-    subprocess.run(["kaggle", "kernels", "output", KERNEL_ID, "-o", "-p", str(out),
-                    "--file-pattern", r"md/.*\.md$"], capture_output=True, text=True)
-    got = 0
-    src = out / "md"
-    page_dir = STATE / f"v{vol}"
-    page_dir.mkdir(parents=True, exist_ok=True)
-    if src.exists():
-        for f in sorted(src.glob("p*.md")):
-            shutil.copy2(f, page_dir / f.name)
-            got += 1
-    print(f"downloaded {got} pages for v{vol} {start}:{end}", flush=True)
-    return "COMPLETE" in st
+    print(f"Pushed vol {vol} ({kid}, gpu={use_gpu}): rc={r.returncode} {r.stdout.strip()}", flush=True)
+    return r.returncode == 0
 
 
-def rebuild(vol):
-    total, _ = VOLUMES[vol]
-    page_dir = STATE / f"v{vol}"
-    parts = []
-    for pi in range(total):
-        f = page_dir / f"p{pi:05d}.md"
-        if not f.exists():
-            break
-        parts.append(f.read_text(encoding="utf-8").rstrip() + "\n")
-    if not parts:
-        return 0
-    out = TARGET / f"v{vol}.md"
-    tmp = out.with_suffix(".md.tmp")
-    tmp.write_text("\n".join(parts), encoding="utf-8")
-    tmp.replace(out)
-    return len(parts)
+def download_volume(vol, kid=None):
+    if kid is None:
+        kid, _, _, _, _ = KERNELS[vol]
+    dl_dir = pathlib.Path(f"/tmp/kdl/v{vol}")
+    shutil.rmtree(dl_dir, ignore_errors=True)
+    dl_dir.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run([KAGGLE, "kernels", "output", kid, "-p", str(dl_dir)],
+                       capture_output=True, text=True)
+    print(f"Download vol {vol} ({kid}): rc={r.returncode}", flush=True)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    md_file = dl_dir / f"{vol}.md"
+    tar_file = dl_dir / f"md_v{vol}.tar.gz"
+    if tar_file.exists():
+        v_state = STATE_DIR / f"word_split_v{vol}"
+        v_state.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(tar_file, "r:gz") as tf:
+            tf.extractall(v_state)
+        n_pages = len(list(v_state.glob("p*.md")))
+        print(f"Vol {vol}: extracted {n_pages} page md files into {v_state}", flush=True)
+    if md_file.exists():
+        dst = OUT_DIR / f"{vol}.md"
+        shutil.copy2(md_file, dst)
+        print(f"Vol {vol}: saved {dst} ({dst.stat().st_size:,} bytes)", flush=True)
+        return True
+    return False
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--volumes", default="1,2,3,4")
-    ap.add_argument("--chunk", type=int, default=50)
-    ap.add_argument("--max-chunks", type=int, default=0)
+    ap.add_argument("--push", action="store_true")
+    ap.add_argument("--monitor", action="store_true")
     args = ap.parse_args()
-    TARGET.mkdir(parents=True, exist_ok=True)
-    STATE.mkdir(parents=True, exist_ok=True)
-    for vol in VOLUMES:
-        f = TARGET / f"v{vol}.md"
-        bak = STATE / f"pre_layout_v{vol}.md"
-        if f.exists() and not bak.exists():
-            shutil.copy2(f, bak)
-    # seed front matter already OCR'd in the pilot
-    pilot = pathlib.Path("/tmp/opencode/kaggle_rts_chunk/md")
-    seed = STATE / "v1"
-    seed.mkdir(parents=True, exist_ok=True)
-    if pilot.exists():
-        for f in sorted(pilot.glob("p0000*.md")):
-            if not (seed / f.name).exists():
-                shutil.copy2(f, seed / f.name)
-    done_chunks = 0
-    for vol in [int(x) for x in args.volumes.split(",") if x.strip()]:
-        total, offset = VOLUMES[vol]
-        page_dir = STATE / f"v{vol}"
-        page_dir.mkdir(parents=True, exist_ok=True)
-        while True:
-            present = {int(f.stem[1:]) for f in page_dir.glob("p*.md")}
-            start = next((i for i in range(total) if i not in present), None)
-            if start is None:
-                break
-            end = min(total, start + args.chunk)
-            print(f"v{vol}: next chunk {start}:{end}", flush=True)
-            ok = run_kaggle(vol, start, end, offset, pathlib.Path("/tmp/opencode/rts_kernel"))
-            n = rebuild(vol)
-            print(f"v{vol}: contiguous {n}/{total}", flush=True)
-            done_chunks += 1
-            if args.max_chunks and done_chunks >= args.max_chunks:
-                return
-            if not ok:
-                print("chunk failed; resume with the same command", flush=True)
-                return
+    vols = [int(x) for x in args.volumes.split(",") if x.strip()]
+    if args.push:
+        for v in vols:
+            push_volume(v)
+            time.sleep(2)
+    if args.monitor:
+        done = set()
+        while len(done) < len(vols):
+            for v in vols:
+                if v in done:
+                    continue
+                for kid in WATCH_KERNELS.get(v, [KERNELS[v][0]]):
+                    q = subprocess.run([KAGGLE, "kernels", "status", kid],
+                                       capture_output=True, text=True)
+                    st = q.stdout.strip().splitlines()[-1] if q.stdout.strip() else ""
+                    print(f"[{time.strftime('%H:%M:%S')}] v{v} ({kid}): {st}", flush=True)
+                    if "COMPLETE" in st:
+                        if download_volume(v, kid=kid):
+                            done.add(v)
+                            break
+            if len(done) < len(vols):
+                time.sleep(60)
 
 
 if __name__ == "__main__":
     main()
+
