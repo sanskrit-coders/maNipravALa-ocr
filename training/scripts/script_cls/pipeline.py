@@ -50,7 +50,7 @@ if not pathlib.Path(TAG_FONT).exists():
     TAG_FONT = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
 TAM_ANCHOR_FONT = "/usr/share/fonts/truetype/noto/NotoSerifTamil-Regular.ttf"
 DEV_ANCHOR_FONT = "/usr/share/fonts/sanskrit-fonts/ttf-devanagari/noto/NotoSansDevanagari-Regular.ttf"
-ANCHOR_STRIP_RE = re.compile(r"\s*[\[\(\{]?[கஙசकखग]{1,4}[\]\)\}]?\s*$")
+ANCHOR_STRIP_RE = re.compile(r"\s*[\[\(\{]?\s*(?:க\s*ங[சஞடண\u0bcd\sர]*|क\s*ख[गघङच\s]*)\s*[\]\)\}]?\s*$")
 
 SCRIPT_COLORS = {"dev": (200, 0, 0), "tam": (0, 120, 0), "other": (0, 0, 220)}
 GAP_WORD = 10
@@ -689,10 +689,10 @@ def compose_faux(arr, runs, path, tag_start=1):
     anchor_txt = None
     anchor_font = None
     if "_tam_" in p_str and pathlib.Path(TAM_ANCHOR_FONT).exists():
-        anchor_txt = "[கஙச]"
+        anchor_txt = "கஙசஞடண"
         anchor_font = ImageFont.truetype(TAM_ANCHOR_FONT, 36)
     elif "_dev_" in p_str and pathlib.Path(DEV_ANCHOR_FONT).exists():
-        anchor_txt = "[कखग]"
+        anchor_txt = "कखगघङच"
         anchor_font = ImageFont.truetype(DEV_ANCHOR_FONT, 36)
     for k, im in enumerate(crops):
         y = 20 + k * ROW_PITCH
@@ -749,6 +749,12 @@ def parse_tagged(txt, n):
             return addition
         if cur.endswith(addition):
             return cur
+        cw = cur.split()
+        aw = addition.split()
+        if cw and aw and cw[-1] == aw[0]:
+            addition = " ".join(aw[1:]).strip()
+            if not addition:
+                return cur
         return cur + " " + addition
 
     def flush_pending():
@@ -1012,9 +1018,9 @@ def main():
                     return True
                 w = q["x1"] - q["x0"]
                 sub = dark[q["y0"]:q["y1"], q["x0"]:q["x1"]]
-                rows = np.where(sub.any(axis=1))[0]
-                ink_h = (int(rows[-1]) - int(rows[0]) + 1) if len(rows) else 0
-                return ink_h < 18 or (w < 22 and ink_h < 28)
+                ink_rows = int(sub.any(axis=1).sum())
+                ink_area = int(sub.sum())
+                return ink_rows < 18 or ink_area < 110 or (w < 30 and ink_rows < 24)
             for idx, r in enumerate(line_runs):
                 if _is_punct_or_other(r):
                     left = next((line_runs[j] for j in range(idx - 1, -1, -1)

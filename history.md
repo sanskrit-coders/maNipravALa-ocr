@@ -4,18 +4,51 @@ This document records the chronological history of approaches, datasets, models,
 
 Per-component technical details live in [`summary/`](summary/overall.md):
 - [summary/overall.md](summary/overall.md) — Current system overview, I/O summary, and active roadmap.
-- [summary/patch-script-classifier.md](summary/patch-script-classifier.md) — Base 48×48 patch script classifier (`script_cls.pt`, **active**).
-- [summary/obsolete/script-boundary-classifier.md](summary/obsolete/script-boundary-classifier.md) — Mixed-word boundary segmenter (Shiro-rekhā rule, projection-glyph DP, and boundary CNNs).
-- [summary/obsolete/word-classifier.md](summary/obsolete/word-classifier.md) — 4-class word-level script classifier (`script_sep.pt`, `word_cls.pt`).
-- [summary/obsolete/lines_to_words.md](summary/obsolete/lines_to_words.md) — Projection-valley and TSV-constrained word segmentation.
-- [summary/obsolete/column-separator.md](summary/obsolete/column-separator.md) — 256-column script classifier (`column_sep.pt`).
-- [summary/obsolete/line-classifier.md](summary/obsolete/line-classifier.md) — Whole-line dominant-script classifier (`line_cls`).
+- [summary/current-pipeline.md](summary/current-pipeline.md) — Stage-by-stage specification of the current production Manipravalam OCR pipeline.
+- **Active models ([`summary/models/`](summary/models/)):**
+  - [summary/models/patch-script-classifier.md](summary/models/patch-script-classifier.md) — Base 48×48 patch script classifier (`script_cls.pt`, **active**).
+  - [summary/models/google-drive-ocr.md](summary/models/google-drive-ocr.md) — Google Drive Document OCR recognizer (`drive_ocr_images.py`, **active**).
+- **Obsolete models ([`summary/models/obsolete/`](summary/models/obsolete/)):**
+  - [summary/models/obsolete/script-boundary-classifier.md](summary/models/obsolete/script-boundary-classifier.md) — Mixed-word boundary segmenter (Shiro-rekhā rule, projection-glyph DP, and boundary CNNs).
+  - [summary/models/obsolete/word-classifier.md](summary/models/obsolete/word-classifier.md) — 4-class word-level script classifier (`script_sep.pt`, `word_cls.pt`).
+  - [summary/models/obsolete/lines_to_words.md](summary/models/obsolete/lines_to_words.md) — Projection-valley and TSV-constrained word segmentation.
+  - [summary/models/obsolete/column-separator.md](summary/models/obsolete/column-separator.md) — 256-column script classifier (`column_sep.pt`).
+  - [summary/models/obsolete/line-classifier.md](summary/models/obsolete/line-classifier.md) — Whole-line dominant-script classifier (`line_cls`).
+  - [summary/models/obsolete/kraken-word-ocr.md](summary/models/obsolete/kraken-word-ocr.md) — Kraken 7.1.1 VGSL word-level dual-script OCR (`best_0.8900.safetensors`).
+  - [summary/models/obsolete/dev-tam-chars-ocr.md](summary/models/obsolete/dev-tam-chars-ocr.md) — Kraken VGSL whole-line mixed-script OCR (`devTamCharsOCR` / `kaggle_v10_best.pt`).
+  - [summary/models/obsolete/tesseract-paddle-baselines.md](summary/models/obsolete/tesseract-paddle-baselines.md) — Tesseract 5 and PaddleOCR PP-OCRv4 baselines.
 - [evaluation/summary.md](evaluation/summary.md) & [evaluation/COMPARE.md](evaluation/COMPARE.md) — Controlled line- and block-level benchmarks on `RTS_sb_01`/`02`.
 - [data/README.md](data/README.md) — Canonical volumes (`RTS_sb_01`, `RTS_sb_02`), block detection, GT alignment, and `word-image-maps`.
 
 ---
 
-## 1. 2026-11-07 — Comprehensive Audit & Post-Mortem of Volume 4 and Volume 1 Runs
+## 1. 2026-11-07 — Phase 1 (Vol. 4 Deterministic Cleanup & Promotion) and Phase 2 (Vol. 1 Intra-Word Manipravalam Pipeline Fixes & Pilot)
+
+- **Docs:** [summary/overall.md](summary/overall.md), [summary/patch-script-classifier.md](summary/patch-script-classifier.md), [evaluation/pilot_v1/](evaluation/pilot_v1/).
+- **Phase 1 — Volume 4 Cleanup & Promotion:**
+  - Removed contaminated/failed Volume 4 outputs (`4.drive.corrected.md`, `4.drive.corrected.raw.md`, `4.drive.corrected2.md`, `4.drive.wordwise.md`) and moved `4.drive.md`, `4.drive.raw.md`, and `4.drive.report.md` out of gitignored `raw/drive/local/` into tracked `raw/drive/`.
+  - Applied a deterministic cleanup pass (`tag_fixes=7`, `rep_fixes=404`, `verse_fixes=741` via `plain-drive/4.md` cross-reference for dropped `०` in `।। १०२ ।।`, `lat_fixes=161`), verified all 10 audit pages (`5, 100, 109, 141, 158, 380, 408, 437, 534, 700`), archived the old Kraken output to `/tmp/opencode/4.kraken-wordwise.md`, and promoted the cleaned `4.drive.md` (24,209 lines, 1,163,914 chars) to `raw/tesseract/4.md`.
+- **Phase 2 — Root-Cause Fixes & Volume 1 Pilot (`p0029, p0032, p0035, p0055` = Printed Pages `14, 17, 20, 40`):**
+  - **Root causes identified and fixed in `training/scripts/apply_ocr_pdf.py` and `training/scripts/script_cls/pipeline.py`:**
+    1. **Line segmentation (`segment_lines_projection` in `apply_ocr_pdf.py`):** Replaced connected-component `find_objects` (which merged 2–3 lines via touching Tamil descenders/Devanagari matras) with horizontal projection-profile segmentation + pitch-based recursive multi-line valley splitting (`unit_h` + `pitch`) and non-overlapping valley clamping. Separates all `35, 34, 35, 32` printed lines on `p0029, p0032, p0035, p0055` with zero merged lines.
+    2. **Why `script_sep.pt` was retired (`train_script_sep.py` diagnosis):** `load_real()` in `train_script_sep.py` labeled *all* real scan crops from `p0036.jsonl` as `CLS['mixed']` while `dev/tam/other` were purely synthetic font renders, training the CNN to classify scan paper texture as `mixed`. Replaced with the retrained 48×48 patch classifier `training/local/script_cls.pt` (0.9921 real-page validation accuracy).
+    3. **Intra-word splitting & short-run merging (`classify_word`, `_merge_short_runs`, `_safe_split_x`):** Added center-patch sampling for narrow words (`w <= 40`), mean-probability argmax fallback when all patches are `<= 0.45`, minimum-ink (`<= 6` dark px) column splitting in `_safe_split_x` to cut across 1–3 px Shiro-rekhā overhangs (e.g. `निवर्तनத்தில்`), and merging of `"other"` and narrow runs into adjacent `dev`/`tam` runs.
+    4. **Line-level `pre_space` and punctuation absorption (`_is_punct_or_other`):** Set `pre_space = not (prev_script == "dev" and script == "tam" and (rx0 - prev_rx1) <= 5)` for multi-run boxes so true `dev→tam` Manipravalam words join seamlessly without spaces (`अनुवदिத்தாரிறே?`, `समाश्रयिக்கையில்`, `पुरुषार्थलाभத்தில்`, `स्वरूपप्राप्तமான`, `निरुपाधिकமாக`) while inter-word transitions preserve spaces. Absorbed `"other"` and low-ink punctuation runs (`ink_rows < 18 or ink_area < 110`, such as `...`, `-`, `।`, quotes) into adjacent `dev`/`tam` runs.
+    5. **Faux-page geometry & script anchors (`_compact_crop_whitespace`, `compose_faux`, `parse_tagged`):** Compacted wide internal crop gaps (`> 36` px → `22` px) to prevent Drive 2-column reordering; used `ROW_PITCH = 136` (strip height `82` px, `54` px vertical gap) with strips pasted at `x = 146` (`28` px = 1-space gap after `#Txx`); and rendered a 6-consonant script anchor (`கஙசஞடண` on `_tam_` pages, `कखगघङच` on `_dev_` pages) to the right of narrow rows (`im.width < 460`) so Drive's line-level script detector never misclassifies short 3–4 letter Tamil suffixes (`மான,`, `என்று,`, `முமாம்.`) as Latin/ASCII (`LD IT 60T,`, `6T601M,`, `(LOLOLD.`). Stripped the anchor in `parse_tagged` and removed `\b` from `TAG_TOKEN_RE` (since Python `re` treats Indic base letters as `\w`).
+  - **Volume 1 Pilot Results (`evaluation/pilot_v1/p00029.md .. p00055.md`):**
+    - **First-pass Drive OCR tag recovery:** **568 / 568 segments (100.00%)** across 16 faux pages (`0` retry pages needed).
+    - **Comparison against previous Volume 1 outputs:**
+      | PDF Page (Printed) | Metric | Old `linewise-script-split-drive-ocr/v1.txt` | Old `script-split-tesseract/v1.md` | **New Phase 2 Pipeline (`evaluation/pilot_v1/`)** |
+      |---|---|---|---|---|
+      | `p0029` (`[[P14]]`) | Lines / Chars / Mixed Words / Latin | 12 / 404 / 0 / 2 | 11 / 399 / 0 / 0 | **35 / 2,632 / 23 / 1** |
+      | `p0032` (`[[P17]]`) | Lines / Chars / Mixed Words / Latin | 38 / 2,931 / 0 / 26 | 32 / 2,449 / 1 / 0 | **34 / 2,604 / 22 / 1** |
+      | `p0035` (`[[P20]]`) | Lines / Chars / Mixed Words / Latin | 36 / 2,723 / 0 / 34 | 34 / 2,429 / 0 / 0 | **35 / 2,586 / 28 / 0** |
+      | `p0055` (`[[P40]]`) | Lines / Chars / Mixed Words / Latin | 31 / 2,814 / 0 / 12 | 30 / 2,496 / 0 / 0 | **32 / 2,715 / 37 / 2** |
+      | **Total (4 pages)** | **Lines / Chars / Mixed Words / Latin** | **117 / 8,872 / 0 / 74** | **107 / 7,773 / 1 / 0** | **136 / 10,537 / 110 / 4** |
+
+---
+
+## 2. 2026-11-07 (Earlier) — Comprehensive Audit & Post-Mortem of Volume 4 and Volume 1 Runs
 
 - **What was done:**
   - Audited all four full-volume OCR outputs for `ra-tra-sA_5-commentaries_4.pdf` (806 PDF pp., 791 printed pp.) and pilot outputs for `ra-tra-sA_5-commentaries_1.pdf` directly against high-resolution PDF page scans (`5, 100, 109, 141, 158, 380, 408, 437, 534, 700` on Vol. 4; `14, 17, 20, 40` on Vol. 1) and faux-page renders.

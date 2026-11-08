@@ -1,16 +1,23 @@
 # Manipravalam OCR summary
 
-This directory splits classifier-specific notes out of the legacy
-`evaluation/summary.md`.
+This directory documents the current Manipravalam OCR pipeline and all active and retired models.
 
-Classifier documents:
+## Pipeline & Model Index
 
-- [patch-script-classifier.md](patch-script-classifier.md) — base 48×48 patch classifier (active production classifier, 0.9921 real-page accuracy).
-- [obsolete/lines_to_words.md](obsolete/lines_to_words.md) — GT-constrained word boxes; old-vs-fixed evaluation.
-- [obsolete/word-classifier.md](obsolete/word-classifier.md) — word-level `dev/tam/other/mixed` classifier.
-- [obsolete/script-boundary-classifier.md](obsolete/script-boundary-classifier.md) — mixed-word boundary segmenter, Shiro-rekhā rule, CNN metrics, and wordwise faux-page post-mortem.
-- [obsolete/column-separator.md](obsolete/column-separator.md) — per-column separator.
-- [obsolete/line-classifier.md](obsolete/line-classifier.md) — experimental line classifier.
+- **Current Production Pipeline:**
+  - [current-pipeline.md](current-pipeline.md) — End-to-end architecture and stage-by-stage specification (`segment_lines_projection` → `word_segments` → `script_cls.pt` + `_safe_split_x` → `_is_punct_or_other` → `make_segments` → `compose_faux` with script anchors → `drive_ocr_images.py` → `parse_tagged`).
+- **Active Models ([`models/`](models/)):**
+  - [models/patch-script-classifier.md](models/patch-script-classifier.md) — Base 48×48 patch residual CNN (`training/local/script_cls.pt`, **0.9921** real-page accuracy on `word-image-maps`).
+  - [models/google-drive-ocr.md](models/google-drive-ocr.md) — Google Drive Document OCR recognizer (`drive_ocr_images.py`) on script-pure phrase-strip faux pages with `#Txx` tags and 6-consonant script anchors (`கஙசஞடண` / `कखगघङच`).
+- **Obsolete / Retired Models ([`models/obsolete/`](models/obsolete/)):**
+  - [models/obsolete/word-classifier.md](models/obsolete/word-classifier.md) — Word-level `dev/tam/other/mixed` CNN (`script_sep.pt`, `word_cls.pt`).
+  - [models/obsolete/script-boundary-classifier.md](models/obsolete/script-boundary-classifier.md) — Mixed-word boundary segmenter (Shiro-rekhā rule, projection-glyph DP, `boundary_combined.pt`, `boundary_image.pt`, `boundary_sep.pt`).
+  - [models/obsolete/column-separator.md](models/obsolete/column-separator.md) — Per-column 64×256 separator (`column_sep.pt`).
+  - [models/obsolete/line-classifier.md](models/obsolete/line-classifier.md) — Experimental 64×1024 whole-line script classifier (`line_cls`).
+  - [models/obsolete/lines_to_words.md](models/obsolete/lines_to_words.md) — GT-constrained TSV + word-width DP box generator.
+  - [models/obsolete/kraken-word-ocr.md](models/obsolete/kraken-word-ocr.md) — Kraken 7.1.1 VGSL dual-script word recognizer (`best_0.8900.safetensors`).
+  - [models/obsolete/dev-tam-chars-ocr.md](models/obsolete/dev-tam-chars-ocr.md) — Kraken VGSL whole-line mixed-script recognizer (`devTamCharsOCR` / `kaggle_v10_best.pt`).
+  - [models/obsolete/tesseract-paddle-baselines.md](models/obsolete/tesseract-paddle-baselines.md) — Tesseract 5 (`tam+san` / script-split) and PaddleOCR PP-OCRv4 baselines.
 
 ## Classifier I/O summary
 
@@ -69,19 +76,18 @@ Four full-volume outputs were generated for Volume 4 under `.../rahasya-traya-sA
    - Unlike Volume 4, Volumes 1–3 switch scripts *inside words* (`आचार्यसम्बन्धத்தினுடைய`).
    - Splitting inside every mixed word creates isolated 1–3 akshara Tamil suffix strips (`வுக்கு`, `த்தினுடைய`) that lack word/line context on faux pages. Conversely, earlier Volume 1 faux pages (`faux-pages-linewise-fixed`, Oct 24) were built *before* `script_cls.pt` was retrained on the 95,411 real word-image maps (Oct 26), causing severe cross-script routing errors on Vol. 1 p20.
 
-## Ways forward
+## Ways forward & Completed Milestones (2026-11-07)
 
-1. **Immediate (Volume 4 completion — no re-OCR needed):**
-   - Use `raw/drive/local/4.drive.md` as the authoritative Volume 4 text (retire `4.drive.wordwise.md` and `4.drive.corrected2.md`, and keep `tesseract/4.md` only as a diagnostic archive `4.kraken-wordwise.md`).
-   - Run a lightweight, deterministic cleanup script on `4.drive.md` to: (a) remove the 6 leaked `#T` tags, (b) restore dropped `०` in 3-digit verse numbers (`।। १ २ ।।` → `।। १०२ ।।`, cross-checking `plain-drive/4.md` where needed), (c) deduplicate the few line-end repeat phrases, and (d) standardize page markers `[[२]]`–`[[७९४]]`.
-2. **Fix `pipeline.py` before running Volumes 1–3 (`ra-tra-sA_5-commentaries_{1,2,3}.pdf`):**
-   - **Never drop `"other"` runs:** Absorb `"other"` (digits, dandas, parentheses, hyphens) into the adjacent `dev` or `tam` segment so verse numbers and punctuation are never deleted.
-   - **Never emit isolated wordwise faux pages to Drive OCR:** Always group consecutive same-script runs on a line into **phrase/line strips** (`make_segments`), and pad/anchor short sub-word suffixes so Drive OCR sees coherent horizontal strips.
-   - **Use the retrained `script_cls.pt` (0.9921 real-page patch accuracy) + Shiro-rekhā safe split:** Volume 1 has not yet been run with the Oct 26 retrained `script_cls.pt`. For mixed words where `script_cls.pt` detects both `dev` and `tam`, snap the internal split to the Shiro-rekhā / ink-free valley (`_safe_split_x`), keeping outer word bounds intact.
-   - **Filter 1-speck faux segments:** Skip segments narrower than a minimum ink threshold so smudge crops do not consume tags or Drive batches.
-3. **Alternative / complementary architecture for dense Manipravalam (Volumes 1–3):**
-   - **In-place Context-Preserving Masked Line Faux Pages:** Instead of cutting mixed lines into disconnected micro-strips, emit each mixed line twice as a **full-width line strip**: once on the Devanagari faux page with pure-Tamil runs masked/whited-out (or replaced by baseline guides), and once on the Tamil faux page with pure-Devanagari runs masked. Drive OCR then preserves full line scale and baseline geometry without tag-fragmentation.
-   - **Line-level / Phrase-level Local Recognizer or LLM Post-Correction:** If training a local recognizer, train on **multi-word line/phrase strips** (or fine-tune a vision-language / seq2seq line model on the 2,203 aligned `RTS_sb_01`/`02` pages), never on isolated words without context.
+1. **COMPLETED — Phase 1 (Volume 4 deterministic cleanup & promotion):**
+   - Removed contaminated/failed `.md` files (`4.drive.corrected.md`, `4.drive.corrected.raw.md`, `4.drive.corrected2.md`, `4.drive.wordwise.md`) and moved `4.drive.md`, `4.drive.raw.md`, and `4.drive.report.md` out of gitignored `raw/drive/local/` into tracked `raw/drive/`.
+   - Ran deterministic cleanup on `raw/drive/4.drive.md` (`tag_fixes=7`, `rep_fixes=404`, `verse_fixes=741` restoring dropped `०` in `।। १०२ ।।` via `plain-drive/4.md`, `lat_fixes=161`), audited on pages `5, 100, 109, 141, 158, 380, 408, 437, 534, 700`, archived the Kraken wordwise diagnostic to `/tmp/opencode/4.kraken-wordwise.md`, and promoted the cleaned Volume 4 text (24,209 lines, 1,163,914 chars) to `raw/tesseract/4.md`.
+2. **COMPLETED — Phase 2 (`apply_ocr_pdf.py` & `pipeline.py` fixes + Volume 1 Pilot on `p0029, p0032, p0035, p0055`):**
+   - **Pitch-based recursive line segmentation (`segment_lines_projection` in `apply_ocr_pdf.py`):** Eliminates multi-line merges caused by touching ascenders/descenders; cleanly recovers all `35, 34, 35, 32` lines across the 4 Volume 1 pilot pages.
+   - **Retrained `script_cls.pt` + minimum-ink `_safe_split_x` + `_is_punct_or_other` absorption:** Splits intra-word `dev→tam` transitions even across 1–3 px Shiro-rekhā overhangs (`<= 6` dark px), joins intra-word `dev→tam` runs without spaces (`pre_space = False`), and absorbs `"other"` / punctuation tokens (`...`, `-`, `।`, quotes) into adjacent `dev`/`tam` runs so punctuation and digits are never dropped or isolated.
+   - **Faux-page geometry & 6-consonant script anchors (`கஙசஞடண` / `कखगघङच`):** Compacts internal whitespace gaps (`> 36` px → `22` px), spaces rows at `ROW_PITCH = 136` with strips at `x = 146`, and appends a crisp script anchor to narrow strips (`im.width < 460`) so Google Drive OCR never misclassifies short 3–4 letter Tamil suffixes (`மான,`, `என்று,`, `முமாம்.`) as Latin/ASCII.
+   - **Pilot Benchmark (`evaluation/pilot_v1/p00029.md .. p00055.md`):** Achieved **568 / 568 (100.00%) first-pass tag recovery** across 16 faux pages, recovering all **136 printed lines** and **110 intra-word Manipravalam tokens** (up from 0 in `linewise-script-split-drive-ocr/v1.txt` and 1 in `script-split-tesseract/v1.md`) while reducing stray Latin chars from 74 to 4.
+3. **Next Step — Full-Volume Production Runs on Volumes 1–3 (`ra-tra-sA_5-commentaries_{1,2,3}.pdf`):**
+   - Run the updated `training/scripts/script_cls/pipeline.py` in page chunks across Volumes 1–3 using `training/local/script_cls.pt` (without `--word-classifier`).
 
 ## OCR models inventory
 
