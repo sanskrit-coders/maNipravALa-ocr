@@ -55,7 +55,7 @@ if not pathlib.Path(TAM_ANCHOR_FONT).exists() and (HERE / "NotoSerifTamil-Regula
 DEV_ANCHOR_FONT = "/usr/share/fonts/sanskrit-fonts/ttf-devanagari/noto/NotoSansDevanagari-Regular.ttf"
 if not pathlib.Path(DEV_ANCHOR_FONT).exists() and (HERE / "NotoSansDevanagari-Regular.ttf").exists():
     DEV_ANCHOR_FONT = str(HERE / "NotoSansDevanagari-Regular.ttf")
-ANCHOR_STRIP_RE = re.compile(r"\s*[\[\(\{]?\s*(?:க\s*ங[சஞடண\u0bcd\sர]*|क\s*ख[गघङच\s]*)\s*[\]\)\}]?\s*$")
+ANCHOR_STRIP_RE = re.compile(r"\s*[\[\(\{]?\s*(?:க\s*ங\s*ச[ஞடண\u0bcd\sரஎ]*|(?<!\S)ச\s*ஞ\s*ட\s*ண|क\s*ख\s*ग[घङडड़च\s]*)\s*[\]\)\}]?\s*")
 
 SCRIPT_COLORS = {"dev": (200, 0, 0), "tam": (0, 120, 0), "other": (0, 0, 220)}
 GAP_WORD = 10
