@@ -1,6 +1,6 @@
-# Current Manipravalam OCR Pipeline
+# Current Manipravalam OCR Pipeline (`tadevaOCR`)
 
-This document describes the active production pipeline for mixed Sanskrit (Devanāgarī) and Tamil (Maṇipravāḷa) OCR implemented in [`training/scripts/script_cls/pipeline.py`](../training/scripts/script_cls/pipeline.py) and [`training/scripts/apply_ocr_pdf.py`](../training/scripts/apply_ocr_pdf.py).
+This document describes the active production pipeline (`tadevaOCR`) for mixed Sanskrit (Devanāgarī) and Tamil (Maṇipravāḷa) OCR implemented in [`training/scripts/script_cls/pipeline.py`](../training/scripts/script_cls/pipeline.py) and [`training/scripts/apply_ocr_pdf.py`](../training/scripts/apply_ocr_pdf.py).
 
 ## Overview & Dataflow
 

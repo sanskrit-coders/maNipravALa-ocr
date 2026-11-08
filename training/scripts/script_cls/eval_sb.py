@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate scriptSepDriveOCR, linewiseScriptSepDriveOCR and local baselines
+"""Evaluate scriptSepDriveOCR, tadevaOCR and local baselines
 on the verified RTS_sb evaluation blocks (block-level GT).
 
 For each block crop (core/comm):

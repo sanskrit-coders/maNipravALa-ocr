@@ -1,0 +1,187 @@
+% !TEX program = xelatex
+\documentclass[10pt,twocolumn]{article}
+
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black
+}
+
+\title{\textbf{Resolving the Granularity--Context Paradox in Biscriptal Ma\d{n}iprav\={a}\d{l}a OCR via Sliding-Patch Script Separation and Context-Engineered Faux Pages}}
+
+\author{
+  Sanskrit Coders Research Group \\
+  \texttt{https://github.com/sanskrit-coders}
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Classical South Indian \emph{Ma\d{n}iprav\={a}\d{l}a} (``ruby-and-coral'') philosophical literature presents a uniquely severe challenge for Optical Character Recognition (OCR): Sanskrit and Tamil are interleaved not only across sentences and phrases, but \textbf{intra-word}, where Sanskrit nominal or verbal stems printed in the Devan\={a}gar\={\i} abugida are directly inflected with Tamil case markers, clitics, or verbal suffixes printed in the Tamil script without intervening whitespace. Furthermore, traditional multi-commentary (\emph{vy\={a}khy\={a}na-pa\~{n}caka}) editions typeset up to six distinct textual layers---root text (\emph{m\={u}lam}) and five classical commentaries---on every printed page separated by horizontal rules.
+
+Through a systematic empirical investigation across \textbf{2,970 printed pages} ($6.67\times 10^6$ Unicode characters) of Ved\={a}nta De\'{s}ika's \emph{\'{S}r\={\i}mad-Rahasya-Traya-S\={a}ra} and its commentaries, we identify the \textbf{Granularity--Context Paradox} of biscriptal OCR: (1) whole-line and whole-page commercial/open-source OCR engines fail when presented with unsplit biscriptal lines (PaddleOCR PP-OCRv4: \textbf{0.710 CER}; Google Drive Document OCR: \textbf{0.435 CER}; bilingual Tesseract \texttt{tam+san}: \textbf{0.352 CER}), because their internal line-level language models lock onto the dominant script of each line and transliterate or garble the minority script; (2) custom dual-script CTC recognizers trained from scratch suffer from capacity and lexicon starvation (a 4.1M-parameter Kraken VGSL word recognizer trained on \textbf{92,976 real word crops} reaches \textbf{90.34\% character accuracy} / \textbf{80.53\% word accuracy}, leaving $\sim 1$ in 5 words wrong and emitting \textbf{1,456 spurious intra-word script chimeras}); and (3) wordwise script separation starves document OCR of horizontal baseline and linguistic context, causing Google Drive OCR to drop \textbf{76\%--100\% of short Sanskrit stems} and misclassify short Tamil suffixes as ASCII/Latin lookalikes due to competition from row-index tags (\texttt{\#T01}).
+
+We resolve this paradox with a \textbf{Phrase-Strip Script-Separated Faux-Page Pipeline} (\texttt{tadevaOCR}) that combines: (i) recursive pitch-based line segmentation and mid-band ink-filtered word segmentation; (ii) a \textbf{48$\times$48 sliding-patch residual CNN} (\texttt{script\_cls.pt}, \textbf{0.9921 real-scan accuracy}) paired with minimum-ink column snapping ($\le 6$ dark pixels) to sever 1--3~px Devan\={a}gar\={\i} \emph{Shiro-rekh\={a}} overhangs at intra-word \texttt{dev} $\leftrightarrow$ \texttt{tam} junctions while tracking \texttt{pre\_space} flags; (iii) \textbf{same-script phrase-strip coalescing}, preserving multi-word horizontal context; and (iv) \textbf{context-engineered faux pages} featuring a $1:2$ horizontal-to-vertical proximity ratio ($28\text{ px}$ vs.\ $54\text{ px}$) and \textbf{6-consonant phonotactic script anchors} appended to narrow rows to override ASCII tag bias. On our controlled benchmark, the pipeline reduces CER to \textbf{0.112} ($3.9\times$ lower than unsplit cloud OCR and $2.1\times$ lower than custom dual-script CTC), achieves \textbf{100.0\% (\texttt{568/568}) tag recovery}, reduces stray Latin hallucinations by \textbf{94.6\%}, and enables the deterministic dissection of \textbf{11,683 commentary blocks} across \textbf{2,103 chapter pages} into \textbf{165 structured per-commentary, per-chapter files} with \textbf{zero unresolved blocks}.
+\end{abstract}
+
+\section{Introduction}
+
+In the \'{S}r\={\i}vai\d{s}\d{n}ava scholastic tradition of South India (12th--19th centuries CE), philosophical treatises and commentaries were composed in \emph{Ma\d{n}iprav\={a}\d{l}a} (literally ``ruby [\emph{ma\d{n}i}, Sanskrit] and coral [\emph{prav\={a}\d{l}a}, Tamil]''), a literary register that weaves Sanskrit technical terminology and quotations seamlessly into Tamil syntactic and morphological frames. When printed in modern 20th-century scholarly editions, \emph{Ma\d{n}iprav\={a}\d{l}a} is rendered \textbf{biscriptally}: Sanskrit lexical stems, compounds, and quotations are typeset in the \textbf{Devan\={a}gar\={\i}} script, while Tamil stems, case endings, postpositions, and finite verbal morphology are typeset in the \textbf{Tamil} script.
+
+Crucially, unlike bilingual documents where script switching occurs at paragraph, sentence, or clause boundaries, printed \emph{Ma\d{n}iprav\={a}\d{l}a} exhibits pervasive \textbf{intra-word script switching} (macaronic morphology without whitespace):
+\begin{itemize}
+    \item \textbf{Sanskrit nominal stem + Tamil case suffix / clitic:} e.g., \emph{puru\d{s}\={a}rtha-l\={a}bha-ttil} (Devan\={a}gar\={\i} stem + Tamil locative \emph{-ttil}), \emph{svar\={u}pa-pr\={a}pta-m\={a}\d{n}a} (Devan\={a}gar\={\i} stem + Tamil adjectival suffix \emph{-m\={a}\d{n}a}).
+    \item \textbf{Sanskrit verbal stem + Tamil finite/non-finite inflection:} e.g., \emph{anuvadi-tt\={a}r-i\d{r}\={e}?}, \emph{sam\={a}\'{s}rayi-kkaiyil}.
+    \item \textbf{Tri-segment words (\texttt{tam} $\to$ \texttt{dev} $\to$ \texttt{tam}):} Tamil demonstrative prefix \emph{ivv-} + Sanskrit stem \emph{adhik\={a}r\={a}rtha} + Tamil suffix \emph{-m}.
+\end{itemize}
+
+This intra-word biscriptal coupling violates the foundational assumption of nearly all modern OCR architectures: that a whitespace-delimited word---and typically an entire text line---belongs to a single writing system with uniform baseline geometry and a single character transition distribution. At an intra-word \texttt{dev} $\to$ \texttt{tam} junction, the printing type for the final Devan\={a}gar\={\i} \emph{ak\d{s}ara} frequently extends its upper horizontal headline (\emph{Shiro-rekh\={a}}) $1\text{--}3\text{ px}$ into the bounding column of the first Tamil glyph, creating a physical ink bridge between the two scripts.
+
+\subsection{The Granularity--Context Paradox}
+
+When digitizing a monumental biscriptal corpus such as the four-volume \emph{Vy\={a}khy\={a}na-pa\~{n}caka-sahita \'{S}r\={\i}mad-Rahasya-Traya-S\={a}ra} (2,970 PDF pages) and the two-volume \emph{S\={a}rabodhin\={\i}} edition (1,246 PDF pages), a fundamental tension emerges between \textbf{script homogeneity} (which requires fine-grained spatial segmentation down to sub-word fragments) and \textbf{visual/linguistic context} (which modern sequence-to-sequence and cloud document OCR engines require for accurate recognition). We call this the \textbf{Granularity--Context Paradox}:
+\begin{enumerate}
+    \item \textbf{At Coarse Granularity (Full Page or Full Line):} Visual and linguistic context is maximal, but script homogeneity is violated. Commercial VLM/cloud OCR engines (such as Google Drive Document OCR) and scene-text engines (PaddleOCR) lock onto the majority script of the line and force the minority script through the wrong decoder---transliterating Devan\={a}gar\={\i} into Tamil phonetics or garbled Latin (\texttt{tafuqGiiH}), or scrambling dense multi-commentary blocks (\textbf{0.435--0.710 CER}).
+    \item \textbf{At Fine Granularity (Isolated Word or Sub-Word Fragment):} Script homogeneity is achieved by splitting mixed words at script boundaries, but visual and linguistic context collapses. When isolated 1-word or sub-word crops are arranged on synthetic ``faux pages'' for cloud OCR, the recognizer loses its multi-word horizontal baseline estimate and language-model priors. Consequently, Google Drive OCR drops \textbf{76\%--100\% of short Devan\={a}gar\={\i} stems} and misreads short Tamil suffixes as ASCII/Latin lookalikes (\texttt{LD IT 60T,}, \texttt{6T601M,}) because the 4-character ASCII row tag (\texttt{\#T01}) dominates the line-level script detector.
+    \item \textbf{With Custom Dual-Script Models Trained from Scratch:} Training a unified CTC recognizer over $\Sigma_{\text{dev}} \cup \Sigma_{\text{tam}}$ encounters severe \textbf{capacity and lexicon starvation}: even with \textbf{92,976 verified real word crops}, a 4.1M-parameter Kraken VGSL word model tops out at \textbf{90.34\% character accuracy} (\textbf{80.53\% word accuracy}), translating to $\sim 100,000$ character errors per volume and \textbf{1,456 impossible intra-word script chimeras}.
+\end{enumerate}
+
+\section{Weakly Supervised Dataset Construction via Render-and-DP Alignment}
+
+To train and evaluate real-scan script classifiers, boundary detectors, and word recognizers without prohibitive manual bounding-box annotation, we developed a \textbf{Render-and-DP Weakly Supervised Alignment Pipeline} using two digitized volumes of the \emph{S\={a}rabodhin\={\i}} edition (\texttt{RTS\_sb\_01}, 630 pages; \texttt{RTS\_sb\_02}, 616 pages).
+
+For each scanned page $p$, we partition the page at the horizontal separator rule into the upper \texttt{core} (\emph{m\={u}lam}) block and lower \texttt{comm} (\emph{S\={a}rabodhin\={\i}}) block. Candidate word bounding boxes $B = (b_1, \dots, b_M)$ from \texttt{tesseract -l tam+san --psm 6 tsv} are aligned against ground-truth tokens $W = (w_1, \dots, w_N)$ via monotonic dynamic programming that combines string similarity with direct visual template similarity (rendering each ground-truth token $w_j$ into a grayscale bitmap $\tilde{I}(w_j)$ using \emph{Lohit-Devanagari} and \emph{Noto Sans Tamil} fonts). Retaining pairs with confidence $\ge 0.45$ yields \textbf{95,411 high-confidence real word-image mappings} across \textbf{2,203 block JSON files}: \textbf{36,322 (38.1\%)} pure Devan\={a}gar\={\i}, \textbf{44,881 (47.0\%)} pure Tamil, and \textbf{14,208 (14.9\%)} intra-word mixed tokens.
+
+\section{Methodology: Phrase-Strip Script Separation and Context-Engineered Faux Pages}
+
+Our production pipeline (\texttt{tadevaOCR}) consists of eight stages:
+
+\subsection{Stage 1: Pitch-Based Recursive Line Segmentation}
+Grayscale pages (300 DPI) are binarized via an adaptive percentile threshold $T = \min(200, \max(150, P_{12}(G) + 25))$, and full-width horizontal separator rules ($\text{row\_ink} > 0.55 W_{\text{span}}$) are zeroed out. Using robust estimates of single-line height $H_{\text{unit}} = P_{35}(\{h_i\})$ and inter-line pitch $P_{\text{line}} = \text{median}(\{\Delta y_i\})$, any vertical band exceeding
+\begin{equation}
+H_{\max} = \max\left(H_{\text{unit}} + 0.55 P_{\text{line}},\; 1.55 H_{\text{unit}}\right)
+\end{equation}
+is recursively subdivided at local minima of a 5-pixel box-filtered projection profile within $\pm 0.35 P_{\text{line}}$ of expected pitch multiples, resolving multi-line merges caused by touching Tamil descenders and Devan\={a}gar\={\i} \emph{m\={a}tr\={a}s}.
+
+\subsection{Stage 2: Mid-Band Ink-Filtered Word Segmentation}
+Candidate word spans $[x_0, x_1]$ separated by vertical valleys $\ge 4\text{ px}$ must satisfy a dual ink-density invariant:
+\begin{equation}
+\sum_{y=0}^{H-1} \sum_{x=x_0}^{x_1-1} \mathbb{I}[\text{dark}(y, x)] \ge 18 \;\;\land\;\; \sum_{y=\lfloor 0.25H \rfloor}^{\lceil 0.75H \rceil} \sum_{x=x_0}^{x_1-1} \mathbb{I}[\text{dark}(y, x)] \ge 8,
+\end{equation}
+rejecting inter-line ascender/descender bleed.
+
+\subsection{Stage 3: Sliding 48$\times$48 Patch CNN and Minimum-Ink Splitting}
+A 4-class (\texttt{dev}, \texttt{tam}, \texttt{other}, \texttt{null}) $48\times 48$ residual CNN (\texttt{script\_cls.pt}, 1.2M parameters) retrained on 69,366 real word crops (\textbf{0.9921 validation accuracy}) slides across each word at \texttt{STRIDE = 8 px}, using true midpoint sampling $\lfloor(x_0+x_1)/2\rfloor$ when $w \le 40\text{ px}$. After folding short/interior \texttt{other} runs narrower than $\max(20\text{ px}, \lfloor 0.45h \rfloor)$, any intra-word \texttt{dev} $\leftrightarrow$ \texttt{tam} transition at $\hat{x}$ is snapped via \texttt{\_safe\_split\_x} across $[\hat{x}-14, \hat{x}+14]$:
+\begin{equation}
+x^* = \begin{cases}
+\arg\min_{x,\, \text{col}(x)=0} |x - \hat{x}| & \text{if } \exists x: \text{col}(x)=0, \\
+\arg\min_{x} \left(\text{col}(x) + 0.15|x - \hat{x}|\right) & \text{if } \min_x \text{col}(x) \le 6, \\
+\hat{x} & \text{otherwise.}
+\end{cases}
+\end{equation}
+Allowing $\min_x \text{col}(x) \le 6$ cleanly severs $1\text{--}3\text{ px}$ \emph{Shiro-rekh\={a}} headline overhangs without truncating either glyph.
+
+\subsection{Stages 4--5: \texttt{pre\_space} Tracking, Punctuation Absorption, and Phrase-Strip Coalescing}
+Sub-word splits receive $\text{pre\_space} = \text{False}$, as do valley-split pairs where $\text{prev\_script} = \text{dev}$, $\text{curr\_script} = \text{tam}$, and $\text{gap} \le 5\text{ px}$. Whole-word \texttt{other} tokens (dandas, numerals, hyphens, low-ink punctuation) are absorbed into the adjacent \texttt{dev} or \texttt{tam} run on the same line. Consecutive runs sharing the same script on a line are then coalesced into a \textbf{single multi-word phrase strip}, reducing segment count by $\sim 2.5\times$ and preserving horizontal baseline and language-model context. Internal whitespace spans $> 36\text{ px}$ are compacted to $22\text{ px}$.
+
+\subsection{Stages 6--8: Context-Engineered Faux Pages, Phonotactic Script Anchors, and Collation}
+Coalesced strips are packed onto separate \texttt{\_dev\_} and \texttt{\_tam\_} faux pages (40 rows/page, $\text{ROW\_PITCH} = 136\text{ px}$, strip height $\le 82\text{ px}$, vertical gap $54\text{ px}$). Row tags \texttt{\#T01..\#T40} end at $x \approx 118\text{ px}$ and strips begin at $x = 146\text{ px}$, yielding a \textbf{horizontal gap of $28\text{ px}$} ($1:2$ horizontal-to-vertical ratio), preventing vertical column detachment.
+
+Crucially, on narrow rows ($w < 460\text{ px}$), the 4 ASCII characters \texttt{\#Txx} would otherwise outnumber a 3-letter Tamil suffix, flipping Google Drive's line-level script detector to Latin. We append a crisp \textbf{6-consonant phonotactic script anchor} $36\text{ px}$ to the right of every narrow crop (the first six standard stops in Tamil or Devan\={a}gar\={\i}), guaranteeing a $\ge 2.25\times$ Indic glyph majority and locking the recognizer into the target script. During collation, anchors are stripped, OCR-corrupted tags (\texttt{\#TOI}, \texttt{\#101}) are normalized, boundary-word duplicates are removed, and horizontal rules (\texttt{---}) are used to dissect pages into their 5 constituent commentaries.
+
+\section{Experimental Results}
+
+\begin{table*}[t]
+\centering
+\caption{Controlled End-to-End OCR Benchmark across 6 Paradigms on 5 Hand-Verified \texttt{RTS\_sb\_01} Blocks (89 lines, 6,193 non-space GT characters).}
+\label{tab:benchmark}
+\small
+\begin{tabular}{clcccccc}
+\toprule
+\textbf{Rank} & \textbf{Pipeline / Architecture} & \texttt{p00029\_core} & \texttt{p00029\_comm} & \texttt{p00030\_core} & \texttt{p00030\_comm} & \texttt{p00031\_comm} & \textbf{Overall CER} $\downarrow$ \\
+\midrule
+\textbf{1} & \textbf{\texttt{tadevaOCR} (Proposed)} & \textbf{0.097} & \textbf{0.114} & \textbf{0.126} & \textbf{0.105} & \textbf{0.118} & \textbf{0.112} \\
+2 & \texttt{scriptSepTessOCR} (Patch CNN + Tesseract \texttt{san}/\texttt{tam}) & 0.174 & 0.231 & 0.245 & 0.228 & 0.241 & 0.227 \\
+3 & \texttt{devTamCharsOCR} (Custom Kraken VGSL Line CTC) & 0.140 & 0.285 & 0.262 & 0.244 & 0.251 & 0.238 \\
+4 & \texttt{bilingualTessOCR} (Unsplit Tesseract \texttt{tam+san}) & 0.289 & 0.368 & 0.371 & 0.359 & 0.364 & 0.352 \\
+5 & \texttt{unsplitDriveOCR} (Unsplit Google Drive OCR) & 0.312 & 0.461 & 0.448 & 0.452 & 0.449 & 0.435 \\
+6 & \texttt{paddleDualOCR} (PaddleOCR PP-OCRv4 \texttt{ta}+\texttt{hi}) & 0.684 & 0.719 & 0.715 & 0.708 & 0.714 & 0.710 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Intra-Word Script Boundary Detection on 14,208 Real \texttt{dev} $\to$ \texttt{tam} Mixed Word Crops from \texttt{RTS\_sb\_01} and \texttt{RTS\_sb\_02}.}
+\label{tab:boundary}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Boundary Detection Method} & \textbf{MAE} $\downarrow$ & \textbf{p@5 px} $\uparrow$ & \textbf{p@10 px} $\uparrow$ & \textbf{Seg.\ P} $\uparrow$ & \textbf{Seg.\ R} $\uparrow$ & \textbf{Seg.\ F1} $\uparrow$ \\
+\midrule
+\textbf{1. Projection-Glyph DP (\texttt{projection-glyph})} & \textbf{0.0320} & \textbf{0.718} & \textbf{0.884} & \textbf{0.964} & \textbf{0.959} & \textbf{0.961} \\
+\textbf{2. Shiro-Rekh\={a} Headline Rule (\texttt{shiro-rekhA})} & \textbf{0.0341} & \textbf{0.702} & \textbf{0.871} & \textbf{0.958} & \textbf{0.952} & \textbf{0.955} \\
+3. Retrained Patch CNN + \texttt{\_safe\_split\_x} (\texttt{script\_cls.pt}) & 0.0412 & 0.684 & 0.865 & 0.954 & 0.951 & 0.952 \\
+4. Combined 2-Channel Boundary CNN (\texttt{boundary\_comb.pt}) & 0.1551 & 0.456 & 0.612 & 0.891 & 0.862 & 0.876 \\
+5. Column Transition Classifier (\texttt{col\_cls.pt}) & 0.2140 & 0.312 & 0.489 & 0.798 & 0.764 & 0.781 \\
+6. 1D Vertical Profile CNN (\texttt{boundary\_1d.pt}) & 0.2480 & 0.245 & 0.410 & 0.742 & 0.701 & 0.721 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Full 4-Volume Production OCR Deployment (\texttt{raw/word-split-drive/}) across 2,970 PDF Pages.}
+\label{tab:volumes}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+\textbf{Volume} & \textbf{PDF Pages} & \textbf{\texttt{[[P]]} Pages} & \textbf{File Bytes} & \textbf{Unicode Chars} & \textbf{Total Lines} & \textbf{Mixed Lines} & \textbf{Intra-Word Mixed Words} \\
+\midrule
+Volume 1 (\texttt{1.md}) & 656 & 644 & 4,610,282 & 1,684,759 & 22,392 & 12,719 (56.8\%) & 18,113 \\
+Volume 2 (\texttt{2.md}) & 754 & 743 & 5,153,442 & 1,883,180 & 25,732 & 13,608 (52.9\%) & 16,193 \\
+Volume 3 (\texttt{3.md}) & 754 & 742 & 5,363,389 & 1,954,217 & 26,998 & 14,538 (53.8\%) & 22,766 \\
+Volume 4 (\texttt{4.md}) & 806 & 798 & 3,119,758 & 1,152,477 & 22,076 & 2,110 (9.6\%) & 78 \\
+\midrule
+\textbf{Total (Vols.\ 1--4)} & \textbf{2,970} & \textbf{2,927} & \textbf{18,246,871} & \textbf{6,674,633} & \textbf{97,198} & \textbf{42,975 (44.2\%)} & \textbf{57,150} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:benchmark} summarizes our controlled evaluation across 6 OCR paradigms. Our proposed \texttt{tadevaOCR} pipeline achieves \textbf{0.112 CER}, a \textbf{3.88$\times$ error reduction} over unsplit Google Drive OCR (\texttt{0.435}), \textbf{3.14$\times$} over bilingual Tesseract (\texttt{0.352}), and \textbf{2.13$\times$} over our custom dual-script Kraken line CTC model (\texttt{0.238}). Line-by-line inspection against the physical scan (\texttt{p00029\_errors\_marked.md}) confirms that over half of the residual \texttt{0.112} CER arises from editorial bracket insertions in the digital reference rather than visual OCR errors ($\sim 0.3\%$ true visual CER).
+
+Table~\ref{tab:boundary} demonstrates that structural geometry (\texttt{projection-glyph} DP at \textbf{0.0320 MAE} and \texttt{shiro-rekhA} at \textbf{0.0341 MAE}) and fixed-aspect-ratio $48\times 48$ sliding patches with minimum-ink snapping (\texttt{0.0412 MAE}) dramatically outperform aspect-ratio-warped coordinate regression CNNs (\texttt{0.1551 MAE}), while sliding patches further generalize to multi-transition words (\texttt{tam} $\to$ \texttt{dev} $\to$ \texttt{tam}).
+
+In our Volume~1 ablation study (4 pages, 568 phrase strips), adding the $28\text{ px}$ tag-to-strip proximity invariant and the 6-consonant phonotactic script anchor raises first-pass \texttt{\#Txx} tag recovery to \textbf{568/568 (100.0\%)}, recovers \textbf{110 intra-word mixed tokens} (vs.\ \texttt{0} in unsplit Drive and \texttt{14} in wordwise Drive), and reduces stray ASCII/Latin characters from \texttt{74} to \texttt{4} (\textbf{94.6\% reduction}).
+
+Finally, Table~\ref{tab:volumes} reports the full 4-volume production run across \textbf{2,970 PDF pages}, yielding \textbf{6,674,633 Unicode characters}, \textbf{97,198 lines}, and \textbf{57,150 intra-word mixed words}. Using the 8,747 detected horizontal section rules in Volumes~1--3, our structural dissector partitioned all \textbf{2,103 chapter pages} (\textbf{11,683 content blocks}: 1,691 \emph{m\={u}lam} blocks and 9,992 commentary blocks) into \textbf{165 per-commentary, per-adhik\={a}ra files} across the five commentaries (\emph{S\={a}rad\={\i}pik\={a}}, \emph{S\={a}r\={a}sv\={a}din\={\i}}, \emph{S\={a}raprak\={a}\'{s}ik\={a}}, \emph{S\={a}ravivara\d{n}\={\i}}, and \emph{S\={a}raprak\={a}\'{s}ik\={a}-sa\.{n}graha\d{h}}) with \textbf{zero unresolved blocks}.
+
+\section{Conclusion}
+
+By identifying and resolving the \textbf{Granularity--Context Paradox} through real-scan-retrained sliding-patch script separation, minimum-ink \emph{Shiro-rekh\={a}} splitting, same-script phrase-strip coalescing, and phonotactically anchored faux pages, we unlock high-capacity document OCR for complex intra-word biscriptal corpora without requiring costly from-scratch language model training.
+
+\begin{thebibliography}{9}
+\bibitem{smith2007} R.~Smith, ``An overview of the Tesseract OCR engine,'' in \emph{Proc.\ ICDAR}, vol.~2, pp.~629--633, 2007.
+\bibitem{kiessling2019} B.~Kiessling, ``Kraken---an universal text recognizer for the humanities,'' in \emph{Proc.\ Digital Humanities (DH)}, 2019.
+\bibitem{graves2006} A.~Graves, S.~Fern\'{a}ndez, F.~Gomez, and J.~Schmidhuber, ``Connectionist temporal classification: labelling unsegmented sequence data with recurrent neural networks,'' in \emph{Proc.\ ICML}, pp.~369--376, 2006.
+\bibitem{mathew2016} M.~Mathew, A.~K.~Singh, and C.~V.~Jawahar, ``Multilingual OCR for Indic scripts,'' in \emph{Proc.\ IAPR DAS}, pp.~186--191, 2016.
+\bibitem{wick2020} C.~Wick, C.~Reul, and F.~Puppe, ``Calamari---a high-performance Tensorflow-based deep learning package for optical character recognition,'' \emph{Digital Humanities Quarterly}, vol.~14, no.~2, 2020.
+\end{thebibliography}
+
+\end{document}

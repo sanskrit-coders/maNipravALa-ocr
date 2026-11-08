@@ -31,7 +31,7 @@ This directory documents the current Manipravalam OCR pipeline and all active an
 
 ## Pipelines
 
-**Active production pipeline (`linewiseScriptSepDriveOCR`):**
+**Active production pipeline (`tadevaOCR`):**
 `line separator` → `patch classifier (script_cls.pt)` + `safe ink-free word/run split` → `linewise phrase-strip faux page construction` → `Drive OCR` → `OCR collation`.
 
 **Tested alternate (`wordwise-shiro-rekhA`, retired after Vol. 4 failure):**
@@ -97,7 +97,7 @@ Four full-volume outputs were generated for Volume 4 under `.../rahasya-traya-sA
   - **Verdict:** Useful as a local alignment/confidence signal, but 80.5% word accuracy is too noisy for direct page transcription (`tesseract/4.md`).
 - **Mixed-script line OCR (`training/local/kaggle_v10_best.pt`, `devTamCharsOCR`):**
   - Kraken VGSL line model trained on 16.5k lines: **0.292 line CER / 0.238 block CER** on whole lines, but collapses on isolated short runs (0.812 CER).
-- **Linewise Script-Separated Drive OCR (`linewiseScriptSepDriveOCR`):**
+- **Linewise Script-Separated Drive OCR (`tadevaOCR`):**
   - **0.112 block CER** on the 5 verified `RTS_sb_01` Manipravalam blocks (2.0× better than local script-split Tesseract at 0.227, 2.1× better than `devTamCharsOCR` at 0.238, and 3.9× better than unsplit Drive at 0.435). Production winner on Volume 4 (`4.drive.md`).
 
 ## Artifacts

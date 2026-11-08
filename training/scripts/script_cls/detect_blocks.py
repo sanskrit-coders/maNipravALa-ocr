@@ -16,7 +16,7 @@ first rule line yc in [12%,92%] with width>0.32w.
 Verified on eval (vol01): p0042 none; p0043 sep y=244; p0044 sep y=455.
 
 Usage (canonical, from the doc_curation repo root; page data lives in the
-maNipravALa-ocr repo, auto-detected as a sibling or via --root / $MANIPRAVALA_OCR_ROOT):
+tadeva-maNipravALa-ocr repo, auto-detected as a sibling or via --root / $MANIPRAVALA_OCR_ROOT):
   python3 -m doc_curation.image.checker.detect_blocks --vol 01
   python3 -m doc_curation.image.checker.detect_blocks --vol 01 --subset 0:70
   python3 -m doc_curation.image.checker.detect_blocks --check-crops
@@ -33,12 +33,13 @@ import cv2
 import numpy as np
 
 def _default_root():
-    """The maNipravALa-ocr repo: --root flag / $MANIPRAVALA_OCR_ROOT / sibling repo / cwd."""
+    """The OCR repo: --root flag / $MANIPRAVALA_OCR_ROOT / sibling repo / cwd."""
     cands = []
     env = os.environ.get("MANIPRAVALA_OCR_ROOT")
     if env:
         cands.append(pathlib.Path(env).expanduser())
     for p in pathlib.Path(__file__).resolve().parents:
+        cands.append(p / "tadeva-maNipravALa-ocr")
         cands.append(p / "maNipravALa-ocr")
         cands.append(p)
     cands.append(pathlib.Path.cwd())

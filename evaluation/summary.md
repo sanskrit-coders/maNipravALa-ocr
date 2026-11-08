@@ -11,7 +11,7 @@ those `RTS_sb_*` sets; the earlier `RTS_5c` pilot is archived and is not used fo
 
 Candidates: **Tesseract** (`tam+san`), **PaddleOCR PP-OCRv4** pretrained models (the engine behind
 the Indic-OCR/BytesByJay repo), **Google Drive** document OCR, **devTamCharsOCR** (our from-scratch line recognizer),
-**scriptSepDriveOCR** (a script-run splitting page pipeline that reflows script-pure segments onto faux pages before OCR), and **linewiseScriptSepDriveOCR** (the same dense, pure-script pages with line-strip ordering).
+**scriptSepDriveOCR** (a script-run splitting page pipeline that reflows script-pure segments onto faux pages before OCR), and **tadevaOCR** (the same dense, pure-script pages with line-strip ordering).
 
 **Bottom line**
 
@@ -25,7 +25,7 @@ the Indic-OCR/BytesByJay repo), **Google Drive** document OCR, **devTamCharsOCR*
 | devTamCharsOCR on script segments | — | 0.599 | script-pure input does **not** close the gap |
 | Drive OCR on the whole text block | — | 0.435 | erratic; output often reorders/drops lines |
 | **scriptSepDriveOCR (v2)** | — | **0.114** | pure-script line strips; 3.9× better than whole-block Drive |
-| linewiseScriptSepDriveOCR | — | **0.112** | same dense pages; best micro average |
+| tadevaOCR | — | **0.112** | same dense pages; best micro average |
 
 Line and block CERs use different GT units and are **not comparable** (see §2.3). Six findings
 dominate everything below: (1) **script mixing is a major failure mode for pretrained engines** —
@@ -56,7 +56,7 @@ Six systems are compared; they differ in their unit of recognition and in what t
   Devanagari/Tamil line crops from these volumes; outputs one line of text per line crop.
 * **scriptSepDriveOCR** — a block/page-level pipeline: classifies script at word/run level,
   reflows script-pure line segments onto faux pages, OCRs those with Google Drive, and reassembles the page.
-* **linewiseScriptSepDriveOCR** — the same dense, pure-script line-strip pages, ordered
+* **tadevaOCR** — the same dense, pure-script line-strip pages, ordered
   line-wise and packed across multiple printed lines per page.
 
 | engine | version / model | how it was run |
@@ -66,7 +66,7 @@ Six systems are compared; they differ in their unit of recognition and in what t
 | Google Drive OCR | cloud document OCR (OAuth client) | whole text block, and per-script faux pages (`drive_ocr_images.py`) |
 | devTamCharsOCR | kraken-VGSL spec, torch replica, v10/v13 | CTC greedy decode on line/run/segment crops (§6) |
 | scriptSepDriveOCR | script classifier + faux pages + Drive OCR | block/page, 150 dpi crop upscaled 2×; 20 runs per faux page |
-| linewiseScriptSepDriveOCR | script classifier + dense faux pages + Drive OCR | 40 pure-script line strips/page; no mixed pages; 300 dpi + safe boundaries |
+| tadevaOCR | script classifier + dense faux pages + Drive OCR | 40 pure-script line strips/page; no mixed pages; 300 dpi + safe boundaries |
 | script classifier | 48×48 patch residual CNN, 4 classes | synthetic val acc 0.996 (dev 1.000 / tam 0.998 / other 0.985 / null 0.986) |
 | word-level script separator | 64×256 word CNN, 3 classes | synthetic val acc 0.9996 (dev 0.9987 / tam 1.0000 / other 1.0000) |
 
@@ -196,7 +196,7 @@ the block experiment (§4) is the controlled test.
 ### 3.4 Qualitative failure modes
 
 Line-level examples from the eval split (outputs verbatim; CER in parentheses; links are the
-actual crops). `linewiseScriptSepDriveOCR` is included for each line; `scriptSepDriveOCR` is not
+actual crops). `tadevaOCR` is included for each line; `scriptSepDriveOCR` is not
 defined for a single isolated line (it needs a block of runs). The linewise texts below are the
 raw variant; block-level primary numbers in §4.4 additionally drop `other` runs.
 
@@ -206,13 +206,13 @@ raw variant; block-level primary numbers in §4.4 additionally drop `other` runs
   * Tesseract: `தன்பற்றில்‌ - தானே தன்‌ த்தை உண்டாக்குகையில்‌. இது, “நின்று தன்‌` — the Sanskrit word is replaced by a Tamil fragment and a tail is hallucinated.
   * PaddleOCR: `Is Mnu, To qunoூsumos Goghk mo mau -ougnms` — Devanagari rendered as Latin garbage, word boundaries lost.
   * devTamCharsOCR: `தன்பற்றில் - தானே தன் संबन्धத்தை உண்டாக்குகையில். இது, நின்று த` — right script and words; only the apostrophe is missing and a `த` is added at the end.
-  * linewiseScriptSepDriveOCR: `தன்பற்றில் - தானே தன் संबन्धத்தை உண்டாக்குகையில். இது, 'நின்று தன்` — essentially exact; only the apostrophe glyph differs.
+  * tadevaOCR: `தன்பற்றில் - தானே தன் संबन्धத்தை உண்டாக்குகையில். இது, 'நின்று தன்` — essentially exact; only the apostrophe glyph differs.
 * **Mixed line `01_p0042_comm_L03`** ([crop](examples/01_p0042_comm_L03.png); Tesseract 0.538,
   devTamCharsOCR 0.346, linewise 0.308)
   * GT: `सङ्ग्रहोक्ति. தகவோக்கத்தில் - कृपाधिक्यத்தில். இது 'அருள்`
   * Tesseract: `னான்‌” என்பதின்‌ 898, தகவோக்கத்தில்‌ - कृपाधिक्यं). இது “அருள்‌` — re-routes the line start and substitutes `सङ्ग्रहोक्ति` with digits.
   * devTamCharsOCR: `னான் என்பதின் संग्रहोक्ति, தகவோக்கத்தில் - कपाधिक्यத்தில். இது "ருள்` — prepends `னான் என்பதின்` from the previous line, misreads `कृपा` as `कपा`, and clips the final `அ`.
-  * linewiseScriptSepDriveOCR: `னான் என்பதின் संग्रहोक्ति. தகவோக்கத்தில் कृपाधिक्यத்தில். இது அருள்` — nearly exact; the tag digits are gone, but the leading `ஸ`/`ங` shapes remain.
+  * tadevaOCR: `னான் என்பதின் संग्रहोक्ति. தகவோக்கத்தில் कृपाधिक्यத்தில். இது அருள்` — nearly exact; the tag digits are gone, but the leading `ஸ`/`ங` shapes remain.
 * **Tamil-only line `01_p0042_comm_L12`** ([crop](examples/01_p0042_comm_L12.png); Tesseract
   0.052, devTamCharsOCR 0.034, linewise 0.000)
   * GT: `பாட்டில் சொன்ன இன்பம் முதலான பத்து உபகாரங்களையும் செய்வதற்காகவே.`
@@ -220,31 +220,31 @@ raw variant; block-level primary numbers in §4.4 additionally drop `other` runs
   * PaddleOCR: `பாட்டலெசான்னஇன்பம்ழதலானபத்தஉபகாரங்கைளயமெசய்வதற்காகேவ.` — all word spaces lost, ligatures corrupted (`சொன்ன`→`ெசானன`).
   * devTamCharsOCR: `ாட்டில் சொன்ன இன்பம் முதலான பத்து உகாரங்களையும் செய்வதற்காகவே.` — near-exact; drops the leading `ப` and one `ப` inside `உபகார`.
   * devTamCharsOCR on the script segments: exact (CER 0.000) — splitting a pure line does not hurt this example.
-  * linewiseScriptSepDriveOCR: `பாட்டில் சொன்ன இன்பம் முதலான பத்து உபகாரங்களையும் செய்வதற்காகவே.` — exact.
+  * tadevaOCR: `பாட்டில் சொன்ன இன்பம் முதலான பத்து உபகாரங்களையும் செய்வதற்காகவே.` — exact.
 * **Mixed line `01_p0042_comm_L24`** ([crop](examples/01_p0042_comm_L24.png); Tesseract 0.463,
   devTamCharsOCR 0.019, linewise 0.167)
   * GT: `उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே - अनादिயான`
   * Tesseract: `தாலும்‌, எண்யாலும்‌, மாகக்‌ காண்பிக்கும்‌. தொல்வழியே - யான` — drops the Devanagari words.
   * devTamCharsOCR: `उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே - अनादिயன` — near-perfect (one vowel sign).
-  * linewiseScriptSepDriveOCR: `தாலும், उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே  अनादि ।யான` — duplicates the line start, adds a stray danda (`।`) and a double space; the Tamil `உ` survives.
+  * tadevaOCR: `தாலும், उक्तिயாலும், स्पष्टமாகக் காண்பிக்கும். தொல்வழியே  अनादि ।யான` — duplicates the line start, adds a stray danda (`।`) and a double space; the Tamil `உ` survives.
 * **Devanagari-only line `01_p0043_core_L00`** ([crop](examples/01_p0043_core_L00.png);
   Tesseract 0.232, devTamCharsOCR 0.130, linewise 0.130)
   * GT: `क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्`
   * Tesseract: `“पापिष्ठः क्षनबन्धुर्च पुण्डरीकरच पुण्यकृत्‌ । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्‌` — prepends a word from the previous printed line and confuses `श`/`र`.
   * devTamCharsOCR: `िष्टः्षबन्धशच पुण्डरीकशच पुण्यकृत् । आचार्यवत्तया मुक्तो तस्मादाचार्यवान्` — loses the line start and `मुक्तौ`→`मुक्तो`.
-  * linewiseScriptSepDriveOCR: ` 'पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` — almost exact; adds a leading space and an apostrophe, and inherits `"पापिष्ठः` from the previous printed line.
+  * tadevaOCR: ` 'पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` — almost exact; adds a leading space and an apostrophe, and inherits `"पापिष्ठः` from the previous printed line.
 * **Dense mixed line `01_p0043_comm_L05`** ([crop](examples/01_p0043_comm_L05.png); Tesseract
   0.353, devTamCharsOCR 0.147, linewise 0.191)
   * GT: `अतिशयित-पापமுள்ளவனான. क्षत्रबन्धुश्च - இந்த चकारம் आचार्यवत्तै இருந்தாலும்`
   * Tesseract: `எ19-ராமுள்ளவனான. कषत्रबन्धुङ्च- இந்த चकारा आचार्यवत्ते இருந்தாலும்‌ पापिष्ठ-` — substitutes the first word and appends the next line's text.
   * devTamCharsOCR: `ितपापமுள்ளவனான. क्ष्बन्धुश्च இந்த चकारம் आचार्यवत्तै இருந்தாலும் ்` — drops line-start chars, but keeps the script mixture.
-  * linewiseScriptSepDriveOCR: `शयित-पापமுள்ளவனான. क्षत्रबन्धुश्च- இந்த चकारம் ம் आचार्यवत्तै இருந்தாலும் पापिष्ठ-` — close; one Tamil `ம்` is inserted and the inherited tail remains.
+  * tadevaOCR: `शयित-पापமுள்ளவனான. क्षत्रबन्धुश्च- இந்த चकारம் ம் आचार्यवत्तै இருந்தாலும் पापिष्ठ-` — close; one Tamil `ம்` is inserted and the inherited tail remains.
 * **Mixed prose line `01_p0044_core_L01`** ([crop](examples/01_p0044_core_L01.png); Tesseract
   0.526, devTamCharsOCR 0.053, linewise 0.053)
   * GT: `आचार्यवंशம் भगवाனளவுஞ்செல்ல अनुसन्धिக்கவேணுமென்றோதப்பட்டது.`
   * Tesseract: `आचार्य-वंशा *ளனளவுஞ்செல்ல अनुसन्यि 4०/69/0102 079 01८ 10 ८ ॐ.` — the Tamil half collapses into digits/symbols.
   * devTamCharsOCR: `आचार्यंश் भगवाனளவுஞ்செல்ல अनुसन्धिக்கவேணுமென்றுதப்பட்டது.` — near-exact; `वंशம்` and `ஓ` differ.
-  * linewiseScriptSepDriveOCR: `आचार्य-वंशம் भगवा'னளவுஞ்செல்ல अनुसन्धि,க்கவேணுமென்றோதப்பட்டது.` — near-exact; one apostrophe is inserted.
+  * tadevaOCR: `आचार्य-वंशம் भगवा'னளவுஞ்செல்ல अनुसन्धि,க்கவேணுமென்றோதப்பட்டது.` — near-exact; one apostrophe is inserted.
 
 Failure modes:
 
@@ -331,7 +331,7 @@ classifier. Faux pages are now pure-script: each page packs up to 40 complete li
 with multiple printed lines per page; `other` segments are not composed. On the five eval
 blocks, line-level script presence is 64/69 versus 65/69 for the earlier model.
 
-`linewiseScriptSepDriveOCR` uses the same steps and the same pure-script line-strip pages,
+`tadevaOCR` uses the same steps and the same pure-script line-strip pages,
 with line order preserved across a page.
 
 ### 4.4 Results
@@ -341,7 +341,7 @@ Whitespace-stripped CER per block; micro is over all five blocks (6,193 GT chars
 | system | comm p0042 | core p0043 | comm p0043 | core p0044 | comm p0044 | **micro** |
 |---|---|---|---|---|---|---|
 | **scriptSepDriveOCR (v2)** | **0.079** | **0.033** | 0.226 | **0.052** | **0.034** | 0.114 |
-| linewiseScriptSepDriveOCR | **0.079** | **0.033** | **0.218** | **0.052** | **0.034** | **0.112** |
+| tadevaOCR | **0.079** | **0.033** | **0.218** | **0.052** | **0.034** | **0.112** |
 | Tesseract on whole lines (`tam+san`) | 0.241 | 0.133 | 0.445 | 0.377 | 0.362 | 0.352 |
 | Tesseract on script runs (per-script models) | 0.155 | 0.133 | 0.422 | 0.120 | 0.155 | 0.244 |
 | **Tesseract on script segments (per-script models)** | 0.144 | 0.111 | 0.399 | 0.125 | 0.132 | **0.227** |
@@ -355,7 +355,7 @@ Each faux page contains only Tamil or only Devanagari strips. A strip is a compl
 line/script segment (not a single word); up to 40 strips are packed per page, with multiple
 printed lines per page. The `other` segments are not composed.
 
-linewiseScriptSepDriveOCR is the best micro result. It wins `comm/p0043` (0.218 vs 0.226) and
+tadevaOCR is the best micro result. It wins `comm/p0043` (0.218 vs 0.226) and
 ties page-batched separation on the other four blocks. The split is worth **3.9×** against
 unsplit Drive (0.435), **2.1×** against the best devTamCharsOCR configuration (0.238), and
 **2.0×** against the best local script-split Tesseract configuration (0.227). The unsplit Drive
@@ -455,7 +455,7 @@ linewise 0.033):
 * devTamCharsOCR (whole lines): `पापटः्षवन्धुच पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तो तस्मादाचार्यवान्` / `ன்று` — loses the opening quote, the first two words and the final `भवेत् ॥"`.
 * Tesseract (script segments): `"पापिष्ठः क्षत्रबन्धुरुच पुण्डरीकङच पुण्यकृत्‌ । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्‌` / `भवेत्‌்‌” என்று` — all words present; `श`→`र`/`ङ`, `॥"`→`”`.
 * scriptSepDriveOCR: `“पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` / `भवेत् ॥'' என்று` — almost exact; only the quote glyph/spacing and closing `"` differ.
-* linewiseScriptSepDriveOCR: `“पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` / `भवेत् ॥'' என்று` — same output on this block.
+* tadevaOCR: `“पापिष्ठः क्षत्रबन्धुश्च पुण्डरीकश्च पुण्यकृत् । आचार्यवत्तया मुक्तौ तस्मादाचार्यवान्` / `भवेत् ॥'' என்று` — same output on this block.
 
 The dense `comm/p0043` block ([image](../data/RTS_sb_01/images/comm/p0043.jpg), CER 0.226) shows
 the other failure mode: the words are mostly right, but Drive leaks tag/escape characters into

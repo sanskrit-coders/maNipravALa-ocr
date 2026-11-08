@@ -863,7 +863,7 @@ def main():
     ap.add_argument("--md-dir", default="")
     ap.add_argument("--page-offset", type=int, default=0)
     ap.add_argument("--linewise", action="store_true",
-                    help="compose one faux page per printed line (linewiseScriptSepDriveOCR)")
+                    help="compose one faux page per printed line (tadevaOCR)")
     ap.add_argument("--overlay", action="store_true")
     args = ap.parse_args()
 

@@ -1,6 +1,6 @@
 # Whole-Line Mixed-Script Kraken OCR (`devTamCharsOCR`)
 
-**Status:** **Obsolete / superseded by `linewiseScriptSepDriveOCR`** (not used in [`current-pipeline.md`](../../current-pipeline.md)).
+**Status:** **Obsolete / superseded by `tadevaOCR`** (not used in [`current-pipeline.md`](../../current-pipeline.md)).
 
 ## Model Specification
 
@@ -24,5 +24,5 @@
 
 ## Why Moved to `models/obsolete/`
 
-1. **2.1× higher error than `linewiseScriptSepDriveOCR`:** On the same 5 verified `RTS_sb_01` blocks, script-separated phrase strips with Google Drive OCR achieved **0.112 block CER** vs. **0.238** for `devTamCharsOCR`.
+1. **2.1× higher error than `tadevaOCR`:** On the same 5 verified `RTS_sb_01` blocks, script-separated phrase strips with Google Drive OCR achieved **0.112 block CER** vs. **0.238** for `devTamCharsOCR`.
 2. **Collapse on short script runs:** Because `devTamCharsOCR` was trained exclusively on full-width page lines, feeding it short 1–4 akshara script segments falls outside its BiLSTM length distribution (0.599–0.812 CER).

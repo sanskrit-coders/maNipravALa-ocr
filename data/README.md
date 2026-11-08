@@ -25,7 +25,7 @@
   `python3 training/scripts/render_pages.py --vol 01 --dpi 150 --offset01 30`
   `python3 -m doc_curation.image.checker.detect_blocks --vol 01` (run from the
   `doc_curation` repo root; `--vol 02` same; `--root` or `$MANIPRAVALA_OCR_ROOT`
-  point at this repo, else a sibling `maNipravALa-ocr` is auto-detected).
+  point at this repo, else a sibling `tadeva-maNipravALa-ocr` is auto-detected).
 
 ## Word-image maps
 
