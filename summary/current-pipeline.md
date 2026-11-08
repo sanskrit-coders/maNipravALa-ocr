@@ -80,6 +80,7 @@ All retired/experimental models (`script_sep.pt`, `word_cls.pt`, boundary CNNs, 
 - **Implementation:** [`pipeline.py::ocr_drive`](../training/scripts/script_cls/pipeline.py#L884-L896) and [`flush_batch`](../training/scripts/script_cls/pipeline.py#L900-L975), calling [`drive_ocr_images.py`](../training/scripts/script_cls/drive_ocr_images.py).
 - **Cross-page segment packing:** Across each batch of `--page-batch` (default `20`–`25`) PDF pages, all `dev` segments and all `tam` segments are packed into full `--chunk 40` faux pages (`b{first:04d}_{last:04d}_sep_{script}_{ci:03d}.jpg`). This eliminates partial 1–6 segment tail pages at the end of individual PDF pages and reduces total faux pages and Drive API calls by ~2× (~1.3–1.4 faux pages per PDF page).
 - **Parallel `text/plain` Drive OCR (`drive_ocr_images.py`):** Uses a `ThreadPoolExecutor` (`--workers`, default `5`–`6` threads) with thread-local `DriveClient` instances and exports Google Docs using `mime_type="text/plain"` (instead of `text/markdown`, avoiding ~380 KB embedded base64 PNGs and shrinking `.jpg.txt` files by 250× to ~1.5–5 KB) with exponential backoff + jitter (up to 6 attempts).
+- **Concurrent section-rule detection during Drive I/O:** While `ocr_drive(...)` awaits Google Drive network I/O (~60s per 25-page batch), `flush_batch` concurrently computes `detect_blocks.split_page_sections(arr)` for all pages in the batch in a 4-thread `ThreadPoolExecutor`, reducing post-OCR per-page assembly time from ~2.7s/page (~73s/batch) to ~0.002s/page (~0.05s/batch).
 - **Retry on genuinely missing tags:** If any tag on a faux page returns `None`, `flush_batch` invalidates any stale `*_retry.jpg.txt`, composes a `*_retry.jpg` page containing only the missing crops, and re-runs Drive OCR on the retry batch.
 
 ### Stage 8: Fault-Tolerant Tag Parsing, Continuation Deduplication & Reassembly
@@ -107,11 +108,18 @@ All retired/experimental models (`script_sep.pt`, `word_cls.pt`, boundary CNNs, 
 ```
 
 ### Full 4-Volume Parallel Kaggle Run
-[`training/scripts/script_cls/ocr_5comm_kaggle.py`](../training/scripts/script_cls/ocr_5comm_kaggle.py) dispatches Volumes 1–4 (`656, 754, 754, 806` pages) concurrently across 4 Kaggle kernels (2 CPU + 2 GPU) and downloads the assembled outputs to `raw/word-split-drive/{1,2,3,4}.md`:
+[`training/scripts/script_cls/ocr_5comm_kaggle.py`](../training/scripts/script_cls/ocr_5comm_kaggle.py) dispatches Volumes 1–4 (`656, 754, 754, 806` pages) concurrently across Kaggle kernels and downloads the assembled outputs to `/home/vvasuki/gitland/vishvAsa/rAmAnujIyam/content/tattvam/venkaTa-nAtha-shAkhA/venkaTanAthaH/rahasya-traya-sAraH/5-tIkAH/raw/word-split-drive/{1,2,3,4}.md`:
 ```bash
 /home/vvasuki/gitland/python_venv/bin/python \
   training/scripts/script_cls/ocr_5comm_kaggle.py --push --monitor
 ```
+
+| Volume | Output File | PDF Pages | `--page-offset` | `[[P]]` Markers | File Size | Characters | Non-Empty Lines | Mixed-Script Lines | Mixed-Script Words | `---` Section Rules |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **Vol 1** | `raw/word-split-drive/1.md` | 656 | 16 | 644 | 4,610,282 B | 1,684,759 | 22,392 | 12,719 | 18,113 | 2,403 |
+| **Vol 2** | `raw/word-split-drive/2.md` | 754 | 16 | 743 | 5,153,442 B | 1,883,180 | 25,732 | 13,608 | 16,193 | 3,051 |
+| **Vol 3** | `raw/word-split-drive/3.md` | 754 | 16 | 742 | 5,363,389 B | 1,954,217 | 26,998 | 14,538 | 22,766 | 3,293 |
+| **Vol 4** | `raw/word-split-drive/4.md` | 806 | 10 | 798 | 3,119,758 B | 1,152,477 | 22,076 | 2,110 | 78 | 3 |
 
 > [!IMPORTANT]
 > Do **not** pass `--word-classifier training/local/script_sep.pt` or `--word-classifier training/local/word_cls.pt`; let `pipeline.py` use the default retrained patch classifier `training/local/script_cls.pt`.
